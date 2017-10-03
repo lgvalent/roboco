@@ -1,0 +1,48 @@
+O Arduino pode ser resetado por diversos problemas, como energia, resetButton, ou outra situação.
+Desta forma, é importante usar corretamente a programação do loop principal.
+Em outras palavras, o Robocó poderá ser ligado a qualquer momento, e neste momento ele deve saber o quê fazer.
+
+Uma abordagem interessante é tratar o Robocó como uma máquina de estados finitos.
+A configuração do processo de capitura deverá ser realizado através de um arquivo ROBOCO.TXT.
+Este arquivo é composto de linhas e cada linha possui seções separadas por vírgula.
+Exemplo de uma linha:
+LATITUDE, LONGITUDE, TEMPO_ESVAZIAMENTO_CÂMARA, INTERVALO_ENTRE_CAPTURAS, INTERVALO_AJUSTE_POSICIONAMENTO, TEMPO_CAPTURA
+LATITUDE                          Latitude do ponto onde o ROBOCÓ deverá efetuar a coleta;
+LONGITUDE                         Longitude do ponto onde o ROBOCÓ deverá efetuar a coleta;
+TEMPO_ESVAZIAMENTO_CÂMARA         Tempo, em segundos, para o processo de esvaziamento da câmara
+INTERVALO_ENTRE_CAPTURAS          Tempo, em segundos, para realização das diversas capturas em um mesmo ponto
+INTERVALO_AJUSTE_POSICIONAMENTO   Tempo, em segundos, para que o ROBOCÓ verifique possíveis deslocamentos involuntários
+TEMPO_CAPTURA                     Tempo, em segundos, que o ROBOCÓ permanecerá neste ponto, capturando os dados
+
+Durante sua operação, o ROBOCÓ deve indicar por meio de LEDs e/ou sons o atual estado interno.
+O laço principal deverá implementar as seguintes funções. 
+
+1º Ler o próximo destino no arquivo
+    1.1 Verificar qual foi a última linhas do arquivo processada
+      1.1.1 Ler em um arquivo AUX.TXT o valor gravado na primeira linha do arquivo
+    1.2 Ler a linha do arquivo ROBOCO.TXT
+    1.3 Guardar os valores em variáveis globais
+
+2º Deslocar-se até o destino
+    2.1 Localizar-se pelo GPS
+    2.2 Verificar a distância e definir a velocidade de deslocamento
+      2.2.1 Quanto mais longe do ponto, maior será a velocidade.
+    2.3 Alinhar o bico
+    2.4 Avançar
+    2.5 Volte para 2.3 N vezes, onde N pode ser uma razão entre a posição atual e o destino
+    2.6 Volte para 2.1 até chegar
+
+3º Iniciar captura dos dados
+    3.1 Acionar simultâneamente até o final de ambas tarefas
+      3.1.1 Acionar esvaziamento da câmara por TEMPO_ESVAZIAMENTO_CÂMARA segundos
+      3.1.2 Estabilizar sensor CO2 por 90 segundos
+    3.2 Coletar dados
+      3.1 CO2, temperaturas, pressão, altitude, etc
+      3.2 Armazenar os dados no cartão
+        3.2.1 Gravar uma linha para cada capitura
+          TIME_STAMP, CO2, TEMP_INTERNA, PRESSÃO, ALTITUDE
+    3.3 Repetir 3.2 a cada NTERVALO_ENTRE_CAPTURAS segundos
+    3.4 Verificar o INTERVALO_AJUSTE_POSICIONAMENTO
+      3.4.1 Repetir as atividades do 2º passo para reposicionamento
+    3.5 Repetir 3.2 até esgotar o TEMPO_CAPTURA
+    
