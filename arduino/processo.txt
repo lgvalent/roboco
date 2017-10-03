@@ -3,7 +3,7 @@ Desta forma, é importante usar corretamente a programação do loop principal.
 Em outras palavras, o Robocó poderá ser ligado a qualquer momento, e neste momento ele deve saber o quê fazer.
 
 Uma abordagem interessante é tratar o Robocó como uma máquina de estados finitos.
-A configuração do processo de capitura deverá ser realizado através de um arquivo ROBOCO.TXT.
+A configuração do processo de captura deverá ser realizado através de um arquivo ROBOCO.TXT.
 Este arquivo é composto de linhas e cada linha possui seções separadas por vírgula.
 Exemplo de uma linha:
 LATITUDE, LONGITUDE, TEMPO_ESVAZIAMENTO_CÂMARA, INTERVALO_ENTRE_CAPTURAS, INTERVALO_AJUSTE_POSICIONAMENTO, TEMPO_CAPTURA
@@ -14,7 +14,12 @@ INTERVALO_ENTRE_CAPTURAS          Tempo, em segundos, para realização das dive
 INTERVALO_AJUSTE_POSICIONAMENTO   Tempo, em segundos, para que o ROBOCÓ verifique possíveis deslocamentos involuntários
 TEMPO_CAPTURA                     Tempo, em segundos, que o ROBOCÓ permanecerá neste ponto, capturando os dados
 
-Durante sua operação, o ROBOCÓ deve indicar por meio de LEDs e/ou sons o atual estado interno.
+O Robocó não saberá o ponto em que ele foi solto, então, a última linha do arquivo deverá marcar o ponto de retorno onde o pesquisador pretende resgatá-lo
+
+Durante sua operação, o ROBOCÓ deve indicar por meio de LEDs e/ou sons o atual estado interno, isto ajuda na análise de seu comportamento e no diagnóstico de futuros problemas.
+
+A cada operação, o ROBOCÓ deverá verificar o nível da bateria e quando a mesma estiver baixa, o robocó deverá iniciar a rotina de retorno ao ponto de resgate, para isto, basta escrever no arquivo AUX um número infinitamente alto e resetar o arduino que ele vai ler a última linha do arquivo de coordenadas. Caso não seja possível obter o nível da bateria, um temporizador de autonomia pode ser usado, e após determinado tempo, por segurança, ele aciona o retorno.
+
 O laço principal deverá implementar as seguintes funções. 
 
 1º Ler o próximo destino no arquivo
