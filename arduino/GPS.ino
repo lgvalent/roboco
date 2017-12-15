@@ -92,18 +92,4 @@ void localizarGps()                     // run over and over again
   Altitude = GPS.altitude;
   fix = GPS.fix;
 }
-void testeGps() {
-  lcd.clear();
-  while (!fix) {
-    Serial.println("BUSCANDO SINAL DO GPS");
-    LCD(0, 0, "BUSCANDO SINAL");
-    LCD(6, 1, "GPS");
-    localizarGps();
-  }
-  if(fix){
-    lcd.clear();
-    LCD(3,0,"GPS FIXADO");
-    delay(3000);
-  }
-}
 

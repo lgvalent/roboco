@@ -1,3 +1,6 @@
+
+#include <Dumotor.h>
+
 void moverFrente(int vel) {
   led(3,1); // acionando led vermelho
   motor.M1move(vel, ANTI_HORARIO);
@@ -23,4 +26,10 @@ void parar() {
   motor.M1parar(); //Para o motor1
   motor.M2parar(); //Para o motor2
   Serial.println("parar");
+
+  // GAMBI
+  digitalWrite(8, LOW);
+  digitalWrite(9, LOW);
+  digitalWrite(5, LOW);
+  digitalWrite(6, LOW);
 }

@@ -2,7 +2,7 @@
 //Bibliotecas Gerais
 #include <SoftwareSerial.h>
 #include <SPI.h>
-#include<EEPROM.h>
+#include <EEPROM.h>
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
 //Bibliotecas GPS
@@ -68,15 +68,15 @@ unsigned long tempoAnterior;
 int linhaFinal=0;
 
 /// PINOS DOS LEDS
-int ledBranco = 38;
-int ledBranco1 = 34;
-int ledBranco2 = 36;
-int ledVerde = 32;
-int ledVerde1 = 40;
-int ledVerde2 = 44;
-int ledVermelho = 46;
-int ledVermelho1 = 48;
-int ledVermelho2 = 50;
+const int ledBranco = 32;
+const int ledBranco1 = 36;
+const int ledBranco2 = 34;
+const int ledVerde = 38;
+const int ledVerde1 = 50;
+const int ledVerde2 = 40;
+const int ledVermelho = 44;
+const int ledVermelho1 = 48;
+const int ledVermelho2 = 46;
 
 //VARIAVEIS DE DESLOCAMENTO
 int velocidade=0;
@@ -95,15 +95,19 @@ void setup() {
   pinMode(ledVermelho2, OUTPUT);
   pinMode(A5,OUTPUT); //Pino do buzzer
 
-  Serial.begin(115200); // INICIANDO MONITOR SERIAL
-  GPS.begin(9600); //INICIANDO COMUNICAÇÃO SERIAL DO GPS
-  mySerial.begin(9600);// INICIANDO COMUNICAÇÃO SERIAL DO SENSOR DE CO2
   lcd.begin (16, 2); // INFORMANDO QUE O LCD E 16X2
-  lcd.init(); // INICIANDO LCD
+ // lcd.init(); // INICIANDO LCD
   lcd.init(); // INICIANDO LCD
   lcd.setBacklight(LOW); // APAGANDO LUZ LCD
   delay(2000);
   lcd.setBacklight(HIGH); // ACENDENDO LUZ LCD  
+  lcd.clear();
+  lcd.setCursor(0,0);
+
+  Serial.begin(115200); // INICIANDO MONITOR SERIAL
+  mySerial.begin(9600);// INICIANDO COMUNICAÇÃO SERIAL DO SENSOR DE CO2
+
+  GPS.begin(9600); //INICIANDO COMUNICAÇÃO SERIAL DO GPS
   GPS.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCGGA); // COLOCANDO PARAMETRO EM ALGUMAS VARIAVEZ DO GPS
   GPS.sendCommand(PMTK_SET_NMEA_UPDATE_1HZ);   // 1 Hz taxa de atualização
   GPS.sendCommand(PGCMD_ANTENNA);// atualizando antena quando nao esta fazendo leitura
@@ -112,10 +116,12 @@ void setup() {
   if (!bmp.begin()) {
     Serial.println(F("Could not find a valid BMP280 sensor, check wiring!"));
   }
-  teste();
-  distanciaAoPonto();
-  lcd.clear();
-  lcd.setCursor(0,0);
+    
+  tone(A5, 262,500);delay(200); //DO
+  tone(A5, 330,500);delay(200); //DO
+  tone(A5, 392,500);delay(200); //DO
+  
+  boot();
 }
 
 void loop() {

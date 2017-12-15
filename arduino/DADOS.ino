@@ -10,7 +10,7 @@ long th, tl, h, l, ppm, tpwm, p1, p2, ppm3 = 0.0;
 long offset = 45.0;
 
 void leituraSensores() { // FUNCAO QUE FAZ LEITURA DOS SENSORES DE TEMPERATURA E CO2
-  led(2, 1); //acionando led verdes
+  
   //mh_z19
   mySerial.write(cmd, 9);
   mySerial.readBytes(response, 9);
@@ -27,7 +27,6 @@ void leituraSensores() { // FUNCAO QUE FAZ LEITURA DOS SENSORES DE TEMPERATURA E
   Serial.print(bmp.readAltitude(1013.25)); // this should be adjusted to your local forcase
   Serial.println(" m");
   Serial.println("-----------");
-  led(2, 0);
 }
 void lcdSensores(){
   lcd.clear();
@@ -40,17 +39,7 @@ void lcdSensores(){
   lcd.print(ppm);
   lcd.println(" , ppm ");
 }
-void testeSensores() { // TESTE DOS SENSORES DE TEMPERATURA E CO2
-  leituraSensores();
-  lcd.setCursor(0, 0);
-  lcd.print(F("Temp = "));
-  lcd.print(bmp.readTemperature());
-  lcd.println(" *C ");
-  lcd.setCursor(0, 1);
-  lcd.print(F("co2 = "));
-  lcd.print(ppm);
-  lcd.println(" , ppm ");
-}
+
 void capturaDeDados() {
   esvaziamentoCamera(); /// ESVAZIAMENTO DA CAMERA E ESTABILIZAÇÃO DO SENSOR DE CO2
   int numeroCapturas = tempoCaptura/intervaloEntreCapturas;
@@ -84,7 +73,7 @@ void esvaziamentoCamera() {
   lcd.clear();
   LCD(0,0,"ESVAZIANDO CAMERA");
   tempoMillis = millis();
-  if (tempoEsvaziamentoCamaraMilly > 90000) {
+  if (tempoEsvaziamentoCamaraMilly > 5000) {
     tempoEsvaziamentoCamaraAnterior = tempoMillis;
     while (tempoMillis - tempoEsvaziamentoCamaraAnterior < tempoEsvaziamentoCamaraMilly) { /// enquanto o tempo for menor que tempo de esvaziamento da camera
       //Acionar esvaziamento da câmara
