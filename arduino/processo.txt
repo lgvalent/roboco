@@ -1,4 +1,4 @@
-O Arduino pode ser resetado por diversos problemas, como energia, resetButton, ou outra situação.
+﻿O Arduino pode ser resetado por diversos problemas, como energia, resetButton, ou outra situação.
 Desta forma, é importante usar corretamente a programação do loop principal.
 Em outras palavras, o Robocó poderá ser ligado a qualquer momento, e neste momento ele deve saber o quê fazer.
 
@@ -50,4 +50,9 @@ O laço principal deverá implementar as seguintes funções.
     3.4 Verificar o INTERVALO_AJUSTE_POSICIONAMENTO
       3.4.1 Repetir as atividades do 2º passo para reposicionamento
     3.5 Repetir 3.2 até esgotar o TEMPO_CAPTURA
+
+
+
+
+kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk
     
