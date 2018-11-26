@@ -1,5 +1,5 @@
+#include <Arduino.h>
 
-#include <Dumotor.h>
 
 void moverFrente(int vel) {
   led(3,1); // acionando led vermelho
