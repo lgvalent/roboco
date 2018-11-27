@@ -1,5 +1,5 @@
 
-//Bibliotecas Gerais
+/*//Bibliotecas Gerais
 #include <SoftwareSerial.h>
 #include <SPI.h>
 #include <EEPROM.h>
@@ -15,9 +15,12 @@
 #include <Adafruit_Sensor.h> //co2
 #include <Adafruit_BMP280.h> //temperatura
 
-Adafruit_BMP280 bmp; // I2C
-Dumotor motor; //inciando motores
-
+Adafruit_BMP280 bmp; // I2C */
+#include <motor.h>
+//inciando motores
+Motor* motorRight;
+Motor* motorLeft;
+/*
 //INICIALIZANDO COMPONENTES
 // GPS
 SoftwareSerial mySerial(12, 13); // RX, TX, MHZ_19
@@ -122,10 +125,25 @@ void setup() {
   tone(A5, 392,500);delay(200); //DO
   
   boot();
+}*/
+
+void setup()
+{
+ motorRight=new Motor(2,3,4);     
+ motorLeft=new Motor(5,6,9);
+}
+void loop() {
+  motorRight->move(CLOCKWISE,255);
+  delay(1000);
+  motorRight->stop();
+  delay(1000);
+  motorRight->move(ANTICLOCKWISE,255);
+  delay(1000);
+  motorRight->stop();
+  motorLeft->move(ANTICLOCKWISE,255);
+  delay(1000);
+  motorLeft->stop();
 }
 
-void loop() {
-  apresentacao();
-}
 
 
