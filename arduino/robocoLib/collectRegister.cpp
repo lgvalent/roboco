@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#include "data.h"
+#include "collectRegister.h"
 
 Motor::Motor(int8_t pin1, int8_t pin2, int8_t pinPwm){
   this->pin1=pin1;
