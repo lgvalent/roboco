@@ -1,7 +1,7 @@
 #include <Arduino.h>
-#include "motor.h"
+#include "sensor.h"
 
-Motor::Motor(int8_t pin1, int8_t pin2, int8_t pinPwm){
+Sensor::Sensor(int8_t pin1, int8_t pin2, int8_t pinPwm){
   this->pin1=pin1;
   this->pin2=pin2;
   this->pinPwm=pinPwm;
@@ -11,12 +11,12 @@ Motor::Motor(int8_t pin1, int8_t pin2, int8_t pinPwm){
   this->stop();
 }
 
-void Motor::stop(){
+void Sensor::stop(){
   analogWrite(pinPwm, 0);
 }
-void Motor::move(MotorDirection direction,unsigned char speed){
+void Sensor::move(SensorDirection direction,unsigned char speed){
   
-  if(direction == CLOCKWISE){
+  if(direction == CLOCKWISE_){
      digitalWrite(pin1, HIGH);
      digitalWrite(pin2, LOW);   
   }else{

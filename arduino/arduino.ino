@@ -17,6 +17,7 @@
 
 Adafruit_BMP280 bmp; // I2C */
 #include <motor.h>
+#include <sensor.h>
 //inciando motores
 Motor* motorRight;
 Motor* motorLeft;
