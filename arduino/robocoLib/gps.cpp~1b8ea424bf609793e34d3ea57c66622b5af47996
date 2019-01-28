@@ -1,7 +1,7 @@
 #include <Arduino.h>
-#include "sensor.h"
+#include "gps.h"
 
-Sensor::Sensor(int8_t pin1, int8_t pin2, int8_t pinPwm){
+Motor::Motor(int8_t pin1, int8_t pin2, int8_t pinPwm){
   this->pin1=pin1;
   this->pin2=pin2;
   this->pinPwm=pinPwm;
@@ -11,12 +11,12 @@ Sensor::Sensor(int8_t pin1, int8_t pin2, int8_t pinPwm){
   this->stop();
 }
 
-void Sensor::stop(){
+void Motor::stop(){
   analogWrite(pinPwm, 0);
 }
-void Sensor::move(SensorDirection direction,unsigned char speed){
+void Motor::move(MotorDirection direction,unsigned char speed){
   
-  if(direction == CLOCKWISE_){
+  if(direction == CLOCKWISE){
      digitalWrite(pin1, HIGH);
      digitalWrite(pin2, LOW);   
   }else{
