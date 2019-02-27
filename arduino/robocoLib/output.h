@@ -4,6 +4,10 @@
 
 class Output{
   private:
+      int8_t pinLed0;
+      int8_t pinLed1;
+      int8_t pinLed2;
+  
   public:
     Output(int8_t pinLed0, int8_t pinLed1, int8_t pinLed2);
     void setLed0(boolean on);  
