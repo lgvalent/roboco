@@ -1,28 +1,25 @@
 #include <Arduino.h>
 #include "output.h"
 
-Motor::Motor(int8_t pin1, int8_t pin2, int8_t pinPwm){
-  this->pin1=pin1;
-  this->pin2=pin2;
-  this->pinPwm=pinPwm;
-  pinMode(pin1, OUTPUT);
-  pinMode(pin2, OUTPUT);
-  pinMode(pinPwm, OUTPUT);
-  this->stop();
+Output::Output(int8_t pinLed0, int8_t pinLed1, int8_t pinLed2){
+    this->pinLed0=pinLed0;
+    this->pinLed1=pinLed1;
+    this->pinLed2=pinLed2;
+  
+    pinMode(pinLed0,OUTPUT);
+    pinMode(pinLed1,OUTPUT);
+    pinMode(pinLed2,OUTPUT);
 }
 
-void Motor::stop(){
-  analogWrite(pinPwm, 0);
+void Output::setLed0(boolean on){
+        digitalWrite(pinLed0,on?HIGH:LOW);
 }
-void Motor::move(MotorDirection direction,unsigned char speed){
-  
-  if(direction == CLOCKWISE){
-     digitalWrite(pin1, HIGH);
-     digitalWrite(pin2, LOW);   
-  }else{
-     digitalWrite(pin1, LOW);
-     digitalWrite(pin2, HIGH);
-  }
-  analogWrite(pinPwm, speed);
+
+void Output::setLed1 (boolean on){
+        digitalWrite(pinLed1,on?HIGH:LOW);
+}
+
+void Output::setLed0(boolean on){
+        digitalWrite(pinLed0,on?HIGH:LOW);
 }
 
