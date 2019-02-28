@@ -4,14 +4,13 @@
 
 class Sensors{
   private:
-//    int8_t pin1;
-//    int8_t pin2;
-//    int8_t pinPwm;  
+    int8_t pin_A15;
+    Adafruit_BMP280* bmp;
   public:
-    Sensors(/* Coloque os dados que precisam para configurar os sensores pinos, seriais, etcs*/ );
-    float getTemperatureC();
-    float getCO2Ppm();
-    float getRelativeHumidity();
+    Sensors(int8 pinLum);
+	float getTemperatureC();
+	float getCO2ppm();
+	float getAltitude();
 	float getAtmosphericPressure();
 	float getLuminosity();
 };
