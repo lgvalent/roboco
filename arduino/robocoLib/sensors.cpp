@@ -6,7 +6,7 @@
 #include <Adafruit_BMP280.h>
 #include <SoftwareSerial.h>
 
-SoftwareSerial mySerial(19,18); // RX, TX
+SoftwareSerial mySerial(pinTxCo2,pinRxCo2); // RX, TX
 byte cmd[9] = {0xFF,0x01,0x86,0x00,0x00,0x00,0x00,0x00,0x79};
 char response[9];
 int prevVal = LOW;
