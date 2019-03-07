@@ -7,7 +7,7 @@ class Sensors{
     int8_t pin_A15;
     Adafruit_BMP280* bmp;
   public:
-    Sensors(int8 pinLum);
+    Sensors(int8_t pinLum, int8_t pinRxCo2, int8_t pinTxCo2);
 	float getTemperatureC();
 	float getCO2ppm();
 	float getAltitude();
