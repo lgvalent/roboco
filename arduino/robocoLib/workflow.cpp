@@ -13,11 +13,11 @@ Workflow::Worflow (int8_t pinSD){
 }
 
 Workstep* Workflow::getNextStep(){
+  int linhaAtual;
+  int readLine = 0;
   Serial.begin(9600);
   while (!Serial) {
   }
-  
-  
   
   if ( ! SD. begin ( pinSD ) ) { //Como deixar a pinagem genérica?
   lcd. claro ();
@@ -31,12 +31,19 @@ Workstep* Workflow::getNextStep(){
  if(myFile == NULL){
      return NULL;
  }
- else
-     while( (ch=fgetc(arq))!= EOF ) //leitura do arquivo caracter por caracter
-     putchar(ch);
+ else{
+   if (readLine == linhaAtual) {
+      latitude = getValue (buffer, ' , ' , 0 ). toFloat ();
+      longitude = getValue (buffer, ' , ' , 1 ). toFloat ();
+      collectInterval = getValue (buffer, ' , ' , 5 ). toInt ();
+      collectCount = getValue (buffer, ', ', 5). toInt ();
+   }
+ readLine ++;
+ }
+//while( (ch=fgetc(arq))!= EOF ) //leitura do arquivo caracter por caracter
+//putchar(ch);
    
  fclose(arq);
-
 }
   
 
