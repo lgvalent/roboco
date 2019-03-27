@@ -5,15 +5,12 @@
 
 Workflow::Worflow (int8_t pinSD){
   this->pinSD = pinSD;
-  this->latitude = latitude;
-  this->longitude = longitude;
-  this->collectCount = collectCount;
-  this->collectInterval = collectInterval;
- 
 }
 
 Workstep* Workflow::getNextStep(){
-  int linhaAtual;
+  Workstep* workstep = new Workstep;
+  this->currentStopIndex = -1;
+  int linhaAtual = 0;
   int readLine = 0;
   Serial.begin(9600);
   while (!Serial) {
@@ -31,8 +28,16 @@ Workstep* Workflow::getNextStep(){
  if(myFile == NULL){
      return NULL;
  }
+  
+  while ( ){//terminar
+  }
+  
  else{
-   if (readLine == linhaAtual) {
+   if (this->currentStopIndex == linhaAtual) {
+      this->latitude = latitude;
+      this->longitude = longitude;
+      this->collectCount = collectCount;
+      this->collectInterval = collectInterval;
       latitude = getValue (buffer, ' , ' , 0 ). toFloat ();
       longitude = getValue (buffer, ' , ' , 1 ). toFloat ();
       collectInterval = getValue (buffer, ' , ' , 5 ). toInt ();
