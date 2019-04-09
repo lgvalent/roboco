@@ -29,8 +29,8 @@ Workstep* Workflow::getNextStep(){
  }
   
   while ( linhaAtual != currentStopIndex){
-    while ( (ch=fgetc(arq))!= EOF) //verificar se fgetc funciona ou é myfile.read
-          if(ch=='/n'){ //verificar se é r ou n que vem por ultimo.
+    while ( (ch=myFile.read(arq))!= EOF) 
+          if(ch=='/n'){ 
             linhaAtual++;
             break;
           }
