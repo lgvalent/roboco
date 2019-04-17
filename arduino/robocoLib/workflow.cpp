@@ -14,6 +14,16 @@ Workflow::Worflow (int8_t pinSD){
   this->currentStopIndex = EEPROM.read(adress);
 }
 
+Worflow::reset(){
+  this->currentStopIndex = 0;
+  EEPROM.write(adress, 0);
+}
+
+Worflow::backOneStep(){
+  this->currentStopIndex--;
+  EEPROM.write(adress, this->currentStopIndex);
+}
+
 Workstep* Workflow::getNextStep(){
   Workstep* workstep = new Workstep;
   int linhaAtual = 0;

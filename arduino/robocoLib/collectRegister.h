@@ -7,8 +7,9 @@ class CollectRegister{
   private:
   public:
     CollectRegister(int8_t pinSD);
-	void open(char* fileName);
+	  void open(char* fileName);
     void write(Location* location, Sensors* sensors);
-	void close();
+	  void close();
+    void delete();
 };
 #endif

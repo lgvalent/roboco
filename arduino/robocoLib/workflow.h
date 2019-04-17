@@ -15,6 +15,8 @@ class Workflow{
   private:
   public:
     Workflow(/* Coloque os dados que precisam para configurar os pinos onde estão o SDCARD, seriais, etcs*/);
-	Workstep* getNextStep();
+	  Workstep* getNextStep();
+	  void backOneStep();
+    void reset();
 };
 #endif
