@@ -1,6 +1,9 @@
 #ifndef WORKFLOW_H
 #define WORKFLOW_H
 #include <Arduino.h>
+
+byte currentStopIndex;
+
 struct Workstep{
   float latitude;
   float longitude;
