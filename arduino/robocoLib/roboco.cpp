@@ -2,7 +2,7 @@
 #include "roboco.h"
 
 
-Roboco:: Roboco(Sensors *sensors, Output *output, GPS *gps, CollectRegister *collectRegister, Worflow *workflow, Motor *motorLeft, Motor *motorRight){
+Roboco:: Roboco(Sensors *sensors, Output *output, GPS *gps, CollectRegister *collectRegister, Worflow *workflow, Motor *motorLeft, Motor *motorRight, Motor *motorFront, Motor *motorAfter){
         this->sensors = sensors;
         this->output = output;
         this->gps = gps;
@@ -11,10 +11,13 @@ Roboco:: Roboco(Sensors *sensors, Output *output, GPS *gps, CollectRegister *col
 
         this->motorLeft = motorLeft;
         this->motorRight = motorRight;
+        this->motorFront = motorFront;
+        this->motorAfter = motorAfter;
 };
 
 void Roboco::setup(){
         int const DELAY = 500;
+        int const testSpeed = 0;
         // Testing SENSORS
         
         // Testing LEDs
@@ -44,7 +47,20 @@ void Roboco::setup(){
 
 
         // Testing MOTORS
-
+        this->motorFront->moveFront(testSpeed);
+        delay(2000);
+        this-> stop();
+        this->motorAfter->moveAfter(testSpeed);
+        delay(2000);
+        this-> stop();
+        this->motorRight->moveRight(testSpeed);
+        delay(2000);
+        this-> stop();
+        this->motorLeft->moveLeft(testSpeed);
+        delay(2000);
+        this-> stop();  
+        this->motorFront->moveFront(testSpeed);
+        this-> stop(); 
 
 };
 
