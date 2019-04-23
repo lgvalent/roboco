@@ -14,7 +14,7 @@ class Roboco{
     GPS *gps;
     CollectRegister *collectRegister;
     Worflow *workflow;
-    Motor *motorLeft, *motorRight;
+    Motor *motorLeft, *motorRight, *motorFront, *motorAfter;
   
   public:
     Roboco(Sensors *sensors, Output *output, GPS *gps, CollectRegister *collectRegister, Worflow *workflow, Motor *left, Motor *right, Motor *front, Motor *after);
