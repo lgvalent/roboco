@@ -14,10 +14,10 @@ class Roboco{
     GPS *gps;
     CollectRegister *collectRegister;
     Worflow *workflow;
-    Motor *motorLeft, *motorRight, *motorFront, *motorAfter;
+    Motor *motorLeft, *motorRight;
   
   public:
-    Roboco(Sensors *sensors, Output *output, GPS *gps, CollectRegister *collectRegister, Worflow *workflow, Motor *left, Motor *right, Motor *front, Motor *after);
+    Roboco(Sensors *sensors, Output *output, GPS *gps, CollectRegister *collectRegister, Worflow *workflow, Motor *left, Motor *right);
 
     void setup();
 
