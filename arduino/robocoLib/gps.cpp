@@ -1,7 +1,6 @@
 #include<Arduino.h>
 
-
-#include "gps.h"
+#include <gps.h>
 
 #define GPSECHO  true
 GPS::GPS(int8_t pinRx, int8_t pinTx){

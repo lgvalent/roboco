@@ -1,36 +1,21 @@
-#include <Arduino.h>
-#include <stdio.h>
+#ifndef COLLECT_REGISTER_H
+#define COLLECT_REGISTER_H
+
 #include <SD.h>
-#include "collectRegister.h"
-#include "Sensor.h"
-#include <SPI.h>
 
-CollectRegister::CollectRegister(int8_t pinSD){
-	this->pinSD = pinSD;
-}
+#include <gps.h>
+#include <sensors.h>
 
-CollectRegister::open(){ 
-	this->myFile = SD.open("result.txt", FILE_WRITE);
-	myfile.println("Luminosity, Temperature, Altitude, AtmosphericPressure");
-}
+class CollectRegister{
+  private:
+    int8_t pinSD;
+	File file;
+  public:
+    CollectRegister(int8_t pinSD);
+	void open();
+    void write(Location* location, Sensors* sensors);
+	void close();
+};
+#endif
 
-CollectRegister::write(Location* location, Sensors* sensors){
-	this->location = location;
-	this->sensors = sensors;
-	if(myFile){
-		myFile.print(Sensors.getLuminosity());
-		myFile.print(',');
-		myFile.print(Sensors.getTemperature());
-		myFile.print(',');
-		myFile.print(Sensors.getAltitude());
-		myFile.print(',');
-		myFile.print(Sensors.getAtmosphericPressure());
-		myFile.print(',');
-		myFile.print(Sensors.getCO2ppm());
-		myFile.println(';');
-	}	
-}
 
-CollectRegister::close(){
-    myFile.close();
-}

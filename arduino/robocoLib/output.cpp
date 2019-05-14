@@ -1,5 +1,6 @@
 #include <Arduino.h>
-#include "output.h"
+
+#include <output.h>
 
 Output::Output(int8_t pinLed0, int8_t pinLed1, int8_t pinLed2){
     this->pinLed0=pinLed0;
@@ -19,7 +20,7 @@ void Output::setLed1 (boolean on){
         digitalWrite(pinLed1,on?HIGH:LOW);
 }
 
-void Output::setLed0(boolean on){
-        digitalWrite(pinLed0,on?HIGH:LOW);
+void Output::setLed2(boolean on){
+        digitalWrite(pinLed2,on?HIGH:LOW);
 }
 

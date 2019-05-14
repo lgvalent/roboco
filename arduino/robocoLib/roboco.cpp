@@ -1,8 +1,8 @@
 #include <Arduino.h>
-#include "roboco.h"
 
+#include <roboco.h>
 
-Roboco:: Roboco(Sensors *sensors, Output *output, GPS *gps, CollectRegister *collectRegister, Worflow *workflow, Motor *motorLeft, Motor *motorRight){
+Roboco:: Roboco(Sensors *sensors, Output *output, GPS *gps, CollectRegister *collectRegister, Workflow *workflow, Motor *motorLeft, Motor *motorRight){
         this->sensors = sensors;
         this->output = output;
         this->gps = gps;
@@ -15,7 +15,6 @@ Roboco:: Roboco(Sensors *sensors, Output *output, GPS *gps, CollectRegister *col
 
 void Roboco::setup(){
         int const DELAY = 500;
-        int const testSpeed = 0;
         // Testing SENSORS
         
         // Testing LEDs
@@ -34,7 +33,7 @@ void Roboco::setup(){
         // Testing collectRegister
 
         // Testing Workflow
-        if(this->workflow->getNextStep() == null){
+        if(this->workflow->getNextStep() == NULL){
                 this->output->setLed0(true);
                 this->output->setLed1(true);
                 this->output->setLed2(true);
@@ -45,18 +44,19 @@ void Roboco::setup(){
 
 
         // Testing MOTORS
-        this->motorRight->moveRight(testSpeed);
+        this->motorRight->move(CLOCKWISE, 255);
         delay(2000);
-        this-> stop();
-        this->motorLeft->moveLeft(testSpeed);
+        this->motorRight->stop();
+        this->motorLeft->move(CLOCKWISE, 255);
         delay(2000);
-        this-> stop();  
-     
-
+        this->motorRight->stop();  
 };
 
 void Roboco::reset(){
         this->workflow->reset();
 }
 
-void Roboco::run();  
+void Roboco::run(){
+        
+}
+  
