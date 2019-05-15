@@ -31,20 +31,20 @@ Workstep* Workflow::getNextStep(){
      }
   }
   
-  int linhaAtual = 0;
-  while (linhaAtual != this->currentStepIndex){
+  int currentLine = 0;
+  while (currentLine != this->currentStepIndex){
     if(myFile.readStringUntil('\n').length()>0){
-        linhaAtual++;
+        currentLine++;
     }else{
       return NULL;
     } 
   }
 
-  if(this->currentStepIndex != linhaAtual)
+  if(this->currentStepIndex != currentLine)
     return NULL;
 
   Workstep* workstep = new Workstep();
-  // Ler a linha atual inteira. Se usar getvalue (precisa implementar) guardar no buffer antes.
+ 
   workstep->latitude = myFile.readStringUntil(',').toFloat();
   workstep->longitude = myFile.readStringUntil(',').toFloat();
   workstep->collectCount = myFile.readStringUntil(',').toInt();
@@ -52,7 +52,7 @@ Workstep* Workflow::getNextStep(){
 
   myFile.close();
   
-  //fazer a leitura de cada caracter e guardar a junção dos caracteres em cada variavel, exemplo '100028749' = latitude.  
+ 
   this->currentStepIndex++;
   EEPROM.write(EEPROM_STEP_ADDRESS, this->currentStepIndex); //Escrevendo na EPROMM o currentStepIndex https://www.arduino.cc/en/Tutorial/EEPROMWrite
 
