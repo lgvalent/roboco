@@ -22,13 +22,13 @@ struct DataTimer
 
 class GPS{
     private:
-        void iniciando();
-        void readGps();
-    public:
+        void setup();
+        boolean readGps();
         Adafruit_GPS* gps;
+    public:
         GPS(int8_t pinRx, int8_t pinTx);
-        GPS(HardwareSerial * serial);    
+        GPS(HardwareSerial* serial);    
         Location* getCurrentLocation();
-        DataTimer* getCurrentDataTimer();
+        DataTimer* getCurrentDataTime();
 };
 #endif
