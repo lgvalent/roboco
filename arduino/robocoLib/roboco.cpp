@@ -2,7 +2,7 @@
 
 #include <roboco.h>
 
-Roboco:: Roboco(Sensors *sensors, Output *output, GPS *gps, CollectRegister *collectRegister, Workflow *workflow, Motor *motorLeft, Motor *motorRight){
+Roboco:: Roboco(Sensors* sensors, Output* output, GPS* gps, CollectRegister* collectRegister, Workflow* workflow, Motor* motorLeft, Motor* motorRight){
         this->sensors = sensors;
         this->output = output;
         this->gps = gps;
