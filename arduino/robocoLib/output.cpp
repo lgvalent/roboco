@@ -25,6 +25,7 @@ void Output::setLed2(boolean on){
 }
 
       // Testing LEDs
+        int const DELAY = 500;
         this->output->setLed0(true);
         delay(DELAY);
         this->output->setLed0(false);
