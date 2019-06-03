@@ -14,42 +14,19 @@ Roboco:: Roboco(Sensors* sensors, Output* output, GPS* gps, CollectRegister* col
 };
 
 void Roboco::setup(){
-        int const DELAY = 500;
+     
         // Testing SENSORS
         
         // Testing LEDs
-        this->output->setLed0(true);
-        delay(DELAY);
-        this->output->setLed0(false);
-        this->output->setLed1(true);
-        delay(DELAY);
-        this->output->setLed1(false);
-        this->output->setLed2(true);
-        delay(DELAY);
-        this->output->setLed2(false);
 
         // Testing GPS
 
         // Testing collectRegister
 
         // Testing Workflow
-        if(this->workflow->getNextStep() == NULL){
-                this->output->setLed0(true);
-                this->output->setLed1(true);
-                this->output->setLed2(true);
-                while(1);
-        }else{
-                this->workflow->backOneStep();
-        }
-
 
         // Testing MOTORS
-        this->motorRight->move(CLOCKWISE, 255);
-        delay(2000);
-        this->motorRight->stop();
-        this->motorLeft->move(CLOCKWISE, 255);
-        delay(2000);
-        this->motorRight->stop();  
+  
 };
 
 void Roboco::reset(){
@@ -57,6 +34,14 @@ void Roboco::reset(){
 }
 
 void Roboco::run(){
+        
+        while (this->workflow(int8_t pinSD)){ // Le o proximo destino do txt
+                
+                this->gps(int8_t pinRx, int8_t pinTx); // Vai para o destino
+                this->Sensors(int8_t pinLum, int8_t pinRxCo2, int8_t pinTxCo2); // Começa a coleta dos dados
+                this-> CollectRegister(int8_t pinSD); //Armazena os dados no cartão 
+ 
+        }
         
 }
   
