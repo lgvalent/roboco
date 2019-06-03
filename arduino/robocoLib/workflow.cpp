@@ -57,7 +57,16 @@ Workstep* Workflow::getNextStep(){
   EEPROM.write(EEPROM_STEP_ADDRESS, this->currentStepIndex); //Escrevendo na EPROMM o currentStepIndex https://www.arduino.cc/en/Tutorial/EEPROMWrite
 
   return workstep;
-
+  
+// Testing Workflow
+        if(this->workflow->getNextStep() == NULL){
+                this->output->setLed0(true);
+                this->output->setLed1(true);
+                this->output->setLed2(true);
+                while(1);
+        }else{
+                this->workflow->backOneStep();
+        }
 }
   
 
