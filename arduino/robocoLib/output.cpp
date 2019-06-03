@@ -24,3 +24,13 @@ void Output::setLed2(boolean on){
         digitalWrite(pinLed2, on?HIGH:LOW);
 }
 
+      // Testing LEDs
+        this->output->setLed0(true);
+        delay(DELAY);
+        this->output->setLed0(false);
+        this->output->setLed1(true);
+        delay(DELAY);
+        this->output->setLed1(false);
+        this->output->setLed2(true);
+        delay(DELAY);
+        this->output->setLed2(false);
