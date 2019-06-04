@@ -33,6 +33,7 @@ Location* GPS::getCurrentLocation(){
   location->latitude = this->gps->latitudeDegrees;
   location->altitude = this->gps->altitude;
   location->angle = this->gps->angle;
+  location->time = millis();
 
   return location;
 }
