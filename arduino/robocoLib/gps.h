@@ -8,6 +8,7 @@ struct Location{
     float longitude;
     float altitude;
     float angle;
+    unsigned long time;
 };
 
 struct DataTimer
