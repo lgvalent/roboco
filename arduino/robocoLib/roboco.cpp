@@ -35,12 +35,15 @@ void Roboco::reset(){
 
 void Roboco::run(){
         
-        while (this->workflow(int8_t pinSD)){ // Le o proximo destino do txt
-                
-                this->gps(int8_t pinRx, int8_t pinTx); // Vai para o destino
-                this->Sensors(int8_t pinLum, int8_t pinRxCo2, int8_t pinTxCo2); // Começa a coleta dos dados
-                this-> CollectRegister(int8_t pinSD); //Armazena os dados no cartão 
- 
+        // currentStep = this->whorkFlow->getNextStep
+        // previousLocation= currentLocation //para conparar a velocidade e onde ele está/estava, ter um time para ver o tempo de uso do arduino.
+        // currentLocaition = this->gps->getLocation 
+        // fazer o delta e uma funão para estipular a velocidade
+        // para alinhar o bico pega o currentstep (latitude e longitude) -alvo- fazer uma funcao que dependendo do anglo de distancia entre o alvo ate a localizacao atual, gira um pouco mais o motor da direita ou da esquerda
+        
+        //funcao mape do arduino para conseguir ter diferenca de giro (220 - 255) com a funcao mape o giro passa a ser de 0 a 255
+        
+       
         }
         
 }
