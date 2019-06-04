@@ -39,9 +39,18 @@ void Roboco::run(){
         currentLocaition = this->gps->getLocation // 2º Deslocar-se até o destino
    
         // previousLocation= currentLocation //para conparar a velocidade e onde ele está/estava, ter um time para ver o tempo de uso do arduino.
-
-    
+       
         // fazer o delta e uma funão para estipular a velocidade
+        distanceLatitude = currentStep->latitude - currentLocation->latitude;// Verificar a distância e definir a velocidade (?) de deslocamento
+        didstanceLongitude = currentStep->longitude - currentLocation->longitude; //após verificar a distancia deve definir a velocidade, porem n temos um controle de velocidade na classe dos motores
+       
+        if (currentLocation->angle < 10  &&  > 350 ) { // Alinhar o bico
+                motorLeft = motor->move; // move o motor da esqueda
+                motorRight = motor->move; // move o motor da direita
+                
+        }
+        
+     
         // para alinhar o bico pega o currentstep (latitude e longitude) -alvo- fazer uma funcao que dependendo do anglo de distancia entre o alvo ate a localizacao atual, gira um pouco mais o motor da direita ou da esquerda
         
         //funcao mape do arduino para conseguir ter diferenca de giro (220 - 255) com a funcao mape o giro passa a ser de 0 a 255
