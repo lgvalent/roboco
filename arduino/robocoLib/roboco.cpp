@@ -35,9 +35,12 @@ void Roboco::reset(){
 
 void Roboco::run(){
         
-        // currentStep = this->whorkFlow->getNextStep
+        currentStep = this->whorkFlow->getNextStep // 1º Ler o próximo destino no arquivo
+        currentLocaition = this->gps->getLocation // 2º Deslocar-se até o destino
+   
         // previousLocation= currentLocation //para conparar a velocidade e onde ele está/estava, ter um time para ver o tempo de uso do arduino.
-        // currentLocaition = this->gps->getLocation 
+
+    
         // fazer o delta e uma funão para estipular a velocidade
         // para alinhar o bico pega o currentstep (latitude e longitude) -alvo- fazer uma funcao que dependendo do anglo de distancia entre o alvo ate a localizacao atual, gira um pouco mais o motor da direita ou da esquerda
         
