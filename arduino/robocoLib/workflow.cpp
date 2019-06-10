@@ -1,75 +1,72 @@
 #include <Arduino.h>
 #include <stdio.h>
-#include "workflow.h"
 #include <SD.h>
 #include <EEPROM.h>
-#define adress 0
 
-//passar todas as variaveis pro ingles.
+#include <workflow.h>
 
-Workflow::Worflow (int8_t pinSD){
+#define EEPROM_STEP_ADDRESS 0
+
+Workflow::Workflow(int8_t pinSD){
   this->pinSD = pinSD;
-  byte value;
-  byte currentStopIndex;
-  this->currentStopIndex = EEPROM.read(adress);
+  this->currentStepIndex = EEPROM.read(EEPROM_STEP_ADDRESS);
 }
 
-Worflow::reset(){
-  this->currentStopIndex = 0;
-  EEPROM.write(adress, 0);
+void Workflow::reset(){
+  this->currentStepIndex = 0;
+  EEPROM.write(EEPROM_STEP_ADDRESS, 0);
 }
 
-Worflow::backOneStep(){
-  this->currentStopIndex--;
-  EEPROM.write(adress, this->currentStopIndex);
+void Workflow::backOneStep(){
+  this->currentStepIndex--;
+  EEPROM.write(EEPROM_STEP_ADDRESS, this->currentStepIndex);
 }
 
 Workstep* Workflow::getNextStep(){
-  Workstep* workstep = new Workstep;
-  int linhaAtual = 0;
-  int readLine = 0;
-  
+  File myFile;
   if ( ! SD. begin ( pinSD ) ) { 
-    File myFile;
-    myFile = SD.open("roboco.txt", "r");
-    if(myFile == NULL){
+    myFile = SD.open("roboco.txt", FILE_READ);
+    if(myFile){
       return NULL;
      }
   }
   
-  while ( linhaAtual != currentStopIndex){
-    while ( (ch=myFile.read(arq))!= EOF) 
-          if(ch=='/n'){ 
-            linhaAtual++;
-            break;
-          }
+  int currentLine = 0;
+  while (currentLine != this->currentStepIndex){
+    if(myFile.readStringUntil('\n').length()>0){
+        currentLine++;
+    }else{
+      return NULL;
+    } 
   }
-  //ler a linha atual inteira.   se usar getvalue (precisa implementar) guardar no buffer antes.
-    
-      (this->currentStopIndex == linhaAtual) {
-      this->latitude = getValue (buffer, ',', 0 ). toFloat (); //arrumar os outros igual a esse.
-      this->longitude = getValue (buffer, ',', 1 ). toFloat ();
-      this->collectInterval = getValue (buffer, ',', 5 ). toInt ();
-      this->collectCount = getValue (buffer, ',', 5). toInt ();
-      //fazer a leitura de cada caracter e guardar a junção dos caracteres em cada variavel, exemplo '100028749' = latitude.
-      this->longitude = longitude;
-      this->collectCount = collectCount;
-      this->collectInterval = collectInterval;
-        
-   }
-   this->currentStopIndex ++;
-   EEPROM.write(address, currentStopIndex); //Escrevendo na EPROMM o currentStopIndex23 https://www.arduino.cc/en/Tutorial/EEPROMWrite
-   address = address + 1;
-   if(address == EEPROM.length()){
-      address = 0;
-   }
-   ++ address & = EEPROM.length() -1; //impedimento da memória EEPROM estourar.
-}
 
-fclose(arq);
+  if(this->currentStepIndex != currentLine)
+    return NULL;
+
+  Workstep* workstep = new Workstep();
  
+  workstep->latitude = myFile.readStringUntil(',').toFloat();
+  workstep->longitude = myFile.readStringUntil(',').toFloat();
+  workstep->collectCount = myFile.readStringUntil(',').toInt();
+  workstep->collectInterval = myFile.readStringUntil(',').toInt();
 
- fclose(arq);
+  myFile.close();
+  
+ 
+  this->currentStepIndex++;
+  EEPROM.write(EEPROM_STEP_ADDRESS, this->currentStepIndex); //Escrevendo na EPROMM o currentStepIndex https://www.arduino.cc/en/Tutorial/EEPROMWrite
+
+  return workstep;
+  
+// Testing Workflow
+        if(this->workflow->getNextStep() == NULL){
+                this->output->setLed0(true);
+                this->output->setLed1(true);
+                this->output->setLed2(true);
+                while(1);
+        }else{
+                this->workflow->backOneStep();
+        }
 }
   
 

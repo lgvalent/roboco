@@ -1,5 +1,6 @@
 #include <Arduino.h>
-#include "motor.h"
+
+#include <motor.h>
 
 Motor::Motor(int8_t pin1, int8_t pin2, int8_t pinPwm){
   this->pin1=pin1;
@@ -14,7 +15,8 @@ Motor::Motor(int8_t pin1, int8_t pin2, int8_t pinPwm){
 void Motor::stop(){
   analogWrite(pinPwm, 0);
 }
-void Motor::move(MotorDirection direction,unsigned char speed){
+
+void Motor::move(MotorDirection direction, unsigned char speed){
   
   if(direction == CLOCKWISE){
      digitalWrite(pin1, HIGH);
@@ -23,5 +25,14 @@ void Motor::move(MotorDirection direction,unsigned char speed){
      digitalWrite(pin1, LOW);
      digitalWrite(pin2, HIGH);
   }
+  
   analogWrite(pinPwm, speed);
 }
+
+ // Testing MOTORS
+        this->motorRight->move(CLOCKWISE, 255);
+        delay(2000);
+        this->motorRight->stop();
+        this->motorLeft->move(CLOCKWISE, 255);
+        delay(2000);
+        this->motorRight->stop();  

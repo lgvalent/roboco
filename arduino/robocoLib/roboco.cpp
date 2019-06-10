@@ -1,8 +1,8 @@
 #include <Arduino.h>
-#include "roboco.h"
 
+#include <roboco.h>
 
-Roboco:: Roboco(Sensors *sensors, Output *output, GPS *gps, CollectRegister *collectRegister, Worflow *workflow, Motor *motorLeft, Motor *motorRight){
+Roboco:: Roboco(Sensors* sensors, Output* output, GPS* gps, CollectRegister* collectRegister, Workflow* workflow, Motor* motorLeft, Motor* motorRight){
         this->sensors = sensors;
         this->output = output;
         this->gps = gps;
@@ -14,42 +14,49 @@ Roboco:: Roboco(Sensors *sensors, Output *output, GPS *gps, CollectRegister *col
 };
 
 void Roboco::setup(){
-        int const DELAY = 500;
+     
         // Testing SENSORS
         
         // Testing LEDs
-        this->output->setLed0(true);
-        delay(DELAY);
-        this->output->setLed0(false);
-        this->output->setLed1(true);
-        delay(DELAY);
-        this->output->setLed1(false);
-        this->output->setLed2(true);
-        delay(DELAY);
-        this->output->setLed2(false);
 
         // Testing GPS
 
         // Testing collectRegister
 
         // Testing Workflow
-        if(this->workflow->getNextStep() == null){
-                this->output->setLed0(true);
-                this->output->setLed1(true);
-                this->output->setLed2(true);
-                while(1);
-        }else{
-                this->workflow->backOneStep();
-        }
-
 
         // Testing MOTORS
-
-
+  
 };
 
 void Roboco::reset(){
         this->workflow->reset();
 }
 
-void Roboco::run();  
+void Roboco::run(){
+        
+        currentStep = this->whorkFlow->getNextStep // 1º Ler o próximo destino no arquivo
+        currentLocaition = this->gps->getLocation // 2º Deslocar-se até o destino
+   
+        // previousLocation= currentLocation //para conparar a velocidade e onde ele está/estava, ter um time para ver o tempo de uso do arduino.
+       
+        // fazer o delta e uma funão para estipular a velocidade
+        distanceLatitude = currentStep->latitude - currentLocation->latitude;// Verificar a distância e definir a velocidade (?) de deslocamento
+        didstanceLongitude = currentStep->longitude - currentLocation->longitude; //após verificar a distancia deve definir a velocidade, porem n temos um controle de velocidade na classe dos motores
+       
+        if (currentLocation->angle < 10  &&  > 350 ) { // Alinhar o bico
+                motorLeft = motor->move; // move o motor da esqueda
+                motorRight = motor->move; // move o motor da direita
+                
+        }
+        
+     
+        // para alinhar o bico pega o currentstep (latitude e longitude) -alvo- fazer uma funcao que dependendo do anglo de distancia entre o alvo ate a localizacao atual, gira um pouco mais o motor da direita ou da esquerda
+        
+        //funcao mape do arduino para conseguir ter diferenca de giro (220 - 255) com a funcao mape o giro passa a ser de 0 a 255
+        
+       
+        }
+        
+}
+  

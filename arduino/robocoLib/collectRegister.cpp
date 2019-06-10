@@ -1,28 +1,31 @@
-#include <Arduino.h>
-#include "collectRegister.h"
 
-Motor::Motor(int8_t pin1, int8_t pin2, int8_t pinPwm){
-  this->pin1=pin1;
-  this->pin2=pin2;
-  this->pinPwm=pinPwm;
-  pinMode(pin1, OUTPUT);
-  pinMode(pin2, OUTPUT);
-  pinMode(pinPwm, OUTPUT);
-  this->stop();
+#include <collectRegister.h>
+#include <gps.h>
+
+CollectRegister::CollectRegister(int8_t pinSD){
+	this->pinSD = pinSD;
 }
 
-void Motor::stop(){
-  analogWrite(pinPwm, 0);
-}
-void Motor::move(MotorDirection direction,unsigned char speed){
-  
-  if(direction == CLOCKWISE){
-     digitalWrite(pin1, HIGH);
-     digitalWrite(pin2, LOW);   
-  }else{
-     digitalWrite(pin1, LOW);
-     digitalWrite(pin2, HIGH);
-  }
-  analogWrite(pinPwm, speed);
+void CollectRegister::open(){ 
+	this->file = SD.open("result.txt", FILE_WRITE);
+	file.println("Luminosity, Temperature, Altitude, AtmosphericPressure");
 }
 
+void CollectRegister::write(Location* location, Sensors* sensors){
+	if(file){
+		file.print(sensors->getLuminosity());
+		file.print(',');
+		file.print(sensors->getTemperatureC());
+		file.print(',');
+		file.print(sensors->getAltitude());
+		file.print(',');
+		file.print(sensors->getAtmosphericPressure());
+		file.print(',');
+		file.print(sensors->getCO2ppm());
+		file.println(';');
+	}	
+}
+
+void CollectRegister::close(){
+    file.close();
+}

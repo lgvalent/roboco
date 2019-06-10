@@ -1,23 +1,24 @@
 #ifndef ROBOCO_H
 #define ROBOCO_H
-#include "sensors.h"
-#include "output.h"
-#include "collectRegister.h"
-#include "workflow.h"
-#include "gps.h"
-#include "motor.h"
+
+#include <collectRegister.h>
+#include <gps.h>
+#include <motor.h>
+#include <output.h>
+#include <sensors.h>
+#include <workflow.h>
 
 class Roboco{
   private:
-    Sensors *sensors;
-    Output *output;
-    GPS *gps;
-    CollectRegister *collectRegister;
-    Worflow *workflow;
-    Motor *motorLeft, *motorRight;
+    Sensors* sensors;
+    Output* output;
+    GPS* gps;
+    CollectRegister* collectRegister;
+    Workflow* workflow;
+    Motor* motorLeft,* motorRight;
   
   public:
-    Roboco(Sensors *sensors, Output *output, GPS *gps, CollectRegister *collectRegister, Worflow *workflow, Motor *left, Motor *right);
+    Roboco(Sensors* sensors, Output* output, GPS* gps, CollectRegister* collectRegister, Workflow* workflow, Motor* left, Motor* right);
 
     void setup();
 

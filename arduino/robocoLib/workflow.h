@@ -2,19 +2,21 @@
 #define WORKFLOW_H
 #include <Arduino.h>
 
-byte currentStopIndex;
-
 struct Workstep{
   float latitude;
   float longitude;
   int collectCount;
   int collectInterval; // in seconds
+  byte currentStopIndex;
 };
 
 class Workflow{
   private:
+    int8_t pinSD;
+    byte currentStepIndex;
+
   public:
-    Workflow(/* Coloque os dados que precisam para configurar os pinos onde estão o SDCARD, seriais, etcs*/);
+    Workflow(int8_t pinSD);
 	  Workstep* getNextStep();
 	  void backOneStep();
     void reset();
