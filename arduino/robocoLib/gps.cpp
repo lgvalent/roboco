@@ -63,3 +63,29 @@ DataTimer* GPS::getCurrentDataTimer(){
 
   return dataTimer;
 }
+void GPS::testeGps(){
+  Location* loc = getCurrentLocation();
+  DataTimer* dat = getCurrentDataTimer();
+    if (millis() - timer > 2000) {
+    timer = millis(); // reset the timer  
+    Serial.print("\nTime: ");
+    Serial.print((dat->hour-3), DEC); Serial.print(':');
+    Serial.print(dat->minute, DEC); Serial.print(':');
+    Serial.print(dat->seconds, DEC); Serial.print('.');
+    Serial.print("Date: ");
+    Serial.print(dat->day, DEC); Serial.print('/');
+    Serial.print(dat->month, DEC); Serial.print("/20");
+    Serial.println(dat->year, DEC);
+    Serial.print("Fix: "); Serial.print((int)gps->fix);
+    Serial.print(" quality: "); Serial.println((int)gps->fixquality);
+    Serial.print("Location (in degrees, works with Google Maps): ");
+    Serial.println(loc->latitude, 4);
+    Serial.print("Location (in degrees, works with Google Maps): ");
+    Serial.println(loc->longitude,4);      
+    Serial.print("Speed (knots): "); Serial.println(gps->speed);
+    Serial.print("Angle: "); Serial.println(loc->angle);
+    Serial.print("Altitude: "); Serial.println(loc->altitude);
+    Serial.print("Satellites: "); Serial.println((int)gps->satellites);
+   free(dat);
+   free(loc);
+}

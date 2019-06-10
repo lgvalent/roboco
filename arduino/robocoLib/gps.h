@@ -30,5 +30,6 @@ class GPS{
         GPS(HardwareSerial * serial);    
         Location* getCurrentLocation();
         DataTimer* getCurrentDataTimer();
+        void testeGps();
 };
 #endif
