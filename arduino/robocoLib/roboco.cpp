@@ -42,11 +42,20 @@ void Roboco::run(){
        
         // fazer o delta e uma funão para estipular a velocidade
         distanceLatitude = currentStep->latitude - currentLocation->latitude;// Verificar a distância e definir a velocidade (?) de deslocamento
-        didstanceLongitude = currentStep->longitude - currentLocation->longitude; //após verificar a distancia deve definir a velocidade, porem n temos um controle de velocidade na classe dos motores
+        distanceLongitude = currentStep->longitude - currentLocation->longitude; //após verificar a distancia deve definir a velocidade, porem n temos um controle de velocidade na classe dos motores
        
         if (currentLocation->angle < 10  &&  > 350 ) { // Alinhar o bico
                 motorLeft = motor->move; // move o motor da esqueda
                 motorRight = motor->move; // move o motor da direita
+                
+        }
+        
+        // Outra forma de fazer para alinhar o bico
+        if (currentLocation->angle !=0 &&  distanceLongitude !=0 && distanceLatitude !=0) {
+                if (currentLocation->angle < 180)
+                          motorLeft = motor->move;
+                else
+                          motorRight = motor->move;
                 
         }
 
