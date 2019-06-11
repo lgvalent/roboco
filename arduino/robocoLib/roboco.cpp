@@ -31,7 +31,7 @@ void Roboco::setup(){
 
 void Roboco::reset(){
         this->workflow->reset();
-}
+};
 
 void Roboco::run(){
         
@@ -49,14 +49,11 @@ void Roboco::run(){
                 motorRight = motor->move; // move o motor da direita
                 
         }
+
+        // OBS: para alinhar o bico pega o currentstep (latitude e longitude) -alvo- fazer uma funcao que dependendo do anglo de distancia entre o alvo ate a localizacao atual, gira um pouco mais o motor da direita ou da esquerda
+        //funcao map do arduino para conseguir ter diferenca de giro (220 - 255) com a funcao map o giro passa a ser de 0 a 255
+ 
+ 
         
-     
-        // para alinhar o bico pega o currentstep (latitude e longitude) -alvo- fazer uma funcao que dependendo do anglo de distancia entre o alvo ate a localizacao atual, gira um pouco mais o motor da direita ou da esquerda
-        
-        //funcao mape do arduino para conseguir ter diferenca de giro (220 - 255) com a funcao mape o giro passa a ser de 0 a 255
-        
-       
-        }
-        
-}
+};
   
