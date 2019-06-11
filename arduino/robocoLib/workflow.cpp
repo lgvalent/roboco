@@ -58,7 +58,7 @@ Workstep* Workflow::getNextStep(){
 
   return workstep;
   
-// Testing Workflow
+/*Testing Workflow
         if(this->workflow->getNextStep() == NULL){
                 this->output->setLed0(true);
                 this->output->setLed1(true);
@@ -67,6 +67,7 @@ Workstep* Workflow::getNextStep(){
         }else{
                 this->workflow->backOneStep();
         }
+*/
 }
   
 

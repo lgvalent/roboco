@@ -1,5 +1,4 @@
 #include <Arduino.h>
-
 #include <gps.h>
 
 GPS::GPS(int8_t pinRx, int8_t pinTx){
@@ -16,8 +15,9 @@ void GPS::setup(){
   this->gps->sendCommand(PMTK_SET_NMEA_UPDATE_1HZ);
   this->gps->sendCommand(PGCMD_ANTENNA);
 }
-boolean GPS::readGps(){
-  while(!this->gps->newNMEAreceived()){
+boolean GPS::readGps(){  
+  if(!this->gps->newNMEAreceived()){
+    Serial.print("oie");
     delay(10); //Lucio 20190516: Por quê é necessário este delay? Por causa do SoftwareSerial? Fazer um teste sem este delay, ou com delay(1)
     this->gps->read();
   }
@@ -38,7 +38,8 @@ Location* GPS::getCurrentLocation(){
   return location;
 }
 
-DataTimer* GPS::getCurrentDataTime(){
+DataTimer* GPS::getCurrentDataTimer(){
+  Serial.print("ACORDAAA");
   if(!this->readGps())
     return NULL;
 
@@ -55,7 +56,8 @@ DataTimer* GPS::getCurrentDataTime(){
 void GPS::testeGps(){
   Location* loc = getCurrentLocation();
   DataTimer* dat = getCurrentDataTimer();
-    if (millis() - timer > 2000) {
+  unsigned long timer = millis();
+    if (millis() - timer > 100) {
     timer = millis(); // reset the timer  
     Serial.print("\nTime: ");
     Serial.print((dat->hour-3), DEC); Serial.print(':');
@@ -77,4 +79,5 @@ void GPS::testeGps(){
     Serial.print("Satellites: "); Serial.println((int)gps->satellites);
    free(dat);
    free(loc);
+  }
 }

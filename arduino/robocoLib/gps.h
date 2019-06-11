@@ -2,6 +2,7 @@
 #define GPS_CPP
 #include <Arduino.h>
 #include <Adafruit_GPS.h>
+#include<SoftwareSerial.h>
 
 struct Location{
     float latitude;

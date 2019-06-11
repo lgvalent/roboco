@@ -20,7 +20,7 @@ class Roboco{
   public:
     Roboco(Sensors* sensors, Output* output, GPS* gps, CollectRegister* collectRegister, Workflow* workflow, Motor* left, Motor* right);
 
-    void setup();
+    void setup(unsigned char testing);
 
     void reset();
 

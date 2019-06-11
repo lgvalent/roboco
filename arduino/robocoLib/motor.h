@@ -15,6 +15,6 @@ class Motor{
   public:
     Motor(int8_t pin1, int8_t pin2, int8_t pinPwm);
     void stop();
-    void move(MotorDirection direction, unsigned char speed);  
+    void move(MotorDirection direction, unsigned char speed);
 };
 #endif

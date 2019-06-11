@@ -24,7 +24,7 @@ void Output::setLed2(boolean on){
         digitalWrite(pinLed2, on?HIGH:LOW);
 }
 
-      // Testing LEDs
+      /* Testing LEDs
         int const DELAY = 500;
         this->output->setLed0(true);
         delay(DELAY);
@@ -35,3 +35,4 @@ void Output::setLed2(boolean on){
         this->output->setLed2(true);
         delay(DELAY);
         this->output->setLed2(false);
+*/

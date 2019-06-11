@@ -28,11 +28,3 @@ void Motor::move(MotorDirection direction, unsigned char speed){
   
   analogWrite(pinPwm, speed);
 }
-
- // Testing MOTORS
-        this->motorRight->move(CLOCKWISE, 255);
-        delay(2000);
-        this->motorRight->stop();
-        this->motorLeft->move(CLOCKWISE, 255);
-        delay(2000);
-        this->motorRight->stop();  
