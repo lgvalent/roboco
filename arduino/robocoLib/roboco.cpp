@@ -92,7 +92,7 @@ void Roboco::setup(unsigned char testing){
 /*
 void Roboco::reset(){
         this->workflow->reset();
-}
+};
 
 void Roboco::run(){
         
@@ -103,7 +103,7 @@ void Roboco::run(){
        
         // fazer o delta e uma funão para estipular a velocidade
         distanceLatitude = currentStep->latitude - currentLocation->latitude;// Verificar a distância e definir a velocidade (?) de deslocamento
-        didstanceLongitude = currentStep->longitude - currentLocation->longitude; //após verificar a distancia deve definir a velocidade, porem n temos um controle de velocidade na classe dos motores
+        distanceLongitude = currentStep->longitude - currentLocation->longitude; //após verificar a distancia deve definir a velocidade, porem n temos um controle de velocidade na classe dos motores
        
         if (currentLocation->angle < 10  &&  > 350 ) { // Alinhar o bico
                 motorLeft = motor->move; // move o motor da esqueda
@@ -111,13 +111,23 @@ void Roboco::run(){
                 
         }
         
-     
-        // para alinhar o bico pega o currentstep (latitude e longitude) -alvo- fazer uma funcao que dependendo do anglo de distancia entre o alvo ate a localizacao atual, gira um pouco mais o motor da direita ou da esquerda
-        
-        //funcao mape do arduino para conseguir ter diferenca de giro (220 - 255) com a funcao mape o giro passa a ser de 0 a 255
-        
-       
+        // Outra forma de fazer para alinhar o bico
+        if (currentLocation->angle !=0 &&  distanceLongitude !=0 && distanceLatitude !=0) {
+                if (currentLocation->angle < 180)
+                          motorLeft = motor->move;
+                else
+                          motorRight = motor->move;
+                
         }
+
+        // OBS: para alinhar o bico pega o currentstep (latitude e longitude) -alvo- fazer uma funcao que dependendo do anglo de distancia entre o alvo ate a localizacao atual, gira um pouco mais o motor da direita ou da esquerda
+        //funcao map do arduino para conseguir ter diferenca de giro (220 - 255) com a funcao map o giro passa a ser de 0 a 255
+ 
+ 
         
+<<<<<<< HEAD
 }*/
+=======
+};
+>>>>>>> ef8129dbe9a905cd48f8ed1f6e445127d1d24035
   
