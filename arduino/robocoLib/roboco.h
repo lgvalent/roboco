@@ -7,6 +7,7 @@
 #include <output.h>
 #include <sensors.h>
 #include <workflow.h>
+#include <testing.h>
 
 class Roboco{
   private:
@@ -16,11 +17,12 @@ class Roboco{
     CollectRegister* collectRegister;
     Workflow* workflow;
     Motor* motorLeft,* motorRight;
+    Testing* testing;
   
   public:
     Roboco(Sensors* sensors, Output* output, GPS* gps, CollectRegister* collectRegister, Workflow* workflow, Motor* left, Motor* right);
 
-    void setup(unsigned char testing);
+    void setup();
 
     void reset();
 

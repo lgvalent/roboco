@@ -1,20 +1,34 @@
 #include <Arduino.h>
-#include <Wire.h>
-#include <SPI.h>
-
-#include <SoftwareSerial.h>
 
 #include <sensors.h>
 
 
-Sensors::Sensors(int8_t pinLum, int8_t pinRxCo2, int8_t pinTxCo2) {
+Sensors::Sensors(int8_t pinLum, int8_t pinRxCo2, int8_t pinTxCo2, int8_t pwmCo2) {
+  this->pin_A15 = pinLum;
+  this->pwmC02 = pwmCo2;
+  this->bmp = new Adafruit_BMP280();
+  pinMode(pinLum, INPUT);
+  this->bmp->begin(0x76);
+  //this->serialCO2 = new Mhz(pinRxCo2, pinTxCo2, pwmCo2); // RX, TX
+}
+Sensors::Sensors(int8_t pinLum, HardwareSerial* serial, int8_t pwmCo2) {
   this->pin_A15 = pinLum;
   this->bmp = new Adafruit_BMP280();
-  pinMode(pinLum, OUTPUT);
+  pinMode(pinLum, INPUT);
+  this->bmp->begin(0x76);
 
-  this->serialCO2 = new SoftwareSerial(pinRxCo2, pinTxCo2); // RX, TX
+  //this->serialCO2->serial; // RX, TX
 }
-
+bool Sensors::bmpValid(){
+  Serial.println("boaa");
+    if(!this->bmp->begin(0x76)) {
+      Serial.println(F("Could not find a valid BMP280 sensor, check wiring!"));
+      return false;  
+    }else{
+      Serial.println("true");
+      return true;
+    }
+}
 float Sensors::getLuminosity(){
   int valLum = analogRead(this->pin_A15);
   return(valLum);
@@ -31,7 +45,7 @@ float Sensors::getAltitude(){
 float Sensors::getAtmosphericPressure(){
  return(bmp->readPressure());
 }
-
+/* 
 float Sensors::getCO2ppm(){
   byte cmd[9] = {0xFF,0x01,0x86,0x00,0x00,0x00,0x00,0x00,0x79};
   char response[9];
@@ -43,4 +57,4 @@ float Sensors::getCO2ppm(){
   int responseLow = (int) response[3];
   ppm = (256*responseHigh)+responseLow;
   return (ppm);
-}
+}*/

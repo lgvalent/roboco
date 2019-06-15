@@ -12,82 +12,8 @@ Roboco:: Roboco(Sensors* sensors, Output* output, GPS* gps, CollectRegister* col
         this->motorRight = motorRight;
 }
 
-void Roboco::setup(unsigned char testing){
-
-
-        if(testing == 1){ //TESTING MOTORES
-                unsigned char comando = 0;
-                unsigned char pwm = 0;
-                 Serial.println("TESTING MOTOR");
-              while(comando != 1){
-                  if(Serial.available()){
-                  comando = Serial.read();
-                  Serial.print("comando : "); Serial.println(comando-48);
-                  switch (comando)
-                                  {
-                                  case '2':
-                                  this->motorRight->move(ANTICLOCKWISE, pwm);
-                                  this->motorLeft->move(ANTICLOCKWISE, pwm);
-                                  delay(1000);
-                                  this->motorRight->stop();
-                                  this->motorLeft->stop();
-                                  break;
-                                  
-                                  case '4':
-                                  this->motorRight->move(CLOCKWISE, pwm);
-                                  this->motorLeft->move(ANTICLOCKWISE, pwm);
-                                  delay(1000);
-                                  this->motorRight->stop();
-                                  this->motorLeft->stop();
-                                  break;
-                                  case '6':
-                                  this->motorRight->move(ANTICLOCKWISE, pwm);
-                                  this->motorLeft->move(CLOCKWISE, pwm);
-                                  delay(1000);
-                                  this->motorRight->stop();
-                                  this->motorLeft->stop();
-                                  break;
-                                  case '8':
-                                  this->motorRight->move(CLOCKWISE, pwm);
-                                  this->motorLeft->move(CLOCKWISE, pwm);
-                                  delay(1000);
-                                  this->motorRight->stop();
-                                  this->motorLeft->stop();
-                                  break;
-                                  case '1' :
-                                  comando = 1;
-                                  break;
-                                  case '7' :
-                                  if(pwm>50) pwm = pwm-51;
-                                  Serial.print("PWM : "); Serial.println(pwm);
-                                  break;
-                                  case '9' :
-                                  if(pwm<205) pwm = pwm+51;
-                                  Serial.print("PWM : "); Serial.println(pwm);
-                                  break;
-                                  }
-                  }
-              }
-                
-        }
-        if(testing == 2){ //TESTING GPS
-                while(1){
-                        this->gps->testeGps();
-                }
-        }
-     
-        // Testing SENSORS
-        
-        // Testing LEDs
-
-        // Testing GPS
-
-        // Testing collectRegister
-
-        // Testing Workflow
-
-        // Testing MOTORS
-  
+void Roboco::setup(){
+        this->output->lcdPrint("ROBOCO",0,0);
 }
 /*
 void Roboco::reset(){
@@ -125,9 +51,4 @@ void Roboco::run(){
  
  
         
-<<<<<<< HEAD
 }*/
-=======
-};
->>>>>>> ef8129dbe9a905cd48f8ed1f6e445127d1d24035
-  
