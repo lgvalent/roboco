@@ -7,28 +7,84 @@
 #include <SoftwareSerial.h>
 
 
-class Sensors : public Mhz{
-  private:
-    int8_t pin_A15; // SENSOR LDR
-    Adafruit_BMP280* bmp;
-    Mhz* sensorCo2;
+class Sensor{
+  protected:
+    static enum SensorType{PRESSURE=0, ALTITUDE, TEMPERATURE, LUMINOSITY, CO2} SENSOR_TYPE;
+    static String SENSOR_TYPE_NAMES[];
   public:
-    Sensors(int8_t pinLum, int8_t pinRxCo2, int8_t pinTxCo2, int8_t pwmCo2);
-    Sensors(int8_t pinLum, HardwareSerial* serial, int8_t pwmCo2);
-    float getTemperatureC();
-    float getCO2ppm();
-    float getAltitude();
-    float getAtmosphericPressure();
-    float getLuminosity();
-    bool bmpValid();
+    virtual SensorType getType() = 0;
+    
+    String getTypeName(){return Sensor::SENSOR_TYPE_NAMES[this->getType()];};
+    
+    virtual String read() = 0;
 };
-class Mhz{
-  private:
-  int8_t pwm;
-  Mhz* serial;
-  public:
-  Mhz(int8_t rx, int8_t tx, int8_t pwm);
-  Mhz(HardwareSerial* serial);
 
+class Mhz19: public Sensor {
+  int8_t pwmPin;
+  Stream* serial;
+  public:
+  Mhz19(Stream *serial){this->serial = serial;};
+  Mhz19(int8_t pwmPin){this->pwmPin = pwmPin;};
+  String read(){
+    // Código de leitura via PWM ou Serial???
+  };
+  SensorType getType(){return CO2;};
+};
+
+class Ldr: public Sensor{
+  int8_t pin;
+  public:
+    Ldr(int8_t pin){
+      pinMode(pin, INPUT);
+      this->pin = pin;
+    };
+    SensorType getType(){return LUMINOSITY;};
+    
+    String read(){
+      return String(analogRead(this->pin));
+    };
+};
+
+class TemperatureSensor: public Sensor{
+  Adafruit_BMP280* sensor;
+  public:
+    TemperatureSensor(Adafruit_BMP280* sensor){this->sensor = sensor;};
+    SensorType getType(){return TEMPERATURE;};
+
+    String read(){ 
+      return String(this->sensor->readTemperature());
+    };
+};
+
+class PressureSensor: public Sensor{
+    Adafruit_BMP280* sensor;
+  public:
+    PressureSensor(Adafruit_BMP280* sensor){this->sensor = sensor;};
+    SensorType getType(){return PRESSURE;};
+    
+    String read(){ 
+      return String(this->sensor->readPressure());
+    };
+};
+
+class AltitudeSensor: public Sensor{
+    Adafruit_BMP280* sensor;
+  public:
+    AltitudeSensor(Adafruit_BMP280* sensor){this->sensor = sensor;};
+    SensorType getType(){return ALTITUDE;};
+    
+    String read(){ 
+      return String(this->sensor->readAltitude());
+    };
+};
+
+class Sensors{
+  Sensor** sensors;
+  int8_t size;
+  public:
+    Sensors(int8_t maxNumberOfSensors);
+    int8_t getSize();
+    void addSensor(int index, Sensor* sensor);
+    Sensor* getSensor(int index);
 };
 #endif

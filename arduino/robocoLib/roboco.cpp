@@ -15,9 +15,14 @@ Roboco:: Roboco(Sensors* sensors, Output* output, GPS* gps, CollectRegister* col
 void Roboco::setup(){
         this->output->lcdPrint("ROBOCO",0,0);
 }
+
 /*
 void Roboco::reset(){
         this->workflow->reset();
+
+        int lumens = this->sensors->getSensor(Roboco::LUMINOSITY)->read().toInt();
+
+        int lumens = this->sensors->readLuminosity();
 };
 
 void Roboco::run(){

@@ -1,6 +1,7 @@
 #include <Arduino.h>
 
 #include <testing.h>
+#include <roboco.h>
 
 Testing:: Testing(Sensors* sensors, Output* output, GPS* gps, CollectRegister* collectRegister, Workflow* workflow, Motor* motorLeft, Motor* motorRight){
         this->sensors = sensors;
@@ -118,18 +119,18 @@ void Testing::motorTeste(){
 }
 void Testing::tempTeste(){
     unsigned char exit = 0;
-    while(!this->sensors->bmpValid()){
-    this->output->lcdClear();
-    this->output->lcdPrint("SENSOR TEMP",0,0);
-    this->output->lcdPrint("DESCONECTED",0,1);
-    }
+    // while(!this->sensors->bmpValid()){
+    // this->output->lcdClear();
+    // this->output->lcdPrint("SENSOR TEMP",0,0);
+    // this->output->lcdPrint("DESCONECTED",0,1);
+    // }
     while(exit == 0){
         if(Serial.available()){
             exit = Serial.read();
         }
     this->output->lcdClear();
     this->output->lcdPrint("TEMPERATURE TEST",0,0);
-    this->output->lcdPrint(String(this->sensors->getTemperatureC(),2),5,1);
+    this->output->lcdPrint(this->sensors->getSensor(Roboco::TEMPERATURE)->read(),5,1);
     this->output->lcdPrint("*C",17,1);
     delay(200);
     }
@@ -146,7 +147,7 @@ void Testing::ldrTeste(){
         }
     this->output->lcdClear();
     this->output->lcdPrint("BRIGHTNESS TEST",0,0);
-    this->output->lcdPrint(String(this->sensors->getLuminosity()),5,1);
+    this->output->lcdPrint(this->sensors->getSensor(Roboco::LUMINOSITY)->read(),5,1);
     delay(200);
     }
 }
