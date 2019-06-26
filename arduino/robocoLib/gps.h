@@ -27,11 +27,19 @@ class GPS{
         void setup();
         boolean readGps();
         Adafruit_GPS* gps;
+        Location* targetLocation;
+        Location* previousLocation;
+        Location* currentLocation;
+
+        float getAngleToTarget(Location* currentLocation);
     public:
         GPS(int8_t pinRx, int8_t pinTx);
         GPS(HardwareSerial* serial);    
         Location* getCurrentLocation();
-        DataTimer* getCurrentDataTimer();
+        Location* getPreviousLocation();
+        Location* getTargetLocation();
+        void setTargetLocation(Location* location);
         void testeGps();
+        DataTimer* getCurrentDataTimer();
 };
 #endif

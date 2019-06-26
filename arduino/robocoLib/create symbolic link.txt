@@ -8,11 +8,10 @@ No Windows, utilize o comando:
 - Aperte [Shift] + F10 e escolha 'Abrir janela de comando aqui'
 - digite
 
-mklink /d /j robocoLib %USERPROFILE%\Documents\Arduino\libraries\robocoLib
+mklink /d /j %USERPROFILE%\Documents\Arduino\libraries\robocoLib robocoLib
 
 - Obs: os diretórios do comando podem variar de acordo com suas instalações.
 
 No Linux:
 - ln -s $HOME/opt/roboco.git/trunk/arduino/robocoLib $HOME/Arduino/libraries/robocoLib
 - Obs: os diretórios do comando podem variar de acordo com suas instalações.
-
