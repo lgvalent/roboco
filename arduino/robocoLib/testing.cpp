@@ -1,7 +1,6 @@
 #include <Arduino.h>
 
 #include <testing.h>
-#include <roboco.h>
 
 Testing:: Testing(Sensors* sensors, Output* output, GPS* gps, CollectRegister* collectRegister, Workflow* workflow, Motor* motorLeft, Motor* motorRight){
         this->sensors = sensors;
@@ -28,7 +27,7 @@ void Testing::setup(unsigned char teste){
         this->ldrTeste();
     break;
     case 4 : // Testing GPS
-        this->motorTeste();
+        this->gpsTeste();
     break;
     case 5 : // Testing collectRegister
         this->motorTeste();
@@ -119,18 +118,18 @@ void Testing::motorTeste(){
 }
 void Testing::tempTeste(){
     unsigned char exit = 0;
-    // while(!this->sensors->bmpValid()){
-    // this->output->lcdClear();
-    // this->output->lcdPrint("SENSOR TEMP",0,0);
-    // this->output->lcdPrint("DESCONECTED",0,1);
-    // }
+    while(!this->sensors->bmpValid()){
+    this->output->lcdClear();
+    this->output->lcdPrint("SENSOR TEMP",0,0);
+    this->output->lcdPrint("DESCONECTED",0,1);
+    }
     while(exit == 0){
         if(Serial.available()){
             exit = Serial.read();
         }
     this->output->lcdClear();
     this->output->lcdPrint("TEMPERATURE TEST",0,0);
-    this->output->lcdPrint(this->sensors->getSensor(Roboco::TEMPERATURE)->read(),5,1);
+    this->output->lcdPrint(String(this->sensors->getTemperatureC(),2),5,1);
     this->output->lcdPrint("*C",17,1);
     delay(200);
     }
@@ -147,7 +146,62 @@ void Testing::ldrTeste(){
         }
     this->output->lcdClear();
     this->output->lcdPrint("BRIGHTNESS TEST",0,0);
-    this->output->lcdPrint(this->sensors->getSensor(Roboco::LUMINOSITY)->read(),5,1);
+    this->output->lcdPrint(String(this->sensors->getLuminosity()),5,1);
     delay(200);
+    }
+}
+
+void Testing::gpsTeste(){
+    unsigned char exit=0;
+    unsigned long timer = millis();
+    while(exit == 0){
+        if(Serial.available()){
+            exit = Serial.read();
+        }    
+        if (millis() - timer > 100) {
+        Location* loc = gps->getCurrentLocation();
+        DataTimer* dat = gps->getCurrentDataTimer();
+        timer = millis(); // reset the timer  
+        Serial.print("\nTime: ");
+        Serial.print((dat->hour-3), DEC); Serial.print(':');
+        Serial.print(dat->minute, DEC); Serial.print(':');
+        Serial.print(dat->seconds, DEC); Serial.print('.');
+        Serial.print("Date: ");
+        Serial.print(dat->day, DEC); Serial.print('/');
+        Serial.print(dat->month, DEC); Serial.print("/20");
+        Serial.println(dat->year, DEC);
+        //Serial.print("Fix: "); Serial.print((int)gps->fix);
+        //Serial.print(" quality: "); Serial.println((int)gps->fixquality);
+        Serial.print("Location (in degrees, works with Google Maps): ");
+        Serial.println(loc->latitude, 4);
+        Serial.print("Location (in degrees, works with Google Maps): ");
+        Serial.println(loc->longitude,4);      
+        // Serial.print("Speed (knots): "); Serial.println(gps->speed);
+        //Serial.print("Angle: "); Serial.println(loc->angle);
+        //Serial.print("Altitude: "); Serial.println(loc->altitude);
+        //Serial.print("Satellites: "); Serial.println((int)gps->satellites);
+        output->lcdClear();
+        output->lcdPrint("Time: ",0,0);
+        output->lcdPrint(String((dat->hour-3), DEC),17,0); output->lcdPrint(":",17,0);
+        output->lcdPrint(String(dat->minute, DEC),17,0); output->lcdPrint(":",17,0);
+        output->lcdPrint(String(dat->seconds, DEC),17,0);
+        output->lcdPrint("Date: ",0,1);
+        output->lcdPrint(String(dat->day, DEC),17,1); output->lcdPrint("/",17,1);
+        output->lcdPrint(String(dat->month, DEC),17,1); output->lcdPrint("/",17,1);
+        output->lcdPrint(String(dat->year, DEC),17,1);
+        //Serial.print("Fix: "); Serial.print((int)gps->gps->fix);
+        //Serial.print(" quality: "); Serial.println((int)gps->gps->fixquality);
+        //Serial.print("Location (in degrees, works with Google Maps): ");
+        //Serial.println(loc->latitude, 4);
+        //Serial.print("Location (in degrees, works with Google Maps): ");
+        //Serial.println(loc->longitude,4);      
+        //Serial.print("Speed (knots): "); Serial.println(gps->speed);
+        //Serial.print("Angle: "); Serial.println(loc->angle);
+        //Serial.print("Altitude: "); Serial.println(loc->altitude);
+        //Serial.print("Satellites: "); Serial.println((int)gps->satellites);
+        free(dat);
+        free(loc);
+        delay(1000);
+        }
     }
 }
