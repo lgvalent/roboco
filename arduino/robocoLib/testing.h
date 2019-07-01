@@ -26,12 +26,4 @@ public:
     void co2Teste();
     void ldrTeste();
 };
-
-
-
-
-
-
-
-
 #endif

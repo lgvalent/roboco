@@ -15,17 +15,22 @@ Roboco:: Roboco(Sensors* sensors, Output* output, GPS* gps, CollectRegister* col
 void Roboco::setup(){
         this->output->lcdPrint("ROBOCO",0,0);
 }
+
 /*
 void Roboco::reset(){
         this->workflow->reset();
+
+        int lumens = this->sensors->getSensor(Roboco::LUMINOSITY)->read().toInt();
+
+        int lumens = this->sensors->readLuminosity();
 };
 
 void Roboco::run(){
         
         currentStep = this->whorkFlow->getNextStep // 1º Ler o próximo destino no arquivo
-        currentLocaition = this->gps->getLocation // 2º Deslocar-se até o destino
+        currentLocation = this->gps->getLocation // 2º Deslocar-se até o destino
    
-        // previousLocation= currentLocation //para conparar a velocidade e onde ele está/estava, ter um time para ver o tempo de uso do arduino.
+        // this->gps->getPreviousLocation() //para conparar a velocidade e onde ele está/estava, ter um time para ver o tempo de uso do arduino.
        
         // fazer o delta e uma funão para estipular a velocidade
         distanceLatitude = currentStep->latitude - currentLocation->latitude;// Verificar a distância e definir a velocidade (?) de deslocamento
@@ -34,7 +39,6 @@ void Roboco::run(){
         if (currentLocation->angle < 10  &&  > 350 ) { // Alinhar o bico
                 motorLeft = motor->move; // move o motor da esqueda
                 motorRight = motor->move; // move o motor da direita
-                
         }
         
         // Outra forma de fazer para alinhar o bico
@@ -43,12 +47,9 @@ void Roboco::run(){
                           motorLeft = motor->move;
                 else
                           motorRight = motor->move;
-                
         }
 
         // OBS: para alinhar o bico pega o currentstep (latitude e longitude) -alvo- fazer uma funcao que dependendo do anglo de distancia entre o alvo ate a localizacao atual, gira um pouco mais o motor da direita ou da esquerda
         //funcao map do arduino para conseguir ter diferenca de giro (220 - 255) com a funcao map o giro passa a ser de 0 a 255
- 
- 
         
 }*/

@@ -2,10 +2,16 @@
 #include <gps.h>
 
 GPS::GPS(int8_t pinRx, int8_t pinTx){
+  this->targetLocation = NULL;
+  this->previousLocation = NULL;
+
   this->gps = new Adafruit_GPS(new SoftwareSerial(pinRx, pinTx));
   setup();
 }
 GPS::GPS(HardwareSerial* serial){
+  this->targetLocation = NULL;
+  this->previousLocation = NULL;
+
   this->gps = new Adafruit_GPS(serial);
   setup();
 }
@@ -24,7 +30,12 @@ boolean GPS::readGps(){
   return this->gps->parse(this->gps->lastNMEA());
 }
 
+Location* GPS::getPreviousLocation(){
+  return this->previousLocation;
+}
+
 Location* GPS::getCurrentLocation(){
+  this->previousLocation = this->currentLocation;
   if(!this->readGps())
     return NULL;
 
@@ -32,9 +43,10 @@ Location* GPS::getCurrentLocation(){
   location->longitude = this->gps->longitudeDegrees;
   location->latitude = this->gps->latitudeDegrees;
   location->altitude = this->gps->altitude;
-  location->angle = this->gps->angle;
+  location->angle = getAngleToTarget(location);
   location->time = millis();
 
+  this->currentLocation = location;
   return location;
 }
 
@@ -53,6 +65,17 @@ DataTimer* GPS::getCurrentDataTimer(){
 
   return dataTimer;
 }
+
+void GPS::setTargetLocation(Location* location){
+  this->targetLocation = location;
+}
+
+float GPS::getAngleToTarget(Location* currentLocation){
+  // Verifica se tem um previous location != NULL
+     // Calculo do algulo usando: Posicao atual, posicao anterior e Alvo
+  // Senao retorna 0
+}
+
 void GPS::testeGps(){
   Location* loc = getCurrentLocation();
   DataTimer* dat = getCurrentDataTimer();
