@@ -8,6 +8,7 @@ GPS::GPS(int8_t pinRx, int8_t pinTx){
   this->gps = new Adafruit_GPS(new SoftwareSerial(pinRx, pinTx));
   setup();
 }
+
 GPS::GPS(HardwareSerial* serial){
   this->targetLocation = NULL;
   this->previousLocation = NULL;
@@ -28,6 +29,21 @@ boolean GPS::readGps(){
     this->gps->read();
   }
   return this->gps->parse(this->gps->lastNMEA());
+}
+float GPS::getDistanceToTarget(){
+  float lat1 = currentLocation->latitude * 3.1415927 / 180;
+  float lon1 = currentLocation->longitude * 3.1415927 / 180;
+  float lat2 = targetLocation->latitude * 3.1415927 / 180;
+  float lon2 = targetLocation->longitude * 3.1415927 / 180;
+  float Raio_da_terra = 6371000; // km
+  float dLat = (lat2-lat1); //diferenÃ§a das latitudes dos pontos em radianos
+  float dLon = (lon2-lon1); //diferenÃ§a das longitudes dos pontos em radianos
+  float a = sin(dLat/2) * sin(dLat/2) + cos(lat1) * cos(lat2) * sin(dLon/2) * sin(dLon/2);
+  float c = 2 * atan2(sqrt(a), sqrt(1-a)); 
+  distancia = Raio_da_terra * c; //distancia em metros
+  Serial.println(distancia,6);
+}
+
 }
 
 Location* GPS::getPreviousLocation(){
