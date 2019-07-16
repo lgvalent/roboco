@@ -66,8 +66,12 @@ DataTimer* GPS::getCurrentDataTimer(){
   return dataTimer;
 }
 
-void GPS::setTargetLocation(Location* location){
-  this->targetLocation = location;
+void GPS::setTargetLocation(float latitude, float longitude){
+  if (this->targetLocation == NUUL)
+    this->targetLocation = new Location;
+
+  this->targetLocation.latitude = latitude;
+  this->targetLocation.longitude = longitude;
 }
 
 float GPS::getAngleToTarget(Location* currentLocation){
