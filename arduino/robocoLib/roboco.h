@@ -10,6 +10,10 @@
 #include <testing.h>
 
 class Roboco{
+  public: 
+    const int TARGET_SOFT_APPROACH_METER = 3;
+    const float TARGET_MINIMAL_DISTANCE_APPROACH_FACTOR = 0.1;
+
   private:
     Sensors* sensors;
     Output* output;
@@ -18,6 +22,9 @@ class Roboco{
     Workflow* workflow;
     Motor* motorLeft,* motorRight;
     Testing* testing;
+    Workstep* currentStep;
+    Location* currentLocation;
+
   
   public:
     static enum RobocoSensors{LUMINOSITY=0, PRESSURE, ALTITUDE, HUMIDITY, TEMPERATURE, CO2, _COUNT} ROBOCO_SENSORS;
