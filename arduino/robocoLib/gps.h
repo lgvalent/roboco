@@ -30,7 +30,7 @@ class GPS{
         Location* targetLocation;
         Location* previousLocation;
         Location* currentLocation;
-
+        float getDistanceToTarget();
         float getAngleToTarget(Location* currentLocation);
     public:
         GPS(int8_t pinRx, int8_t pinTx);
@@ -38,7 +38,7 @@ class GPS{
         Location* getCurrentLocation();
         Location* getPreviousLocation();
         Location* getTargetLocation();
-        void setTargetLocation(Location* location);
+        void setTargetLocation(float latitude, float longitude);
         void testeGps();
         DataTimer* getCurrentDataTimer();
 };

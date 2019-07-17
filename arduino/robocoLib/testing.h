@@ -25,5 +25,14 @@ public:
     void tempTeste();
     void co2Teste();
     void ldrTeste();
+    void gpsTeste();
 };
+
+
+
+
+
+
+
+
 #endif

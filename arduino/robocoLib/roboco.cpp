@@ -16,29 +16,64 @@ void Roboco::setup(){
         this->output->lcdPrint("ROBOCO",0,0);
 }
 
-/*
+
 void Roboco::reset(){
         this->workflow->reset();
-
         int lumens = this->sensors->getSensor(Roboco::LUMINOSITY)->read().toInt();
-
         int lumens = this->sensors->readLuminosity();
 };
 
 void Roboco::run(){
+        //      1º Ler o próximo destino no arquivo
+        this->currentStep = this->whorkFlow->getNextStep();
+        //      1.1 Verificar qual foi a última linhas do arquivo processada
+        //          1.1.1 Ler em um arquivo ROBOCO.TXT o valor gravado na primeira linha do arquivo
+        //      1.2 Ler a linha do arquivo ROBOCO.TXT
+        //      1.3 Guardar os valores em variáveis globais
+
+        //      2º Deslocar-se até o destino
+        this->gps->setTargetLocation(this->currentStep.latitude, this->currentStep.longitude);
+
         
-        currentStep = this->whorkFlow->getNextStep // 1º Ler o próximo destino no arquivo
-        currentLocation = this->gps->getLocation // 2º Deslocar-se até o destino
-   
-        // this->gps->getPreviousLocation() //para conparar a velocidade e onde ele está/estava, ter um time para ver o tempo de uso do arduino.
-       
+        //      2.1 Localizar-se pelo GPS
+        this->currentLocation = this->gps->getCurrentLocation();
+        //      2.2 Verificar a distância e definir a velocidade de deslocamento
+        //          2.2.1 Quanto mais longe do ponto, maior será a velocidade.
+        //      2.3 Alinhar o bico
+        
+        float angleFactor = map(this->currentLocation.angle, -180, 180, -100, 100) / 100.0;  // sera o valor do angulo mapeado entre -100 e 100
+        float distanceFactor = this->getDistanceToTarget();
+        distanceFactor = distanceFactor > TARGET_SOFT_APPROACH_METER ? 1: distanceFactor/ TARGET_SOFT_APPROACH_METER; //  a distancia (em metros) do alvo influenciara a velocidade do motor        
+        int motorLeftFactor = distanceFactor - (distanceFactor * angleFactor);
+        int motorRightFactor = distanceFactor + (distanceFactor * angleFactor);
+        
+        //      2.4 Avançar
+        this->motorLeft->move (CLOCKWISE, map(motorLeftFactor*100, 0, 100, 225, 255)); // move motor da esqueda
+        this->motorRight->move (CLOCKWISE, map(motorRightFactor*100, 0, 100, 225, 255)); // move o motor da direita
+
+        //      2.5 Volte para 2.3 N vezes, onde N pode ser uma razão entre a posição atual e o destino
+        //      2.6 Volte para 2.1 até chegar
+
+        //      3º Iniciar captura dos dados
+        //      3.1 Acionar simultâneamente até o final de ambas tarefas
+        //              3.1.1 Acionar esvaziamento da câmara por TEMPO_ESVAZIAMENTO_CÂMARA segundos
+        //              3.1.2 Estabilizar sensor CO2 por 90 segundos
+        //       3.2 Coletar dados
+        //              3.1 CO2, temperaturas, pressão, altitude, etc
+        //              3.2 Armazenar os dados no cartão
+        //                      3.2.1 Gravar uma linha para cada capitura
+        //                        TIME_STAMP, CO2, TEMP_INTERNA, PRESSÃO, ALTITUDE
+        //      3.3 Repetir 3.2 a cada NTERVALO_ENTRE_CAPTURAS segundos
+        //      3.4 Verificar o INTERVALO_AJUSTE_POSICIONAMENTO
+        //              3.4.1 Repetir as atividades do 2º passo para reposicionamento
+        //      3.5 Repetir 3.2 até esgotar o TEMPO_CAPTURA
+/*
         // fazer o delta e uma funão para estipular a velocidade
-        distanceLatitude = currentStep->latitude - currentLocation->latitude;// Verificar a distância e definir a velocidade (?) de deslocamento
-        distanceLongitude = currentStep->longitude - currentLocation->longitude; //após verificar a distancia deve definir a velocidade, porem n temos um controle de velocidade na classe dos motores
+        distanceLatitude = currentStep->latitude - currentLocation->latitude;// Verificar a distância e definir a velocidade de deslocamento
+         distanceLongitude = currentStep->longitude - currentLocation->longitude; //após verificar a distancia deve definir a velocidad
        
         if (currentLocation->angle < 10  &&  > 350 ) { // Alinhar o bico
-                motorLeft = motor->move; // move o motor da esqueda
-                motorRight = motor->move; // move o motor da direita
+
         }
         
         // Outra forma de fazer para alinhar o bico
@@ -51,5 +86,5 @@ void Roboco::run(){
 
         // OBS: para alinhar o bico pega o currentstep (latitude e longitude) -alvo- fazer uma funcao que dependendo do anglo de distancia entre o alvo ate a localizacao atual, gira um pouco mais o motor da direita ou da esquerda
         //funcao map do arduino para conseguir ter diferenca de giro (220 - 255) com a funcao map o giro passa a ser de 0 a 255
-        
-}*/
+        /**/
+}
