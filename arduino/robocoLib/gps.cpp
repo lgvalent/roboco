@@ -40,8 +40,7 @@ float GPS::getDistanceToTarget(){
   float dLon = (lon2-lon1); //diferenÃ§a das longitudes dos pontos em radianos
   float a = sin(dLat/2) * sin(dLat/2) + cos(lat1) * cos(lat2) * sin(dLon/2) * sin(dLon/2);
   float c = 2 * atan2(sqrt(a), sqrt(1-a)); 
-  distancia = Raio_da_terra * c; //distancia em metros
-  Serial.println(distancia,6);
+  return Raio_da_terra * c; //distancia em metros
 }
 
 }
