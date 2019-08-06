@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <gps.h>
+#include <math.h>
 
 GPS::GPS(int8_t pinRx, int8_t pinTx){
   this->targetLocation = NULL;
@@ -50,9 +51,9 @@ Location* GPS::getPreviousLocation(){
 }
 
 Location* GPS::getCurrentLocation(){
-  this->previousLocation = this->currentLocation;
   if(!this->readGps())
     return NULL;
+  this->previousLocation = this->currentLocation;
 
   Location* location = new Location();
   location->longitude = this->gps->longitudeDegrees;
@@ -81,13 +82,60 @@ DataTimer* GPS::getCurrentDataTimer(){
   return dataTimer;
 }
 
-void GPS::setTargetLocation(Location* location){
-  this->targetLocation = location;
+void GPS::setTargetLocation(float latitude, float longitude){
+  if (this->targetLocation == NUUL)
+    this->targetLocation = new Location;
+
+  this->targetLocation.latitude = latitude;
+  this->targetLocation.longitude = longitude;
 }
 
 float GPS::getAngleToTarget(Location* currentLocation){
+
   // Verifica se tem um previous location != NULL
-     // Calculo do algulo usando: Posicao atual, posicao anterior e Alvo
+  if(this->previousLocation == NULL){
+      return 0;
+  }
+  
+ float cx0 = this->currentLocation.longitude;
+ float cy0 = this->currentLocation.latitude;
+ float cx1 = this->currentLocation.longitude;
+ float cy1 = this->currentLocation.latitude;
+ float tx0 = this->targetLocation.longitude;
+ float ty0 = this->targetLocation.latitude;
+ float tx1 = this->targetLocation.longitude;
+ float ty1 = this->targetLocation.latitude;
+  
+float angleBetweenLines(float cx0, float cy0, float cx1, float cy1, float tx0, float ty0, float tx1, float ty1){
+ 	
+	//pra uma reta ser paralela ao eixo y: valores de x precisam ser iguais 
+	
+float tg = 0;
+	
+	
+		
+	if(cx0 == cx1){
+		float mt = (ty1-ty0)/(tx1-tx0);
+		float tg = 1/mt;
+		return 180/M_PI * atan(tg);
+	}
+    
+  if (tx0 == tx1){
+    float mc = (cy1-cy0)/(cx1-cx0);
+    float tg = 1/mc;
+    return 180/M_PI * atan(tg);	
+	}
+
+	if (cx0 != cx1 && tx0 != tx1){
+ 		float mc = (cy1-cy0)/(cx1-cx0);
+		float mt = (ty1-ty0)/(tx1-tx0);
+		float tg = ((mt - mc)/(1+mc*mt));	
+		return 180/M_PI * atan(tg);
+	}
+}
+
+
+  }     // Calculo do algulo usando: Posicao atual, posicao anterior e Alvo
   // Senao retorna 0
 }
 

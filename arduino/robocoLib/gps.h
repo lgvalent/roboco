@@ -38,7 +38,7 @@ class GPS{
         Location* getCurrentLocation();
         Location* getPreviousLocation();
         Location* getTargetLocation();
-        void setTargetLocation(Location* location);
+        void setTargetLocation(float latitude, float longitude);
         void testeGps();
         DataTimer* getCurrentDataTimer();
 };
