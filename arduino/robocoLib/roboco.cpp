@@ -20,20 +20,18 @@ void Roboco::setup(){
 void Roboco::reset(){
         this->workflow->reset();
         int lumens = this->sensors->getSensor(Roboco::LUMINOSITY)->read().toInt();
-        int lumens = this->sensors->readLuminosity();
-};
+}
 
 void Roboco::run(){
         //      1º Ler o próximo destino no arquivo
-        this->currentStep = this->whorkFlow->getNextStep();
+        this->currentStep = this->workflow->getNextStep();
         //      1.1 Verificar qual foi a última linhas do arquivo processada
         //          1.1.1 Ler em um arquivo ROBOCO.TXT o valor gravado na primeira linha do arquivo
         //      1.2 Ler a linha do arquivo ROBOCO.TXT
         //      1.3 Guardar os valores em variáveis globais
 
         //      2º Deslocar-se até o destino
-        this->gps->setTargetLocation(this->currentStep.latitude, this->currentStep.longitude);
-
+        this->gps->setTargetLocation(this->currentStep->latitude, this->currentStep->longitude);
         
         //      2.1 Localizar-se pelo GPS
         this->currentLocation = this->gps->getCurrentLocation();
@@ -41,8 +39,8 @@ void Roboco::run(){
         //          2.2.1 Quanto mais longe do ponto, maior será a velocidade.
         //      2.3 Alinhar o bico
         
-        float angleFactor = map(this->currentLocation.angle, -180, 180, -100, 100) / 100.0;  // sera o valor do angulo mapeado entre -100 e 100
-        float distanceFactor = this->getDistanceToTarget();
+        float angleFactor = map(this->currentLocation->angle, -180, 180, -100, 100) / 100.0;  // sera o valor do angulo mapeado entre -100 e 100
+        float distanceFactor = this->gps->getDistanceToTarget();
         distanceFactor = distanceFactor > TARGET_SOFT_APPROACH_METER ? 1: distanceFactor/ TARGET_SOFT_APPROACH_METER; //  a distancia (em metros) do alvo influenciara a velocidade do motor        
         int motorLeftFactor = distanceFactor - (distanceFactor * angleFactor);
         int motorRightFactor = distanceFactor + (distanceFactor * angleFactor);

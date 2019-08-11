@@ -17,20 +17,22 @@ GPS::GPS(HardwareSerial* serial){
   this->gps = new Adafruit_GPS(serial);
   setup();
 }
+
 void GPS::setup(){
   this->gps->begin(9600);
   this->gps->sendCommand(PMTK_SET_NMEA_OUTPUT_RMCGGA);
   this->gps->sendCommand(PMTK_SET_NMEA_UPDATE_1HZ);
   this->gps->sendCommand(PGCMD_ANTENNA);
 }
+
 boolean GPS::readGps(){  
   if(!this->gps->newNMEAreceived()){
-    Serial.print("oie");
     delay(10); //Lucio 20190516: Por quê é necessário este delay? Por causa do SoftwareSerial? Fazer um teste sem este delay, ou com delay(1)
     this->gps->read();
   }
   return this->gps->parse(this->gps->lastNMEA());
 }
+
 float GPS::getDistanceToTarget(){
   float lat1 = currentLocation->latitude * 3.1415927 / 180;
   float lon1 = currentLocation->longitude * 3.1415927 / 180;
@@ -42,8 +44,6 @@ float GPS::getDistanceToTarget(){
   float a = sin(dLat/2) * sin(dLat/2) + cos(lat1) * cos(lat2) * sin(dLon/2) * sin(dLon/2);
   float c = 2 * atan2(sqrt(a), sqrt(1-a)); 
   return Raio_da_terra * c; //distancia em metros
-}
-
 }
 
 Location* GPS::getPreviousLocation(){
@@ -67,7 +67,6 @@ Location* GPS::getCurrentLocation(){
 }
 
 DataTimer* GPS::getCurrentDataTimer(){
-  Serial.print("ACORDAAA");
   if(!this->readGps())
     return NULL;
 
@@ -83,38 +82,19 @@ DataTimer* GPS::getCurrentDataTimer(){
 }
 
 void GPS::setTargetLocation(float latitude, float longitude){
-  if (this->targetLocation == NUUL)
+  if (this->targetLocation == NULL)
     this->targetLocation = new Location;
 
-  this->targetLocation.latitude = latitude;
-  this->targetLocation.longitude = longitude;
+  this->targetLocation->latitude = latitude;
+  this->targetLocation->longitude = longitude;
 }
 
-float GPS::getAngleToTarget(Location* currentLocation){
-
-  // Verifica se tem um previous location != NULL
-  if(this->previousLocation == NULL){
-      return 0;
-  }
-  
- float cx0 = this->currentLocation.longitude;
- float cy0 = this->currentLocation.latitude;
- float cx1 = this->currentLocation.longitude;
- float cy1 = this->currentLocation.latitude;
- float tx0 = this->targetLocation.longitude;
- float ty0 = this->targetLocation.latitude;
- float tx1 = this->targetLocation.longitude;
- float ty1 = this->targetLocation.latitude;
-  
 float angleBetweenLines(float cx0, float cy0, float cx1, float cy1, float tx0, float ty0, float tx1, float ty1){
  	
 	//pra uma reta ser paralela ao eixo y: valores de x precisam ser iguais 
 	
-float tg = 0;
-	
-	
-		
-	if(cx0 == cx1){
+  float tg = 0;
+  if(cx0 == cx1){
 		float mt = (ty1-ty0)/(tx1-tx0);
 		float tg = 1/mt;
 		return 180/M_PI * atan(tg);
@@ -134,9 +114,23 @@ float tg = 0;
 	}
 }
 
+float GPS::getAngleToTarget(Location* currentLocation){
 
-  }     // Calculo do algulo usando: Posicao atual, posicao anterior e Alvo
-  // Senao retorna 0
+  // Verifica se tem um previous location != NULL
+  if(this->previousLocation == NULL){
+      return 0;
+  }
+  
+  float cx0 = this->currentLocation->longitude;
+  float cy0 = this->currentLocation->latitude;
+  float cx1 = this->currentLocation->longitude;
+  float cy1 = this->currentLocation->latitude;
+  float tx0 = this->targetLocation->longitude;
+  float ty0 = this->targetLocation->latitude;
+  float tx1 = this->targetLocation->longitude;
+  float ty1 = this->targetLocation->latitude;
+
+  return angleBetweenLines(cx0, cy0, cx1, cy1, tx0, ty0, tx1, ty1);
 }
 
 void GPS::testeGps(){

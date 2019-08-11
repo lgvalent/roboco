@@ -46,56 +46,32 @@ void setup()
   sensors->addSensor(Roboco::LUMINOSITY, ldrSensor1);
 
   Output* output = new Output(1,2,3);
-<<<<<<< HEAD
-<<<<<<< HEAD
+
   gps = new GPS(8,7);
-=======
 
-  GPS* gps = new GPS(8,7);
-
->>>>>>> e5ace8807c1b802df06efda1450e01ba3b646883
-=======
-
-  GPS* gps = new GPS(8,7);
-
->>>>>>> e5ace8807c1b802df06efda1450e01ba3b646883
   CollectRegister* collectRegister = new CollectRegister(1);
 
   Workflow* workflow = new Workflow(1);
 
   Motor* motorLeft = new Motor(2,4,3);
   Motor* motorRight = new Motor(5,6,9);
-<<<<<<< HEAD
-<<<<<<< HEAD
+
   Serial.println("oie");
   if(digitalRead(12) == LOW){
-  roboco = new Roboco(sensors, output, gps, collectRegister, workflow, motorLeft, motorRight);
-  roboco->setup();
-=======
-=======
->>>>>>> e5ace8807c1b802df06efda1450e01ba3b646883
+    roboco = new Roboco(sensors, output, gps, collectRegister, workflow, motorLeft, motorRight);
+    roboco->setup();
+  }
   
   if(digitalRead(12) == LOW){  // Define se o robô estará em modo normal ou de teste
     roboco = new Roboco(sensors, output, gps, collectRegister, workflow, motorLeft, motorRight);
     roboco->setup();
-<<<<<<< HEAD
->>>>>>> e5ace8807c1b802df06efda1450e01ba3b646883
-=======
->>>>>>> e5ace8807c1b802df06efda1450e01ba3b646883
   }else{
     testing = new Testing(sensors, output, gps, collectRegister, workflow, motorLeft, motorRight);
     testing->setup(0);
   }
 }
+
 void loop(){
-<<<<<<< HEAD
-<<<<<<< HEAD
   Serial.println("lopp");
   gps->testeGps();
-=======
-
->>>>>>> e5ace8807c1b802df06efda1450e01ba3b646883
-=======
-
->>>>>>> e5ace8807c1b802df06efda1450e01ba3b646883
 }

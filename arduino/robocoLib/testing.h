@@ -21,11 +21,9 @@ private:
 public:
     Testing(Sensors* sensors, Output* output, GPS* gps, CollectRegister* collectRegister, Workflow* workflow, Motor* left, Motor* right);
     void setup(unsigned char teste);
-    void motorTeste();
-    void tempTeste();
-    void co2Teste();
-    void ldrTeste();
-    void gpsTeste();
+    void testMotor();
+    void testSensors();
+    void testGps();
 };
 
 
