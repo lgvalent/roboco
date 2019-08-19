@@ -93,25 +93,20 @@ float angleBetweenLines(float cx0, float cy0, float cx1, float cy1, float tx0, f
  	
 	//pra uma reta ser paralela ao eixo y: valores de x precisam ser iguais 
 	
-  float tg = 0;
-  if(cx0 == cx1){
-		float mt = (ty1-ty0)/(tx1-tx0);
-		float tg = 1/mt;
-		return 180/M_PI * atan(tg);
-	}
-    
-  if (tx0 == tx1){
-    float mc = (cy1-cy0)/(cx1-cx0);
-    float tg = 1/mc;
-    return 180/M_PI * atan(tg);	
-	}
+float mt = (ty1-ty0)/(tx1-tx0); // calculo do coeficiente angular da reta 1.
+float tg = 0;
+tg = 1/mt; // calculo da tangente da reta 1.
 
-	if (cx0 != cx1 && tx0 != tx1){
- 		float mc = (cy1-cy0)/(cx1-cx0);
-		float mt = (ty1-ty0)/(tx1-tx0);
-		float tg = ((mt - mc)/(1+mc*mt));	
-		return 180/M_PI * atan(tg);
+float mc = (cy1-cy0)/(cx1-cx0); // calculo do coeficiente angular da reta 2.
+float tgg = 0;
+tgg = 1/mc;  // calculo da tangente da reta 2.
+	
+	if (mt =! mc){ // verificando se as retas não são paralelas e retornando o angulo em graus.
+	float angle = tg - tgg;
+	return 180/M_PI * atan(tang);
 	}
+	
+	return 0;
 }
 
 float GPS::getAngleToTarget(Location* currentLocation){
