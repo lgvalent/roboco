@@ -13,9 +13,8 @@ Roboco:: Roboco(Sensors* sensors, Output* output, GPS* gps, CollectRegister* col
 }
 
 void Roboco::setup(){
-        this->output->lcdPrint("ROBOCO",0,0);
+        this->output->lcdPrint("ROBOCO²",0,0);
 }
-
 
 void Roboco::reset(){
         this->workflow->reset();

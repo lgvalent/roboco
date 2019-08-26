@@ -116,12 +116,12 @@ float GPS::getAngleToTarget(Location* currentLocation){
       return 0;
   }
   
-  float cx0 = this->currentLocation->longitude;
-  float cy0 = this->currentLocation->latitude;
+  float cx0 = this->previousLocation->longitude;
+  float cy0 = this->previousLocation->latitude;
   float cx1 = this->currentLocation->longitude;
   float cy1 = this->currentLocation->latitude;
-  float tx0 = this->targetLocation->longitude;
-  float ty0 = this->targetLocation->latitude;
+  float tx0 = this->currentLocation->longitude;
+  float ty0 = this->currentLocation->latitude;
   float tx1 = this->targetLocation->longitude;
   float ty1 = this->targetLocation->latitude;
 

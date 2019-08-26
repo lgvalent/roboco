@@ -13,6 +13,8 @@ class Roboco{
   public: 
     const int TARGET_SOFT_APPROACH_METER = 3;
     const float TARGET_MINIMAL_DISTANCE_APPROACH_FACTOR = 0.1;
+    
+    static enum RobocoStates{READING_NEXT_STEP, READING_CURRENT_LOCATION, KEEPING_TRACK, READING_SENSORS};
 
   private:
     Sensors* sensors;
