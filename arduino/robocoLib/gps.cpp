@@ -103,7 +103,7 @@ tgg = 1/mc;  // calculo da tangente da reta 2.
 	
 	if (mt =! mc){ // verificando se as retas não são paralelas e retornando o angulo em graus.
 	float angle = tg - tgg;
-	return 180/M_PI * atan(tang);
+	return 180/M_PI * atan(angle);
 	}
 	
 	return 0;

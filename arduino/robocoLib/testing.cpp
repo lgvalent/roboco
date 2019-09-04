@@ -112,7 +112,7 @@ void Testing::testMotor()
             this->output->lcdClear();
         }
     }
-vn    Serial.println("saindo");
+    Serial.println("saindo");
     this->output->lcdPrint("EXISTING", 4, 0);
     this->output->lcdPrint("MOTOR TEST", 3, 1);
     delay(2000);
