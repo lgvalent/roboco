@@ -39,8 +39,8 @@ float GPS::getDistanceToTarget(){
   float lat2 = targetLocation->latitude * 3.1415927 / 180;
   float lon2 = targetLocation->longitude * 3.1415927 / 180;
   float Raio_da_terra = 6371000; // km
-  float dLat = (lat2-lat1); //diferenÃ§a das latitudes dos pontos em radianos
-  float dLon = (lon2-lon1); //diferenÃ§a das longitudes dos pontos em radianos
+  float dLat = (lat2-lat1); //diferença das latitudes dos pontos em radianos
+  float dLon = (lon2-lon1); //diferença das longitudes dos pontos em radianos
   float a = sin(dLat/2) * sin(dLat/2) + cos(lat1) * cos(lat2) * sin(dLon/2) * sin(dLon/2);
   float c = 2 * atan2(sqrt(a), sqrt(1-a)); 
   return Raio_da_terra * c; //distancia em metros
@@ -90,23 +90,23 @@ void GPS::setTargetLocation(float latitude, float longitude){
 }
 
 float angleBetweenLines(float cx0, float cy0, float cx1, float cy1, float tx0, float ty0, float tx1, float ty1){
- 	
-	//pra uma reta ser paralela ao eixo y: valores de x precisam ser iguais 
-	
-float mt = (ty1-ty0)/(tx1-tx0); // calculo do coeficiente angular da reta 1.
-float tg = 0;
-tg = 1/mt; // calculo da tangente da reta 1.
+  //pra uma reta ser paralela ao eixo y: valores de x precisam ser iguais
 
-float mc = (cy1-cy0)/(cx1-cx0); // calculo do coeficiente angular da reta 2.
-float tgg = 0;
-tgg = 1/mc;  // calculo da tangente da reta 2.
-	
-	if (mt =! mc){ // verificando se as retas não são paralelas e retornando o angulo em graus.
-	float angle = tg - tgg;
-	return 180/M_PI * atan(angle);
-	}
-	
-	return 0;
+  float mt = (ty1 - ty0) / (tx1 - tx0); // calculo do coeficiente angular da reta 1.
+  float tg = 0;
+  tg = 1 / mt; // calculo da tangente da reta 1.
+
+  float mc = (cy1 - cy0) / (cx1 - cx0); // calculo do coeficiente angular da reta 2.
+  float tgg = 0;
+  tgg = 1 / mc; // calculo da tangente da reta 2.
+
+  if (mt = !mc)
+  { // verificando se as retas não são paralelas e retornando o angulo em graus.
+    float angle = tg - tgg;
+    return 180 / M_PI * atan(angle);
+  }
+
+  return 0;
 }
 
 float GPS::getAngleToTarget(Location* currentLocation){
@@ -118,10 +118,10 @@ float GPS::getAngleToTarget(Location* currentLocation){
   
   float cx0 = this->previousLocation->longitude;
   float cy0 = this->previousLocation->latitude;
-  float cx1 = this->currentLocation->longitude;
-  float cy1 = this->currentLocation->latitude;
-  float tx0 = this->currentLocation->longitude;
-  float ty0 = this->currentLocation->latitude;
+  float cx1 = currentLocation->longitude;
+  float cy1 = currentLocation->latitude;
+  float tx0 = currentLocation->longitude;
+  float ty0 = currentLocation->latitude;
   float tx1 = this->targetLocation->longitude;
   float ty1 = this->targetLocation->latitude;
 
