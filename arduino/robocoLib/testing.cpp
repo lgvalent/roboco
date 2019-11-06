@@ -27,6 +27,11 @@ void Testing::setup(unsigned char teste)
     case 3: // Testing SENSORS
         this->testGps();
         break;
+    case 10:
+        while(1){
+        this->apresentacao();
+        }
+        break;
     }
     if (teste == 0)
     {
@@ -204,3 +209,29 @@ void Testing::testGps()
         }
     }
 }
+    void Testing::apresentacao(){
+                this->output->lcdPrint("FORWARD", 4, 1);
+                this->motorRight->move(CLOCKWISE, 255);
+                this->motorLeft->move(CLOCKWISE, 255);
+                delay(2000);
+                this->motorRight->stop();
+                this->motorLeft->stop();
+                this->output->lcdPrint("BACK", 6, 1);
+                this->motorRight->move(ANTICLOCKWISE, 255);
+                this->motorLeft->move(ANTICLOCKWISE, 255);
+                delay(2000);
+                this->motorRight->stop();
+                this->motorLeft->stop();
+                this->output->lcdPrint("RIGHT", 5, 1);
+                this->motorRight->move(ANTICLOCKWISE, 255);
+                this->motorLeft->move(CLOCKWISE, 255);
+                delay(2000);
+                this->motorRight->stop();
+                this->motorLeft->stop();
+                this->output->lcdPrint("LEFT", 6, 1);
+                this->motorRight->move(CLOCKWISE, 255);
+                this->motorLeft->move(ANTICLOCKWISE, 255);
+                delay(2000);
+                this->motorRight->stop();
+                this->motorLeft->stop();
+    }

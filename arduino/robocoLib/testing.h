@@ -24,6 +24,7 @@ public:
     void testMotor();
     void testSensors();
     void testGps();
+    void apresentacao(); // metodo para o robo ficar bobo.
 };
 
 

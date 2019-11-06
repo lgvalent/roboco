@@ -67,11 +67,9 @@ void setup()
     roboco->setup();
   }else{
     testing = new Testing(sensors, output, gps, collectRegister, workflow, motorLeft, motorRight);
-    testing->setup(0);
+    testing->setup(10);
   }
 }
 
 void loop(){
-  Serial.println("lopp");
-  gps->testeGps();
 }
