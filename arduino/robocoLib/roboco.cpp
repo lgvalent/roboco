@@ -32,24 +32,28 @@ void Roboco::run(){
         //      2º Deslocar-se até o destino
         this->gps->setTargetLocation(this->currentStep->latitude, this->currentStep->longitude);
         
-        //      2.1 Localizar-se pelo GPS
-        this->currentLocation = this->gps->getCurrentLocation();
-        //      2.2 Verificar a distância e definir a velocidade de deslocamento
-        //          2.2.1 Quanto mais longe do ponto, maior será a velocidade.
-        //      2.3 Alinhar o bico
+        bool goToTarget = false; 
+        do{
+                //      2.1 Localizar-se pelo GPS
+                this->currentLocation = this->gps->getCurrentLocation();
+                //      2.2 Verificar a distância e definir a velocidade de deslocamento
+                //          2.2.1 Quanto mais longe do ponto, maior será a velocidade.
+                //      2.3 Alinhar o bico
         
-        float angleFactor = map(this->currentLocation->angle, -180, 180, -100, 100) / 100.0;  // sera o valor do angulo mapeado entre -100 e 100
-        float distanceFactor = this->gps->getDistanceToTarget();
-        distanceFactor = distanceFactor > TARGET_SOFT_APPROACH_METER ? 1: distanceFactor/ TARGET_SOFT_APPROACH_METER; //  a distancia (em metros) do alvo influenciara a velocidade do motor        
-        int motorLeftFactor = distanceFactor - (distanceFactor * angleFactor);
-        int motorRightFactor = distanceFactor + (distanceFactor * angleFactor);
+                float angleFactor = map(this->currentLocation->angle, -180, 180, -100, 100) / 100.0;  // sera o valor do angulo mapeado entre -100 e 100
+                float distanceFactor = this->gps->getDistanceToTarget();
+                distanceFactor = distanceFactor > TARGET_SOFT_APPROACH_METER ? 1: distanceFactor/ TARGET_SOFT_APPROACH_METER; //  a distancia (em metros) do alvo influenciara a velocidade do motor        
+                int motorLeftFactor = distanceFactor - (distanceFactor * angleFactor);
+                int motorRightFactor = distanceFactor + (distanceFactor * angleFactor);
         
-        //      2.4 Avançar
-        this->motorLeft->move (CLOCKWISE, map(motorLeftFactor*100, 0, 100, 225, 255)); // move motor da esqueda
-        this->motorRight->move (CLOCKWISE, map(motorRightFactor*100, 0, 100, 225, 255)); // move o motor da direita
+                //      2.4 Avançar
+                this->motorLeft->move (CLOCKWISE, map(motorLeftFactor*100, 0, 100, 225, 255)); // move motor da esqueda
+                this->motorRight->move (CLOCKWISE, map(motorRightFactor*100, 0, 100, 225, 255)); // move o motor da direita
 
-        //      2.5 Volte para 2.3 N vezes, onde N pode ser uma razão entre a posição atual e o destino
-        //      2.6 Volte para 2.1 até chegar
+                //      2.5 Volte para 2.3 N vezes, onde N pode ser uma razão entre a posição atual e o destino
+                //      2.6 Volte para 2.1 até chegar
+                goToTarget = distanceFactor > TARGET_MINIMAL_DISTANCE_APPROACH_FACTOR;
+        }while(goToTarget);
 
         //      3º Iniciar captura dos dados
         //      3.1 Acionar simultâneamente até o final de ambas tarefas
@@ -80,8 +84,5 @@ void Roboco::run(){
                 else
                           motorRight = motor->move;
         }
-
-        // OBS: para alinhar o bico pega o currentstep (latitude e longitude) -alvo- fazer uma funcao que dependendo do anglo de distancia entre o alvo ate a localizacao atual, gira um pouco mais o motor da direita ou da esquerda
-        //funcao map do arduino para conseguir ter diferenca de giro (220 - 255) com a funcao map o giro passa a ser de 0 a 255
         /**/
 }
