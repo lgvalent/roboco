@@ -58,13 +58,7 @@ void setup()
   Motor* motorLeft = new Motor(2,4,3);
   Motor* motorRight = new Motor(5,6,9);
 
-  Serial.println("oie");
-  if(digitalRead(12) == LOW){
-    roboco = new Roboco(sensors, output, gps, collectRegister, workflow, motorLeft, motorRight);
-    roboco->setup();
-  }
-  
-  if(digitalRead(12) == LOW){  // Define se o robô estará em modo normal ou de teste
+  if(digitalRead(12) == LOW && false){  // Define se o robô estará em modo normal ou de teste
     roboco = new Roboco(sensors, output, gps, collectRegister, workflow, motorLeft, motorRight);
     roboco->setup();
   }else{
