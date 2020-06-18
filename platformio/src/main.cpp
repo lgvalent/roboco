@@ -1,3 +1,5 @@
+#include <Arduino.h>
+#include <SD.h>
 
 /* Use these includes for Arduido IDE production */
 #include <roboco.h>
