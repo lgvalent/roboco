@@ -1,0 +1,17 @@
+As partes do Robocó estão implementadas em classes separada que devem ser instaladas como bibliotecas no ambiente Arduino, que permite a instalação de diretório de bibliotecas.
+
+Para facilitar a sincronização das alterações nas bibliotecas junto ao repositório, deve-se criar um link simbólico do diretório do git no diretório do Arduino.
+
+No Windows, utilize o comando:
+- Abra o Windows Explorer e localize o diretório on estão os arquivos sincronizados os arquivos do Git;
+- Vá até a pasta sua pasta 'arduino' do projeto;
+- Aperte [Shift] + F10 e escolha 'Abrir janela de comando aqui'
+- digite
+
+mklink /d /j %USERPROFILE%\Documents\Arduino\libraries\robocoLib robocoLib
+
+- Obs: os diretórios do comando podem variar de acordo com suas instalações.
+
+No Linux:
+- ln -s $HOME/opt/roboco.git/trunk/arduino/robocoLib $HOME/Arduino/libraries/robocoLib
+- Obs: os diretórios do comando podem variar de acordo com suas instalações.
