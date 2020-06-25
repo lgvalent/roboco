@@ -1,8 +1,6 @@
 #ifndef GPS_CPP
 #define GPS_CPP
 #include <Arduino.h>
-#include <Adafruit_GPS.h>
-#include <SoftwareSerial.h>
 
 struct Location{
     float latitude;
@@ -23,22 +21,22 @@ struct DataTimer
 };
 
 class GPS{
-    private:
-        void setup();
-        boolean readGps();
-        Adafruit_GPS* gps;
+    protected:
+        virtual void setup()=0;
+        virtual boolean readGps()=0;
+
         Location* targetLocation;
         Location* previousLocation;
         Location* currentLocation;
     public:
-        GPS(int8_t pinRx, int8_t pinTx);
-        GPS(HardwareSerial* serial);    
-        Location* getCurrentLocation();
+        virtual Location* getCurrentLocation()=0;
+        virtual DataTimer* getCurrentDataTimer()=0;
+
         Location* getPreviousLocation();
         Location* getTargetLocation();
+
         void setTargetLocation(float latitude, float longitude);
         void testeGps();
-        DataTimer* getCurrentDataTimer();
         
         float getDistanceToTarget();
         float getAngleToTarget(Location* currentLocation);

@@ -11,16 +11,10 @@
 #include <motor.h>
 #include <testing.h>
 
-/* Use these includes for Linux/Windows development 
-#include "robocoLib/roboco.h"
-#include "robocoLib/testing.h"
-#include "robocoLib/sensors.h"
-#include "robocoLib/output.h"
-#include "robocoLib/collectRegister.h"
-#include "robocoLib/workflow.h"
-#include "robocoLib/gps.h"
-#include "robocoLib/motor.h"
-*/
+#include <gpsMTK33x9.h>
+#include <gpsNEO6M.h>
+
+/**/
 
 Roboco* roboco;
 Testing* testing;
@@ -43,12 +37,12 @@ void setup()
   sensors->addSensor(Roboco::TEMPERATURE, tempSensor);
   sensors->addSensor(Roboco::ALTITUDE, altSensor);
   sensors->addSensor(Roboco::PRESSURE, pressSensor);
-  sensors->addSensor(Roboco::CO2, mhzSensor);
+  sensors->addSensor(Roboco::CO2, mhzSensor); 
   sensors->addSensor(Roboco::LUMINOSITY, ldrSensor1);
 
   Output* output = new Output(1,2,3);
 
-  gps = new GPS(8,7);
+  gps = new GpsMTK33x9(8,7);
 
   CollectRegister* collectRegister = new CollectRegister(1);
 
@@ -57,14 +51,15 @@ void setup()
   Motor* motorLeft = new Motor(2,4,3);
   Motor* motorRight = new Motor(5,6,9);
 
-  if(digitalRead(12) == LOW && false){  // Define se o robô estará em modo normal ou de teste
+  // if(digitalRead(12) == LOW && false){  // Define se o robô estará em modo normal ou de teste
     roboco = new Roboco(sensors, output, gps, collectRegister, workflow, motorLeft, motorRight);
     roboco->setup();
-  }else{
-    testing = new Testing(sensors, output, gps, collectRegister, workflow, motorLeft, motorRight);
-    testing->setup(10);
-  }
+  // }else{
+  //   testing = new Testing(sensors, output, gps, collectRegister, workflow, motorLeft, motorRight);
+  //   testing->setup(10);
+  // }
 }
 
 void loop(){
+  roboco->run();
 }
