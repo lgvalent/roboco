@@ -10,7 +10,6 @@
 #include <gps.h>
 #include <motor.h>
 #include <testing.h>
-/**/
 
 /* Use these includes for Linux/Windows development 
 #include "robocoLib/roboco.h"
@@ -21,7 +20,7 @@
 #include "robocoLib/workflow.h"
 #include "robocoLib/gps.h"
 #include "robocoLib/motor.h"
-/**/
+*/
 
 Roboco* roboco;
 Testing* testing;
