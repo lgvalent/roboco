@@ -43,6 +43,7 @@ void setup()
   Output* output = new Output(1,2,3);
 
   gps = new GpsMTK33x9(8,7);
+  // gps = new GpsNEO6M(8,7);
 
   CollectRegister* collectRegister = new CollectRegister(1);
 

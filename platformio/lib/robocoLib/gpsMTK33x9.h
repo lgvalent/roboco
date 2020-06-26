@@ -17,5 +17,7 @@ public:
     GpsMTK33x9(HardwareSerial *serial);
     Location *getCurrentLocation();
     DataTimer *getCurrentDataTimer();
+    void testeGpsMTK33x9();
 };
 #endif
+
