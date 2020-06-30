@@ -83,6 +83,5 @@ void Roboco::run(){
                           motorLeft = motor->move;
                 else
                           motorRight = motor->move;
-        }
-        /**/
+        }*/
 }

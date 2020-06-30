@@ -4,72 +4,84 @@
 
 GpsNEO6M::GpsNEO6M(int8_t pinRx, int8_t pinTx)
 {
-//   this->targetLocation = NULL;
-//   this->previousLocation = NULL;
-
-//   this->gps = new Adafruit_GPS(new SoftwareSerial(pinRx, pinTx)); // mudar aqui
-//   setup();
+    this->targetLocation = NULL;
+    this->previousLocation = NULL;
+    this->gpsSwSerial = new SoftwareSerial(pinRx, pinTx);
+    this->use_sw_serial = true;
+    this->gps = new TinyGPS();
+    setup();
 }
 
 GpsNEO6M::GpsNEO6M(HardwareSerial *serial)
 {
-//   this->targetLocation = NULL;
-//   this->previousLocation = NULL;
-
-//   this->gps = new Adafruit_GPS(serial); // mudar aqui
-//   setup();
+    this->targetLocation = NULL;
+    this->previousLocation = NULL;
+    this->gpsHwSerial = serial; 
+    this->use_sw_serial = false;
+    this->gps = new TinyGPS();
+    setup();
 }
 
 void GpsNEO6M::setup()
 {
-//   this->gps->begin(9600);
-//   this->gps->sendCommand(PMTK_SET_NMEA_OUTPUT_RMCGGA);
-//   this->gps->sendCommand(PMTK_SET_NMEA_UPDATE_1HZ);
-//   this->gps->sendCommand(PGCMD_ANTENNA);
+   if (this->use_sw_serial){ 
+     this->gpsSwSerial->begin(9600);
+      } else {
+         this->gpsHwSerial->begin(9600);
+      }
 }
 
 boolean GpsNEO6M::readGps()
-{
-//   if (!this->gps->newNMEAreceived())
-//   {
-//     delay(10); //Lucio 20190516: Por quê é necessário este delay? Por causa do SoftwareSerial? Fazer um teste sem este delay, ou com delay(1)
-//     this->gps->read();
-//   }
-//   return this->gps->parse(this->gps->lastNMEA());
+{ 
+   if (this->use_sw_serial){
+      
+      while(this->gpsSwSerial->available()){
+         // int caracter = this->gpsSwSerial->read();
+         return this->gps->encode(this->gpsSwSerial->read());
+      }
+   } else {
+       while(this->gpsHwSerial->available()){
+         //int caracter = this->gpsHwSerial->read();
+         return this->gps->encode(this->gpsHwSerial->read());  
+      }
+   } 
 }
 
 Location* GpsNEO6M::getCurrentLocation(){
-//   if(!this->readGps())
-//     return NULL;
-//   this->previousLocation = this->currentLocation;
+   if(!this->readGps())
+     return NULL;
 
-//   Location* location = new Location();
-//   location->longitude = this->gps->longitudeDegrees;
-//   location->latitude = this->gps->latitudeDegrees;
-//   location->altitude = this->gps->altitude;
-//   location->angle = getAngleToTarget(location);
-//   location->time = millis();
+   this->previousLocation = this->currentLocation;
+   Location* location = new Location();
 
-//   this->currentLocation = location;
-//   return location;
+
+    this->gps->f_get_position(&location->latitude, &location->longitude);
+    this->gps->f_altitude(); // altitude em metros
+    location->angle = getAngleToTarget(location);
+    location->time = millis();
+    this->currentLocation = location;
+    return location;
 }
 
 DataTimer *GpsNEO6M::getCurrentDataTimer()
 {
-//   if (!this->readGps())
-//     return NULL;
+   if (!this->readGps())
+     return NULL;
 
-//   DataTimer *dataTimer = new DataTimer();
-//   dataTimer->day = this->gps->day;
-//   dataTimer->month = this->gps->month;
-//   dataTimer->year = this->gps->year;
-//   dataTimer->hour = this->gps->hour;
-//   dataTimer->minute = this->gps->minute;
-//   dataTimer->seconds = this->gps->seconds;
+   DataTimer *dataTimer = new DataTimer();
 
-//   return dataTimer;
-}
+   //this->gps->crack_datetime(&dataTimer->year, &dataTimer->month, &dataTimer->day, &dataTimer->hour, &dataTimer->minute, &dataTimer->seconds, &hundredths, &fix_age);
+   // Usando o exemplo dado no documento da biblioteca TinyGPS. Porém ele utiliza dois parametros (hundredths, fix_age) que não estamos usando no gps.h
 
-void GpsNEO6M::testeGpsNEO6M(){
+   unsigned long date, hour;                   
+   this->gps->get_datetime(&date, &hour);
+ 
+   dataTimer->day = (date / 10000);            
+   dataTimer->month = ((date % 1000) / 100);
+   dataTimer->year = (date % 100);
+   dataTimer->hour = (hour / 1000000);
+   dataTimer->minute = ((hour % 1000000) / 10000);
+   dataTimer->seconds = ((hour % 10000) / 100);
 
+   return dataTimer;
 }
