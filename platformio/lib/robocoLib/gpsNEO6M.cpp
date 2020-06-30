@@ -32,19 +32,19 @@ void GpsNEO6M::setup()
 }
 
 boolean GpsNEO6M::readGps()
-{ 
+{ int caracter;
    if (this->use_sw_serial){
-      
       while(this->gpsSwSerial->available()){
-         // int caracter = this->gpsSwSerial->read();
-         return this->gps->encode(this->gpsSwSerial->read());
+         caracter = this->gpsSwSerial->read();
+         this->gps->encode(caracter);
       }
-   } else {
+   }else{
        while(this->gpsHwSerial->available()){
-         //int caracter = this->gpsHwSerial->read();
-         return this->gps->encode(this->gpsHwSerial->read());  
+         caracter = this->gpsHwSerial->read();
+         this->gps->encode(caracter);  
       }
    } 
+ return this->gps->encode(caracter);
 }
 
 Location* GpsNEO6M::getCurrentLocation(){
