@@ -3,6 +3,8 @@
 
 #include <collectRegister.h>
 #include <gps.h>
+#include <gpsMTK33x9.h>
+#include <gpsNEO6M.h>
 #include <motor.h>
 #include <output.h>
 #include <sensors.h>
@@ -24,14 +26,10 @@ public:
     void testMotor();
     void testSensors();
     void testGps();
+    void testGpsMTK33x9();
+    // void callTestGpsNEO6M();
+    void testGpsNEO6M();
     void apresentacao(); // metodo para o robo ficar bobo.
 };
-
-
-
-
-
-
-
 
 #endif

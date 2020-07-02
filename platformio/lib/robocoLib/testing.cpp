@@ -25,7 +25,7 @@ void Testing::setup(unsigned char teste)
         this->testSensors();
         break;
     case 3: // Testing SENSORS
-        this->testGps();
+        this->testGpsNEO6M();
         break;
     case 10:
         while(1){
@@ -209,7 +209,146 @@ void Testing::testGps()
         }
     }
 }
-    void Testing::apresentacao(){
+void Testing::testGpsMTK33x9(){
+  
+    Location* loc = gps->getCurrentLocation();
+    DataTimer* dat = gps->getCurrentDataTimer();
+    unsigned long timer = millis();
+
+    if(millis() - timer > 100) {
+        timer = millis(); // reset the timer  
+        Serial.print("\nTime: ");
+        Serial.print((dat->hour-3), DEC); Serial.print(':');
+        Serial.print(dat->minute, DEC); Serial.print(':');
+        Serial.print(dat->seconds, DEC); Serial.print('.');
+        Serial.print("Date: ");
+        Serial.print(dat->day, DEC); Serial.print('/');
+        Serial.print(dat->month, DEC); Serial.print("/20");
+        Serial.println(dat->year, DEC);
+        Serial.print("Fix: "); 
+        // Serial.print((int)gps->fix);
+        Serial.print(" quality: "); 
+        // Serial.println((int)gps->fixquality);
+        Serial.print("Location (in degrees, works with Google Maps): ");
+        Serial.println(loc->latitude, 4);
+        Serial.print("Location (in degrees, works with Google Maps): ");
+        Serial.println(loc->longitude,4);      
+        Serial.print("Speed (knots): "); 
+        // Serial.println(gps->speed);
+        Serial.print("Angle: "); 
+        Serial.println(loc->angle);
+        Serial.print("Altitude: "); 
+        Serial.println(loc->altitude);
+        Serial.print("Satellites: "); 
+        // Serial.println((int)gps->satellites);
+        free(dat);
+        free(loc);
+  }
+}
+
+// void Testing::callTestGpsNEO6M(){
+
+//    if (this->use_sw_serial){
+//       while(this->gpsSwSerial->available()){
+//          if (this->gps->encode(this->gpsSwSerial->read())){
+//             this->testGpsNEO6M();
+//          }
+//       }
+//    }else{
+//        while(this->gpsHwSerial->available()){
+//           if (this->gps->encode(this->gpsHwSerial->read())){
+//             this->testGpsNEO6M();
+//          }
+//       }
+//    } 
+// }
+
+// void Testing::testGpsNEO6M(){
+   
+//    unsigned long date, hour;
+//    float lat, lon, vel;
+//    unsigned short sat;  
+
+//    //Hora e data                 
+//    this->gps->get_datetime(&date, &hour);
+      
+//    Serial.print("--");
+//    Serial.print(hour / 1000000);
+//    Serial.print(":");
+//    Serial.print((hour % 1000000) / 10000);
+//    Serial.print(":");
+//    Serial.print((hour % 10000) / 100);
+//    Serial.print("--");
+//    Serial.print(date / 10000);
+//    Serial.print("/");
+//    Serial.print((date % 10000) / 100);
+//    Serial.print("/");
+//    Serial.print(date % 100);
+//    Serial.println("--");
+         
+//    //latitude e longitude
+//    this->gps->f_get_position(&lat, &lon);
+      
+//    Serial.print("Latitude: ");
+//    Serial.println(lat, 6);
+//    Serial.print("Longitude: ");
+//    Serial.println(lon, 6);
+      
+//    //velocidade
+//    vel = this->gps->f_speed_kmph();
+      
+//    Serial.print("Velocidade: ");
+//    Serial.println(vel);
+      
+//    //Satelites
+//    sat = this->gps->satellites();
+//    if (sat != TinyGPS::GPS_INVALID_SATELLITES) {
+//       Serial.print("Satelites: ");
+//       Serial.println(sat);
+//    }
+//    Serial.println("");
+// }
+
+void Testing::testGpsNEO6M(){
+ 
+    Location* loc = gps->getCurrentLocation();
+    DataTimer* dat = gps->getCurrentDataTimer();
+    unsigned long timer = millis();
+    float vel;
+    unsigned short sat; 
+
+      Serial.print("--");
+      Serial.print(dat->hour); 
+      Serial.print(":");
+      Serial.print(dat->minute); 
+      Serial.print(":");
+      Serial.print(dat->seconds); 
+      Serial.print("--");
+      Serial.print(dat->day);
+      Serial.print("/");
+      Serial.print(dat->month);
+      Serial.print("/");
+      Serial.print(dat->year);
+      Serial.println("--");
+      
+      //latitude e longitude
+      Serial.print("Latitude: ");
+      Serial.println(loc->latitude, 6);
+      Serial.print("Longitude: ");
+      Serial.println(loc->longitude, 6);
+
+      //angulo
+      Serial.print("Angulo: ");
+      Serial.println(loc->angle);
+
+    //altitude
+    Serial.print("Altitude: ");
+    Serial.println(loc->altitude);
+
+    Serial.println("");
+}
+
+void Testing::apresentacao(){
                 this->output->lcdPrint("FORWARD", 4, 1);
                 this->motorRight->move(CLOCKWISE, 255);
                 this->motorLeft->move(CLOCKWISE, 255);

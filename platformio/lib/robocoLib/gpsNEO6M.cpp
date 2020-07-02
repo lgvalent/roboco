@@ -68,10 +68,10 @@ DataTimer *GpsNEO6M::getCurrentDataTimer()
 
    DataTimer *dataTimer = new DataTimer();
 
-   //this->gps->crack_datetime(&dataTimer->year, &dataTimer->month, &dataTimer->day, &dataTimer->hour, &dataTimer->minute, &dataTimer->seconds, &hundredths, &fix_age);
+   this->gps->crack_datetime((int*)&dataTimer->year, &dataTimer->month, &dataTimer->day, &dataTimer->hour, &dataTimer->minute, &dataTimer->seconds, NULL, NULL);
    // Usando o exemplo dado no documento da biblioteca TinyGPS. Porém ele utiliza dois parametros (hundredths, fix_age) que não estamos usando no gps.h
 
-   unsigned long date, hour;
+   /*unsigned long date, hour;
    this->gps->get_datetime(&date, &hour);
 
    dataTimer->day = (date / 10000);
@@ -79,7 +79,7 @@ DataTimer *GpsNEO6M::getCurrentDataTimer()
    dataTimer->year = (date % 100);
    dataTimer->hour = (hour / 1000000);
    dataTimer->minute = ((hour % 1000000) / 10000);
-   dataTimer->seconds = ((hour % 10000) / 100);
+   dataTimer->seconds = ((hour % 10000) / 100);*/
 
    return dataTimer;
 }

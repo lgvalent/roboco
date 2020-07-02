@@ -21,7 +21,9 @@ Testing* testing;
 GPS* gps;
 void setup()
 {
+
   Serial.begin(115200);
+  Serial.println("Starting...\n");
 
   /* Cria os sensores */
   Adafruit_BMP280* bmp280 = new Adafruit_BMP280();
@@ -53,14 +55,15 @@ void setup()
   Motor* motorRight = new Motor(5,6,9);
 
   // if(digitalRead(12) == LOW && false){  // Define se o robô estará em modo normal ou de teste
-    roboco = new Roboco(sensors, output, gps, collectRegister, workflow, motorLeft, motorRight);
-    roboco->setup();
+   // roboco = new Roboco(sensors, output, gps, collectRegister, workflow, motorLeft, motorRight);
+   // roboco->setup();
   // }else{
-  //   testing = new Testing(sensors, output, gps, collectRegister, workflow, motorLeft, motorRight);
-  //   testing->setup(10);
+     testing = new Testing(sensors, output, gps, collectRegister, workflow, motorLeft, motorRight);
+     testing->setup(3);
   // }
 }
 
 void loop(){
-  roboco->run();
+ // roboco->run();
+  testing->testGpsNEO6M();
 }

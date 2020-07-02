@@ -23,8 +23,7 @@ struct DataTimer
 class GPS{
     protected:
         virtual void setup()=0;
-        virtual boolean readGps()=0;
-     
+        virtual boolean readGps()=0;     
 
         Location* targetLocation;
         Location* previousLocation;
