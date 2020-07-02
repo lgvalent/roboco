@@ -38,5 +38,7 @@ class Roboco{
     void reset();
 
     void run();  
+
+    void test();
 };
 #endif

@@ -6,6 +6,16 @@
 #include <Adafruit_BMP280.h>
 #include <SoftwareSerial.h>
 
+class Unit{
+  public:
+    String description;
+};
+
+class SensorValue{
+  public:
+    float value;
+    Unit unit;
+};
 
 class Sensor{
   protected:
@@ -17,6 +27,7 @@ class Sensor{
     String getTypeName(){return Sensor::SENSOR_TYPE_NAMES[this->getType()];};
     
     virtual String read() = 0;
+    // virtual SensorValue readValue() = 0;
 };
 
 class Mhz19: public Sensor {
@@ -86,5 +97,6 @@ class Sensors{
     int8_t getSize();
     void addSensor(int index, Sensor* sensor);
     Sensor* getSensor(int index);
+    void test();
 };
 #endif

@@ -34,3 +34,7 @@ void CollectRegister::write(Location* location, Sensors* sensors){
 void CollectRegister::close(){
     file.close();
 }
+
+void CollectRegister::test(){
+    // TODO Testar se o coletor registra os dados no SD card
+}

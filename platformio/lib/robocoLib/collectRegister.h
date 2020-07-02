@@ -15,6 +15,7 @@ class CollectRegister{
 	  void open(Sensors* sensors);
     void write(Location* location, Sensors* sensors);
   	void close();
+    void test();
 };
 #endif
 

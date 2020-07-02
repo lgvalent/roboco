@@ -39,5 +39,7 @@ class GPS{
         
         float getDistanceToTarget();
         float getAngleToTarget(Location* currentLocation);
+
+        void test();
 };
 #endif

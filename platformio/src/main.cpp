@@ -9,7 +9,6 @@
 #include <workflow.h>
 #include <gps.h>
 #include <motor.h>
-#include <testing.h>
 
 #include <gpsMTK33x9.h>
 #include <gpsNEO6M.h>
@@ -17,7 +16,7 @@
 /**/
 
 Roboco* roboco;
-Testing* testing;
+
 GPS* gps;
 void setup()
 {
@@ -54,16 +53,12 @@ void setup()
   Motor* motorLeft = new Motor(2,4,3);
   Motor* motorRight = new Motor(5,6,9);
 
-  // if(digitalRead(12) == LOW && false){  // Define se o robô estará em modo normal ou de teste
-   // roboco = new Roboco(sensors, output, gps, collectRegister, workflow, motorLeft, motorRight);
-   // roboco->setup();
-  // }else{
-     testing = new Testing(sensors, output, gps, collectRegister, workflow, motorLeft, motorRight);
-     testing->setup(3);
-  // }
+  roboco = new Roboco(sensors, output, gps, collectRegister, workflow, motorLeft, motorRight);
+  roboco->setup();
 }
 
 void loop(){
+  // if(digitalRead(12) == LOW && false){  // Define se o robô estará em modo normal ou de teste
  // roboco->run();
-  testing->testGpsNEO6M();
+  roboco->test();
 }

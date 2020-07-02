@@ -28,3 +28,7 @@ void Motor::move(MotorDirection direction, unsigned char speed){
   
   analogWrite(pinPwm, speed);
 }
+
+void Motor::test(){
+  // TODO copiar de testing.cpp
+}
