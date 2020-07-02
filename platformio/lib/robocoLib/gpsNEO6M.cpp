@@ -12,7 +12,6 @@ GpsNEO6M::GpsNEO6M(int8_t pinRx, int8_t pinTx)
    softwareSerial->begin(9600);
    this->serial = softwareSerial;
 
-   this->serial = new SoftwareSerial(pinRx, pinTx);
    this->gps = new TinyGPS();
 
    setup();
