@@ -38,6 +38,7 @@ class Mhz19: public Sensor {
   Mhz19(int8_t pwmPin){this->pwmPin = pwmPin;};
   String read(){
     // Código de leitura via PWM ou Serial???
+    return String(0);
   };
   SensorType getType(){return CO2;};
 };
