@@ -3,7 +3,7 @@
 #include <Arduino.h>
 #include <gps.h>
 #include <TinyGPS.h>
-#include <SoftwareSerial.h>
+#include <Stream.h>
 
 
 class GpsNEO6M : public GPS
@@ -15,9 +15,7 @@ protected:
     TinyGPS* gps;
 
 private:
-    boolean use_sw_serial;
-    HardwareSerial *gpsHwSerial;
-    SoftwareSerial *gpsSwSerial;
+    Stream *serial;
 
 public:
     GpsNEO6M(int8_t pinRx, int8_t pinTx);
