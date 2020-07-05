@@ -21,25 +21,22 @@ struct DataTimer
 };
 
 class GPS{
+
     protected:
         virtual void setup()=0;
         virtual boolean readGps()=0;     
-
         Location* targetLocation;
         Location* previousLocation;
         Location* currentLocation;
+
     public:
         virtual Location* getCurrentLocation()=0;
         virtual DataTimer* getCurrentDataTimer()=0;
-
         Location* getPreviousLocation();
         Location* getTargetLocation();
-
         void setTargetLocation(float latitude, float longitude);
-        
         float getDistanceToTarget();
         float getAngleToTarget(Location* currentLocation);
-
         void test();
 };
 #endif

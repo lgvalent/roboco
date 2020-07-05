@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include <SD.h>
 #include <EEPROM.h>
-
 #include <workflow.h>
 
 #define EEPROM_STEP_ADDRESS 0
@@ -23,15 +22,17 @@ void Workflow::backOneStep(){
 }
 
 Workstep* Workflow::getNextStep(){
+
   File myFile;
-  if ( ! SD. begin ( pinSD ) ) { 
+  int currentLine = 0;
+
+  if (!SD.begin(pinSD)){ 
     myFile = SD.open("roboco.txt", FILE_READ);
     if(myFile){
       return NULL;
      }
   }
   
-  int currentLine = 0;
   while (currentLine != this->currentStepIndex){
     if(myFile.readStringUntil('\n').length()>0){
         currentLine++;
@@ -52,7 +53,6 @@ Workstep* Workflow::getNextStep(){
 
   myFile.close();
   
- 
   this->currentStepIndex++;
   EEPROM.write(EEPROM_STEP_ADDRESS, this->currentStepIndex); //Escrevendo na EPROMM o currentStepIndex https://www.arduino.cc/en/Tutorial/EEPROMWrite
 
@@ -69,5 +69,3 @@ Workstep* Workflow::getNextStep(){
         }
 */
 }
-  
-

@@ -2,8 +2,8 @@
 #include <gps.h>
 #include <math.h>
 
-float GPS::getDistanceToTarget()
-{
+float GPS::getDistanceToTarget(){
+
   float lat1 = currentLocation->latitude * 3.1415927 / 180;
   float lon1 = currentLocation->longitude * 3.1415927 / 180;
   float lat2 = targetLocation->latitude * 3.1415927 / 180;
@@ -16,13 +16,12 @@ float GPS::getDistanceToTarget()
   return Raio_da_terra * c; //distancia em metros
 }
 
-Location *GPS::getPreviousLocation()
-{
+Location *GPS::getPreviousLocation(){
   return this->previousLocation;
 }
 
-void GPS::setTargetLocation(float latitude, float longitude)
-{
+void GPS::setTargetLocation(float latitude, float longitude){
+
   if (this->targetLocation == NULL)
     this->targetLocation = new Location;
 
@@ -30,33 +29,26 @@ void GPS::setTargetLocation(float latitude, float longitude)
   this->targetLocation->longitude = longitude;
 }
 
-float angleBetweenLines(float cx0, float cy0, float cx1, float cy1, float tx0, float ty0, float tx1, float ty1)
-{
+float angleBetweenLines(float cx0, float cy0, float cx1, float cy1, float tx0, float ty0, float tx1, float ty1){
+
+  float mt, mc, tg = 0, tgg = 0;
   //pra uma reta ser paralela ao eixo y: valores de x precisam ser iguais
-
-  float mt = (ty1 - ty0) / (tx1 - tx0); // calculo do coeficiente angular da reta 1.
-  float tg = 0;
+  mt = (ty1 - ty0) / (tx1 - tx0); // calculo do coeficiente angular da reta 1.
   tg = 1 / mt; // calculo da tangente da reta 1.
-
-  float mc = (cy1 - cy0) / (cx1 - cx0); // calculo do coeficiente angular da reta 2.
-  float tgg = 0;
+  mc = (cy1 - cy0) / (cx1 - cx0); // calculo do coeficiente angular da reta 2.
   tgg = 1 / mc; // calculo da tangente da reta 2.
 
-  if (mt = !mc)
-  { // verificando se as retas não são paralelas e retornando o angulo em graus.
+  if (mt = !mc){ // verificando se as retas não são paralelas e retornando o angulo em graus.
     float angle = tg - tgg;
     return 180 / M_PI * atan(angle);
   }
-
   return 0;
 }
 
-float GPS::getAngleToTarget(Location *currentLocation)
-{
+float GPS::getAngleToTarget(Location *currentLocation){
 
   // Verifica se tem um previous location != NULL
-  if (this->previousLocation == NULL)
-  {
+  if (this->previousLocation == NULL){
     return 0;
   }
 
@@ -72,11 +64,12 @@ float GPS::getAngleToTarget(Location *currentLocation)
   return angleBetweenLines(cx0, cy0, cx1, cy1, tx0, ty0, tx1, ty1);
 }
 
-void GPS::test()
-{
+void GPS::test(){
+
   Location *loc = getCurrentLocation();
   DataTimer *dat = getCurrentDataTimer();
   unsigned long timer = millis();
+
   Serial.print("Testing GPS: ");
   Serial.print(dat->year);
   Serial.print("/");
@@ -84,23 +77,18 @@ void GPS::test()
   Serial.print("/");
   Serial.print(dat->day);
   Serial.print(" ");
-
   Serial.print(dat->hour);
   Serial.print(":");
   Serial.print(dat->minute);
   Serial.print(":");
   Serial.print(dat->seconds);
-
   Serial.println();
-
   Serial.print("Latitude: ");
   Serial.println(loc->latitude, 6);
   Serial.print("Longitude: ");
   Serial.println(loc->longitude, 6);
   Serial.print("Altitude: ");
   Serial.println(loc->altitude);
-
-  //angulo
   Serial.print("Angle: ");
   Serial.println(loc->angle);
 }

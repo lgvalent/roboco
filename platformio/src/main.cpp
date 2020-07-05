@@ -1,6 +1,5 @@
 #include <Arduino.h>
 #include <SD.h>
-
 /* Use these includes for Arduido IDE production */
 #include <roboco.h>
 #include <sensors.h>
@@ -16,10 +15,9 @@
 /**/
 
 Roboco* roboco;
-
 GPS* gps;
-void setup()
-{
+
+void setup(){
 
   Serial.begin(115200);
   Serial.println("Starting...\n");

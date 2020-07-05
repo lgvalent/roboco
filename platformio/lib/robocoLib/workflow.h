@@ -11,6 +11,7 @@ struct Workstep{
 };
 
 class Workflow{
+  
   private:
     int8_t pinSD;
     byte currentStepIndex;

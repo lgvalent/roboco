@@ -6,22 +6,22 @@
 #include <Stream.h>
 
 
-class GpsNEO6M : public GPS
-{
-protected:
-    void setup();
-    boolean readGps(); 
-    void begin(int32_t baud);
-    TinyGPS* gps;
+class GpsNEO6M : public GPS{
 
-private:
-    Stream *serial;
+    protected:
+        void setup();
+        boolean readGps(); 
+        void begin(int32_t baud);
+        TinyGPS* gps;
 
-public:
-    GpsNEO6M(int8_t pinRx, int8_t pinTx);
-    GpsNEO6M(HardwareSerial *serial);
-    Location *getCurrentLocation();
-    DataTimer *getCurrentDataTimer();
-    //void testeGpsNEO6M();
+    private:
+        Stream *serial;
+        
+    public:
+        GpsNEO6M(int8_t pinRx, int8_t pinTx);
+        GpsNEO6M(HardwareSerial *serial);
+        Location *getCurrentLocation();
+        DataTimer *getCurrentDataTimer();
+        //void testeGpsNEO6M();
 };
 #endif

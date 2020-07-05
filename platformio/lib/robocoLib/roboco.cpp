@@ -1,9 +1,8 @@
 #include <Arduino.h>
-
 #include <roboco.h>
 
-Roboco::Roboco(Sensors *sensors, Output *output, GPS *gps, CollectRegister *collectRegister, Workflow *workflow, Motor *motorLeft, Motor *motorRight)
-{
+Roboco::Roboco(Sensors *sensors, Output *output, GPS *gps, CollectRegister *collectRegister, Workflow *workflow, Motor *motorLeft, Motor *motorRight){
+
         this->sensors = sensors;
         this->output = output;
         this->gps = gps;
@@ -13,18 +12,15 @@ Roboco::Roboco(Sensors *sensors, Output *output, GPS *gps, CollectRegister *coll
         this->motorRight = motorRight;
 }
 
-void Roboco::setup()
-{
+void Roboco::setup(){
         this->output->lcdPrint("ROBOCO²", 0, 0);
 }
 
-void Roboco::reset()
-{
+void Roboco::reset(){
         this->workflow->reset();
 }
 
-void Roboco::run()
-{
+void Roboco::run(){
         //      1º Ler o próximo destino no arquivo
         this->currentStep = this->workflow->getNextStep();
         //      1.1 Verificar qual foi a última linhas do arquivo processada
@@ -34,10 +30,9 @@ void Roboco::run()
 
         //      2º Deslocar-se até o destino
         this->gps->setTargetLocation(this->currentStep->latitude, this->currentStep->longitude);
-
         bool goToTarget = false;
-        do
-        {
+
+        do{
                 //      2.1 Localizar-se pelo GPS
                 this->currentLocation = this->gps->getCurrentLocation();
                 //      2.2 Verificar a distância e definir a velocidade de deslocamento
@@ -57,7 +52,8 @@ void Roboco::run()
                 //      2.5 Volte para 2.3 N vezes, onde N pode ser uma razão entre a posição atual e o destino
                 //      2.6 Volte para 2.1 até chegar
                 goToTarget = distanceFactor > TARGET_MINIMAL_DISTANCE_APPROACH_FACTOR;
-        } while (goToTarget);
+
+        }while(goToTarget);
 
         //      3º Iniciar captura dos dados
         //      3.1 Acionar simultâneamente até o final de ambas tarefas
@@ -90,14 +86,11 @@ void Roboco::run()
         }*/
 }
 
-void Roboco::test()
-{
+void Roboco::test(){
+
         Serial.println("Testing Roboco...");
         this->gps->test();
-
         // this->sensors->test();
-
         this->motorLeft->test();
         this->motorRight->test();
-
 }

@@ -5,19 +5,18 @@
 #include <Adafruit_GPS.h>
 #include <SoftwareSerial.h>
 
-class GpsMTK33x9 : public GPS
-{
-private:
-    void setup();
-    boolean readGps();
-    Adafruit_GPS* gps;
+class GpsMTK33x9 : public GPS{
 
-public:
-    GpsMTK33x9(int8_t pinRx, int8_t pinTx);
-    GpsMTK33x9(HardwareSerial *serial);
-    Location *getCurrentLocation();
-    DataTimer *getCurrentDataTimer();
-    
+    private:
+        void setup();
+        boolean readGps();
+        Adafruit_GPS* gps;
+
+    public:
+        GpsMTK33x9(int8_t pinRx, int8_t pinTx);
+        GpsMTK33x9(HardwareSerial *serial);
+        Location *getCurrentLocation();
+        DataTimer *getCurrentDataTimer();
 };
 #endif
 

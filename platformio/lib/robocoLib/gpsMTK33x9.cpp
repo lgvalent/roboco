@@ -2,36 +2,33 @@
 #include <gpsMTK33x9.h>
 #include <math.h>
 
-GpsMTK33x9::GpsMTK33x9(int8_t pinRx, int8_t pinTx)
-{
+GpsMTK33x9::GpsMTK33x9(int8_t pinRx, int8_t pinTx){
+
   this->targetLocation = NULL;
   this->previousLocation = NULL;
-
   this->gps = new Adafruit_GPS(new SoftwareSerial(pinRx, pinTx));
   setup();
 }
 
-GpsMTK33x9::GpsMTK33x9(HardwareSerial *serial)
-{
+GpsMTK33x9::GpsMTK33x9(HardwareSerial *serial){
+
   this->targetLocation = NULL;
   this->previousLocation = NULL;
-
   this->gps = new Adafruit_GPS(serial);
   setup();
 }
 
-void GpsMTK33x9::setup()
-{
+void GpsMTK33x9::setup(){
+
   this->gps->begin(9600);
   this->gps->sendCommand(PMTK_SET_NMEA_OUTPUT_RMCGGA);
   this->gps->sendCommand(PMTK_SET_NMEA_UPDATE_1HZ);
   this->gps->sendCommand(PGCMD_ANTENNA);
 }
 
-boolean GpsMTK33x9::readGps()
-{
-  if (!this->gps->newNMEAreceived())
-  {
+boolean GpsMTK33x9::readGps(){
+
+  if (!this->gps->newNMEAreceived()){
     delay(10); //Lucio 20190516: Por quê é necessário este delay? Por causa do SoftwareSerial? Fazer um teste sem este delay, ou com delay(1)
     this->gps->read();
   }
@@ -39,8 +36,10 @@ boolean GpsMTK33x9::readGps()
 }
 
 Location* GpsMTK33x9::getCurrentLocation(){
+  
   if(!this->readGps())
     return NULL;
+
   this->previousLocation = this->currentLocation;
 
   Location* location = new Location();
@@ -54,8 +53,8 @@ Location* GpsMTK33x9::getCurrentLocation(){
   return location;
 }
 
-DataTimer *GpsMTK33x9::getCurrentDataTimer()
-{
+DataTimer *GpsMTK33x9::getCurrentDataTimer(){
+
   if (!this->readGps())
     return NULL;
 
@@ -69,5 +68,3 @@ DataTimer *GpsMTK33x9::getCurrentDataTimer()
 
   return dataTimer;
 }
-
-

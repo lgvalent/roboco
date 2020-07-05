@@ -5,6 +5,7 @@
 #include <LiquidCrystal_I2C.h>
 
 class Output{
+
   private:
       int8_t pinLed0;
       int8_t pinLed1;
