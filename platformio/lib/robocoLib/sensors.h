@@ -36,10 +36,20 @@ class Mhz19: public Sensor {
     Stream* serial;
 
   public:
+<<<<<<< HEAD
     Mhz19(Stream *serial);
     Mhz19(int8_t pwmPin); 
     String read();
     SensorType getType();
+=======
+  Mhz19(Stream *serial){this->serial = serial;};
+  Mhz19(int8_t pwmPin){this->pwmPin = pwmPin;};
+  String read(){
+    // Código de leitura via PWM ou Serial???
+    return String(0);
+  };
+  SensorType getType(){return CO2;};
+>>>>>>> bda4bd7ff543a7595e44b19e3e7806a53f485e6a
 };
 
 class Ldr: public Sensor{

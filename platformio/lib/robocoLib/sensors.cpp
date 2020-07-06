@@ -17,6 +17,7 @@ Mhz19::Mhz19(int8_t pwmPin){
 
 String Mhz19 ::read(){
   // Código de leitura via PWM ou Serial??? 
+  return String(0);
 }; 
  
 Sensor::SensorType Mhz19::getType(){
