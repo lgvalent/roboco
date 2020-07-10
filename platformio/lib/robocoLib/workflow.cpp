@@ -1,7 +1,3 @@
-#include <Arduino.h>
-#include <stdio.h>
-#include <SD.h>
-#include <EEPROM.h>
 #include <workflow.h>
 
 #define EEPROM_STEP_ADDRESS 0
@@ -57,6 +53,19 @@ Workstep* Workflow::getNextStep(){
   EEPROM.write(EEPROM_STEP_ADDRESS, this->currentStepIndex); //Escrevendo na EPROMM o currentStepIndex https://www.arduino.cc/en/Tutorial/EEPROMWrite
 
   return workstep;
+  
+}
+
+void Workflow::test(){
+
+  Serial.print("Testing Workflow... ");
+
+  if(this->getNextStep() == NULL){
+    Serial.print("OK."); // 
+  }else{
+    this->backOneStep();
+  }
+  
   
 /*Testing Workflow
         if(this->workflow->getNextStep() == NULL){

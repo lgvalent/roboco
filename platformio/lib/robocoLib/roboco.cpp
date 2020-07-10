@@ -89,8 +89,12 @@ void Roboco::run(){
 void Roboco::test(){
 
         Serial.println("Testing Roboco...");
-        this->gps->test();
         // this->sensors->test();
+        this->output->test();
+        this->gps->test();
+        this->collectRegister->test(); // em andamento
+        this->workflow->test();
         this->motorLeft->test();
         this->motorRight->test();
+
 }

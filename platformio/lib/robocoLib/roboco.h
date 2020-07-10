@@ -6,7 +6,6 @@
 #include <output.h>
 #include <sensors.h>
 #include <workflow.h>
-// #include <testing.h>
 
 class Roboco{
 
@@ -22,7 +21,6 @@ class Roboco{
     CollectRegister* collectRegister;
     Workflow* workflow;
     Motor* motorLeft,* motorRight;
-    // Testing* testing;
     Workstep* currentStep;
     Location* currentLocation;
 

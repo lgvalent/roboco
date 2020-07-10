@@ -1,6 +1,9 @@
 #ifndef WORKFLOW_H
 #define WORKFLOW_H
 #include <Arduino.h>
+#include <stdio.h>
+#include <SD.h>
+#include <EEPROM.h>
 
 struct Workstep{
   float latitude;
@@ -21,5 +24,6 @@ class Workflow{
 	  Workstep* getNextStep();
 	  void backOneStep();
     void reset();
+    void test();
 };
 #endif

@@ -19,6 +19,7 @@ class Output{
     //void lcdAutoScroll(boolean on);
     void setLed0(boolean on);  
     void setLed1(boolean on);  
-    void setLed2(boolean on);  
+    void setLed2(boolean on);
+    void test();   
 };
 #endif
