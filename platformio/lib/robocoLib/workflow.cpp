@@ -66,7 +66,6 @@ void Workflow::test(){
     this->backOneStep();
   }
   
-  
 /*Testing Workflow
         if(this->workflow->getNextStep() == NULL){
                 this->output->setLed0(true);

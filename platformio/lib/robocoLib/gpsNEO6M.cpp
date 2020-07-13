@@ -35,7 +35,7 @@ void GpsNEO6M::setup(){
 
 boolean GpsNEO6M::readGps(){
 
-   int caracter;
+   char caracter;
    while (this->serial->available()){
       caracter = this->serial->read();
       this->gps->encode(caracter);
@@ -45,7 +45,7 @@ boolean GpsNEO6M::readGps(){
 
 Location *GpsNEO6M::getCurrentLocation(){
 
-   if (!this->readGps())
+   if (this->readGps())         //Foi retirado o ! porque ele só entrava no if
       return NULL;
 
    this->previousLocation = this->currentLocation;
@@ -62,7 +62,7 @@ Location *GpsNEO6M::getCurrentLocation(){
 
 DataTimer *GpsNEO6M::getCurrentDataTimer(){
 
-   if (!this->readGps())
+   if (this->readGps())       //Foi retirado o ! porque ele só entrava no if
       return NULL;
 
    DataTimer *dataTimer = new DataTimer();
