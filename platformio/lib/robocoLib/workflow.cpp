@@ -24,7 +24,7 @@ Workstep* Workflow::getNextStep(){
 
   if (!SD.begin(pinSD)){ 
     myFile = SD.open("roboco.txt", FILE_READ);
-    if(myFile){
+    if(!myFile){
       return NULL;
      }
   }
@@ -36,9 +36,6 @@ Workstep* Workflow::getNextStep(){
       return NULL;
     } 
   }
-
-  if(this->currentStepIndex != currentLine)
-    return NULL;
 
   Workstep* workstep = new Workstep();
  
@@ -61,19 +58,14 @@ void Workflow::test(){
   Serial.print("Testing Workflow... ");
 
   if(this->getNextStep() == NULL){
-    Serial.print("OK."); // 
+    Serial.print("Error: Check sd card or empty file"); // 
   }else{
-    this->backOneStep();
+
+    // Imprime na serial os dados do currentStep
+  //     workstep->latitude
+  // workstep->longitude = myFile.readStringUntil(',').toFloat();
+  // workstep->collectCount = myFile.readStringUntil(',').toInt();
+  // workstep->collectInterval//     this->backOneStep();
   }
   
-/*Testing Workflow
-        if(this->workflow->getNextStep() == NULL){
-                this->output->setLed0(true);
-                this->output->setLed1(true);
-                this->output->setLed2(true);
-                while(1);
-        }else{
-                this->workflow->backOneStep();
-        }
-*/
 }

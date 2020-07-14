@@ -7,17 +7,23 @@ String Sensor::getTypeName(){
    SENSOR_TYPE_NAMES[this->getType()];
 }
 
+boolean Sensor::calibrate(){
+   return true;
+}
+
 Mhz19::Mhz19(Stream *serial){
   this->serial = serial;
 }
 
-Mhz19::Mhz19(int8_t pwmPin){
-  this->pwmPin = pwmPin;
-}
 
 String Mhz19 ::read(){
   // Código de leitura via PWM ou Serial??? 
   return String(0);
+}; 
+ 
+boolean Mhz19::calibrate(){
+  // Código de calibração do sensor!! DUrará horas??? 
+  return true;
 }; 
  
 Sensor::SensorType Mhz19::getType(){
@@ -96,5 +102,16 @@ void Sensors::test(){
     Serial.print(sensor->getTypeName());
     Serial.print(":");
     Serial.println(sensor->read());
+  }
+}
+
+boolean Sensors::calibrate(){
+
+  Serial.println("Calibrating Sensors...");
+  for (int i = 0; i < this->getSize(); i++){
+    Sensor *sensor = this->getSensor(i);
+    Serial.print(sensor->getTypeName());
+    Serial.print(":");
+    Serial.println(sensor->calibrate());
   }
 }

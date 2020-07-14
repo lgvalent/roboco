@@ -13,7 +13,7 @@ Roboco::Roboco(Sensors *sensors, Output *output, GPS *gps, CollectRegister *coll
 }
 
 void Roboco::setup(){
-        this->output->lcdPrint("ROBOCO²", 0, 0);
+        this->output->lcdPrint("ROBOCO²", 0, 0);        
 }
 
 void Roboco::reset(){
@@ -97,4 +97,8 @@ void Roboco::test(){
         this->motorLeft->test();
         this->motorRight->test();
 
+}
+
+void Roboco::calibrateSensors(){
+        this->sensors->calibrate();
 }

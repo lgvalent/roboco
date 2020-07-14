@@ -32,5 +32,6 @@ class Roboco{
     void reset();
     void run();  
     void test();
+    void calibrateSensors();
 };
 #endif

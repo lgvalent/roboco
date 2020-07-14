@@ -37,6 +37,13 @@ void CollectRegister::close(){
     file.close();
 }
 
+
 void CollectRegister::test(){
     // TODO Testar se o coletor registra os dados no SD card
+	// Criar sensores virtuais
+	//  Sensors* s = new Sensors(1);
+	// s->addSensor(0, new Sensor(){String read(){return String("TestValue");} SensorType getType() = 0; })
+    // Abrir os regitrso
+	// Gravar os valores virtuais
+	// Fechar o registro
 }

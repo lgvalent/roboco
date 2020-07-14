@@ -5,6 +5,7 @@
 #include <Adafruit_Sensor.h>
 #include <Adafruit_BMP280.h>
 #include <SoftwareSerial.h>
+#include <MHZ19.h>
 
 class Unit{
   public:
@@ -27,19 +28,20 @@ class Sensor{
     virtual SensorType getType() = 0;
     virtual String read() = 0;
     String getTypeName(); 
+    boolean calibrate();
 };
 
 class Mhz19: public Sensor {
 
   private:
-    int8_t pwmPin;
     Stream* serial;
+    MHZ19 myMHZ19;
 
   public:
     Mhz19(Stream *serial);
-    Mhz19(int8_t pwmPin); 
     String read();
     SensorType getType();
+    boolean calibrate();
 };
 
 class Ldr: public Sensor{
@@ -98,5 +100,6 @@ class Sensors{
     void addSensor(int index, Sensor* sensor);
     Sensor* getSensor(int index);
     void test();
+    boolean calibrate();
 };
 #endif
