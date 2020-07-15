@@ -49,7 +49,7 @@ boolean GpsNEO6M::readGps(){
 
 Location *GpsNEO6M::getCurrentLocation(){
 
-   if (this->readGps())         //Foi retirado o ! porque ele só entrava no if
+   if (!this->readGps())
       return NULL;
 
    this->previousLocation = this->currentLocation;
