@@ -8,7 +8,6 @@
 #include <workflow.h>
 #include <gps.h>
 #include <motor.h>
-
 #include <gpsMTK33x9.h>
 #include <gpsNEO6M.h>
 

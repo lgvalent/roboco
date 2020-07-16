@@ -2,9 +2,9 @@
 #define GPS_NEO6M_CPP
 #include <Arduino.h>
 #include <gps.h>
-#include <TinyGPS.h>
+// #include <TinyGPS.h>
 #include <Stream.h>
-
+#include <TinyGPS++.h>
 
 class GpsNEO6M : public GPS{
 
@@ -12,7 +12,7 @@ class GpsNEO6M : public GPS{
         void setup();
         boolean readGps(); 
         void begin(int32_t baud);
-        TinyGPS* gps;
+        TinyGPSPlus* gps;
 
     private:
         Stream *serial;
