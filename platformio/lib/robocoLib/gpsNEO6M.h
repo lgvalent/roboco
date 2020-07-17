@@ -2,7 +2,6 @@
 #define GPS_NEO6M_CPP
 #include <Arduino.h>
 #include <gps.h>
-// #include <TinyGPS.h>
 #include <Stream.h>
 #include <TinyGPS++.h>
 
@@ -22,6 +21,5 @@ class GpsNEO6M : public GPS{
         GpsNEO6M(HardwareSerial *serial);
         Location *getCurrentLocation();
         DataTimer *getCurrentDataTimer();
-        //void testeGpsNEO6M();
 };
 #endif

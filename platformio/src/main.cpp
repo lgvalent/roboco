@@ -27,7 +27,7 @@ void setup(){
   AltitudeSensor* altSensor = new AltitudeSensor(bmp280);
   PressureSensor* pressSensor = new PressureSensor(bmp280);
 
-  Mhz19* mhzSensor = new Mhz19(10);
+  //Mhz19* mhzSensor = new Mhz19(10); >>> ESTA COMENTADO POIS AINDA NÃO TERMINAMOS DE IMPLEMENTAR <<<
 
   Ldr* ldrSensor1 = new Ldr(A8);
    
@@ -35,13 +35,13 @@ void setup(){
   sensors->addSensor(Roboco::TEMPERATURE, tempSensor);
   sensors->addSensor(Roboco::ALTITUDE, altSensor);
   sensors->addSensor(Roboco::PRESSURE, pressSensor);
-  sensors->addSensor(Roboco::CO2, mhzSensor); 
+  //sensors->addSensor(Roboco::CO2, mhzSensor); >>> ESTA COMENTADO POIS AINDA NÃO TERMINAMOS DE IMPLEMENTAR <<<
   sensors->addSensor(Roboco::LUMINOSITY, ldrSensor1);
 
   Output* output = new Output(1,2,3);
 
   // gps = new GpsMTK33x9(8,7);
-  gps = new GpsNEO6M(8,7);
+  gps = new GpsNEO6M(10,11);
 
   CollectRegister* collectRegister = new CollectRegister(1);
 

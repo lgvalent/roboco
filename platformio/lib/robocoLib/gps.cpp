@@ -70,6 +70,9 @@ void GPS::test(){
   DataTimer *dat = getCurrentDataTimer();
   unsigned long timer = millis();
 
+  // Para testar o GPS temporariamente estamos usando os prints no GPSNEO6M.cpp
+  
+  /*delay(500);
   Serial.print("Testing GPS: ");
   Serial.print(dat->year);
   Serial.print("/");
@@ -91,4 +94,6 @@ void GPS::test(){
   Serial.println(loc->altitude);
   Serial.print("Angle: ");
   Serial.println(loc->angle);
+   delay(500);*/
+
 }
