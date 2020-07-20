@@ -67,7 +67,7 @@ float GPS::getAngleToTarget(Location *currentLocation){
 void GPS::test(){
 
   Location *loc = getCurrentLocation();
-  DataTimer *dat = getCurrentDataTimer();
+  // DataTimer *dat = getCurrentDataTimer();
   unsigned long timer = millis();
 
   // Para testar o GPS temporariamente estamos usando os prints no GPSNEO6M.cpp

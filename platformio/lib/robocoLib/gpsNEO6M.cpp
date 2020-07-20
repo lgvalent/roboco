@@ -35,18 +35,18 @@ void GpsNEO6M::setup(){
 
 boolean GpsNEO6M::readGps(){
 
+   bool result = true;
    while (this->serial->available()){
-      if(this->gps->encode(this->serial->read())){
-         return true;
-      }
+      result = this->gps->encode(this->serial->read());
    }
-   return false;
+   return result;
 }
 
 Location *GpsNEO6M::getCurrentLocation(){
 
    if (!this->readGps())
       return NULL;
+   delete this->previousLocation; // Libera a memória da localização anterior!
    this->previousLocation = this->currentLocation;
    Location *location = new Location();
    
@@ -62,7 +62,7 @@ Location *GpsNEO6M::getCurrentLocation(){
    }
    Serial.println(" ");
 
-   delay(50);
+   //delay(50);
 
    location->longitude =  this->gps->location.lng();
    location->latitude =  this->gps->location.lat();

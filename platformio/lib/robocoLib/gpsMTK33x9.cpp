@@ -39,7 +39,7 @@ Location* GpsMTK33x9::getCurrentLocation(){
   
   if(!this->readGps())
     return NULL;
-
+  delete this->previousLocation; // Libera a memória da localização anterior!
   this->previousLocation = this->currentLocation;
 
   Location* location = new Location();
