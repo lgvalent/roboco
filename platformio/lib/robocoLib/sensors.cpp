@@ -11,35 +11,42 @@ boolean Sensor::calibrate(){
    return true;
 }
 
-Mhz19::Mhz19(Stream *serial){
-  this->serial = serial;
+Co2Sensor::Co2Sensor(int8_t pinRx, int8_t pinTx){
+
+  SoftwareSerial *softwareSerial = new SoftwareSerial(pinRx, pinTx);
+  softwareSerial->begin(9600);
+  this->serial = softwareSerial;
 }
 
+Sensor::SensorType Co2Sensor::getType(){
+  return CO2;
+}
 
-String Mhz19 ::read(){
-  // Código de leitura via PWM ou Serial??? 
-  return String(0);
+String Co2Sensor ::read(){
+  // Código de leitura Serial
+  return String(this->myMHZ19.getCO2(false));
 }; 
  
-boolean Mhz19::calibrate(){
+boolean Co2Sensor::calibrate(){
   // Código de calibração do sensor!! DUrará horas??? 
+  this->myMHZ19.autoCalibration(false);
   return true;
 }; 
  
-Sensor::SensorType Mhz19::getType(){
-  return CO2;
-};
-
-Ldr::Ldr(int8_t pin){
+LuminositySensor::LuminositySensor(int8_t pin){
   pinMode(pin, INPUT);
 };
 
-String Ldr:: read(){
+Sensor::SensorType LuminositySensor::getType(){
+  return LUMINOSITY;
+};
+
+String LuminositySensor:: read(){
   return String(analogRead(this->pin));
 };
 
-Sensor::SensorType Ldr::getType(){
-  return LUMINOSITY;
+boolean LuminositySensor::calibrate(){
+  return true;
 };
 
 TemperatureSensor::TemperatureSensor(Adafruit_BMP280 *sensor){
@@ -54,6 +61,10 @@ String TemperatureSensor::read(){
   return String(this->sensor->readTemperature());
 };
 
+boolean TemperatureSensor::calibrate(){
+  return true;
+};
+
 PressureSensor::PressureSensor(Adafruit_BMP280 *sensor){
   this->sensor = sensor;
 };
@@ -64,6 +75,10 @@ Sensor::SensorType PressureSensor::getType(){
 
 String PressureSensor::read(){
   return String(this->sensor->readPressure());
+};
+
+boolean PressureSensor::calibrate(){
+  return true;
 };
 
 AltitudeSensor::AltitudeSensor(Adafruit_BMP280 *sensor){
@@ -77,6 +92,10 @@ Sensor::SensorType AltitudeSensor::getType(){
 String AltitudeSensor::read(){
   return String(this->sensor->readAltitude());
 }
+
+boolean AltitudeSensor::calibrate(){
+  return true;
+};
 
 Sensors::Sensors(int8_t maxNumberOfSensors) : size(maxNumberOfSensors){
   this->sensors = new Sensor *[maxNumberOfSensors];

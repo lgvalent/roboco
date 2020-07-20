@@ -26,17 +26,15 @@ void setup(){
   TemperatureSensor* tempSensor = new TemperatureSensor(bmp280);
   AltitudeSensor* altSensor = new AltitudeSensor(bmp280);
   PressureSensor* pressSensor = new PressureSensor(bmp280);
+  Co2Sensor* mhzSensor = new Co2Sensor(11, 10); 
+  LuminositySensor* ldrSensor = new LuminositySensor(A8);
 
-  //Mhz19* mhzSensor = new Mhz19(10); >>> ESTA COMENTADO POIS AINDA NÃO TERMINAMOS DE IMPLEMENTAR <<<
-
-  Ldr* ldrSensor1 = new Ldr(A8);
-   
   Sensors* sensors = new Sensors(Roboco::_COUNT);
   sensors->addSensor(Roboco::TEMPERATURE, tempSensor);
   sensors->addSensor(Roboco::ALTITUDE, altSensor);
   sensors->addSensor(Roboco::PRESSURE, pressSensor);
-  //sensors->addSensor(Roboco::CO2, mhzSensor); >>> ESTA COMENTADO POIS AINDA NÃO TERMINAMOS DE IMPLEMENTAR <<<
-  sensors->addSensor(Roboco::LUMINOSITY, ldrSensor1);
+  sensors->addSensor(Roboco::CO2, mhzSensor); 
+  sensors->addSensor(Roboco::LUMINOSITY, ldrSensor);
 
   Output* output = new Output(1,2,3);
 

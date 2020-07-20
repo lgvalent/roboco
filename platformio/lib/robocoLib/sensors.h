@@ -17,11 +17,11 @@ class SensorValue{
     float value;
     Unit unit;
 };
-//vhhh
+
 class Sensor{
 
   protected:
-    static enum SensorType{PRESSURE=0, ALTITUDE, TEMPERATURE, LUMINOSITY, CO2} SENSOR_TYPE;
+    static enum SensorType{PRESSURE, ALTITUDE, TEMPERATURE, LUMINOSITY, CO2} SENSOR_TYPE;
     static String SENSOR_TYPE_NAMES[];
 
   public:
@@ -31,28 +31,29 @@ class Sensor{
     boolean calibrate();
 };
 
-class Mhz19: public Sensor {
+class Co2Sensor: public Sensor {
 
   private:
     Stream* serial;
     MHZ19 myMHZ19;
 
   public:
-    Mhz19(Stream *serial);
-    String read();
+    Co2Sensor(int8_t pinRx, int8_t pinTx);
     SensorType getType();
+    String read();
     boolean calibrate();
 };
 
-class Ldr: public Sensor{
+class LuminositySensor: public Sensor{
 
   private:
     int8_t pin;
 
   public:
-    Ldr(int8_t pin);
+    LuminositySensor(int8_t pin);
     SensorType getType();
     String read();
+    boolean calibrate();
 };
 
 class TemperatureSensor: public Sensor{
@@ -64,6 +65,7 @@ class TemperatureSensor: public Sensor{
     TemperatureSensor(Adafruit_BMP280* sensor); 
     SensorType getType(); 
     String read();
+    boolean calibrate();
 };
 
 class PressureSensor: public Sensor{
@@ -75,6 +77,7 @@ class PressureSensor: public Sensor{
     PressureSensor(Adafruit_BMP280* sensor); 
     SensorType getType();
     String read();
+     boolean calibrate();
 };
 
 class AltitudeSensor: public Sensor{
@@ -86,6 +89,7 @@ class AltitudeSensor: public Sensor{
     AltitudeSensor(Adafruit_BMP280* sensor); 
     SensorType getType(); 
     String read(); 
+    boolean calibrate();
 };
 
 class Sensors{
