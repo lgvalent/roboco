@@ -5,9 +5,6 @@
 
 GpsNEO6M::GpsNEO6M(int8_t pinRx, int8_t pinTx){
    
-   this->targetLocation = NULL;
-   this->previousLocation = NULL;
-
    SoftwareSerial *softwareSerial = new SoftwareSerial(pinRx, pinTx);
    softwareSerial->begin(9600);
    this->serial = softwareSerial;
@@ -19,9 +16,6 @@ GpsNEO6M::GpsNEO6M(int8_t pinRx, int8_t pinTx){
 
 GpsNEO6M::GpsNEO6M(HardwareSerial *serial){
 
-   this->targetLocation = NULL;
-   this->previousLocation = NULL;
-   // serial->begin(115200);
    serial->begin(9600);
    this->serial = serial;
 

@@ -26,7 +26,7 @@ void setup(){
   TemperatureSensor* tempSensor = new TemperatureSensor(bmp280);
   AltitudeSensor* altSensor = new AltitudeSensor(bmp280);
   PressureSensor* pressSensor = new PressureSensor(bmp280);
-  Co2Sensor* mhzSensor = new Co2Sensor(11, 10); 
+  Co2Sensor* mhzSensor = new Co2Sensor(12, 13); 
   LuminositySensor* ldrSensor = new LuminositySensor(A8);
 
   Sensors* sensors = new Sensors(Roboco::_COUNT);

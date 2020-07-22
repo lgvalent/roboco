@@ -4,16 +4,12 @@
 
 GpsMTK33x9::GpsMTK33x9(int8_t pinRx, int8_t pinTx){
 
-  this->targetLocation = NULL;
-  this->previousLocation = NULL;
   this->gps = new Adafruit_GPS(new SoftwareSerial(pinRx, pinTx));
   setup();
 }
 
 GpsMTK33x9::GpsMTK33x9(HardwareSerial *serial){
 
-  this->targetLocation = NULL;
-  this->previousLocation = NULL;
   this->gps = new Adafruit_GPS(serial);
   setup();
 }
