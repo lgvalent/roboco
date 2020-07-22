@@ -45,7 +45,7 @@ Location *GpsNEO6M::getCurrentLocation(){
    Serial.println(" ");
    Serial.print((">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Location: "));
    if (this->gps->location.isValid()){
-      this->previousLocation->copyFrom(this->currentLocation);
+      *(this->previousLocation)=*(this->currentLocation); // guardando currentLocation
       Serial.print(this->gps->location.lat(), 6); //latitude
       Serial.print((" , "));
       Serial.print(this->gps->location.lng(), 6); //longitude
