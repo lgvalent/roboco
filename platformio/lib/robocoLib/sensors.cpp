@@ -4,7 +4,7 @@
 String Sensor::SENSOR_TYPE_NAMES[] = {"Pressure", "Altitude", "Temperature", "Luminosity", "CO2"};
 
 String Sensor::getTypeName(){
-   SENSOR_TYPE_NAMES[this->getType()];
+  return SENSOR_TYPE_NAMES[this->getType()];
 }
 
 boolean Sensor::calibrate(){
@@ -133,4 +133,6 @@ boolean Sensors::calibrate(){
     Serial.print(":");
     Serial.println(sensor->calibrate());
   }
+
+  return true;
 }
