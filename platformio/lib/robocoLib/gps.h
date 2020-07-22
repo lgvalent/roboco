@@ -8,6 +8,14 @@ struct Location{
     float altitude;
     float angle;
     unsigned long time;
+
+    void copyFrom(Location * location){
+        latitude = location->latitude;
+        longitude = location->longitude;
+        altitude = location->altitude;
+        angle = location->angle;
+        time = location->time; 
+    }
 };
 
 struct DateTime

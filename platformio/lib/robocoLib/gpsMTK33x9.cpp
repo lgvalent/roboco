@@ -40,7 +40,7 @@ Location* GpsMTK33x9::getCurrentLocation(){
   if(!this->readGps())
     return NULL;
 
-  *(this->previousLocation) = *(this->currentLocation); // Copiando o conteúdo do objeto
+  this->previousLocation->copyFrom(this->currentLocation); // Copiando o conteúdo do objeto
 
   this->currentLocation->longitude = this->gps->longitudeDegrees;
   this->currentLocation->latitude = this->gps->latitudeDegrees;
