@@ -16,7 +16,7 @@ class GpsMTK33x9 : public GPS{
         GpsMTK33x9(int8_t pinRx, int8_t pinTx);
         GpsMTK33x9(HardwareSerial *serial);
         Location *getCurrentLocation();
-        DataTimer *getCurrentDataTimer();
+        DateTime *getCurrentDateTime();
 };
 #endif
 

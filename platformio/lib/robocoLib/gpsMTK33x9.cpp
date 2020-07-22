@@ -39,32 +39,30 @@ Location* GpsMTK33x9::getCurrentLocation(){
   
   if(!this->readGps())
     return NULL;
-  delete this->previousLocation; // Libera a memória da localização anterior!
-  this->previousLocation = this->currentLocation;
 
-  Location* location = new Location();
-  location->longitude = this->gps->longitudeDegrees;
-  location->latitude = this->gps->latitudeDegrees;
-  location->altitude = this->gps->altitude;
-  location->angle = getAngleToTarget(location);
-  location->time = millis();
+  *(this->previousLocation) = *(this->currentLocation); // Copiando o conteúdo do objeto
 
-  this->currentLocation = location;
-  return location;
+  this->currentLocation->longitude = this->gps->longitudeDegrees;
+  this->currentLocation->latitude = this->gps->latitudeDegrees;
+  this->currentLocation->altitude = this->gps->altitude;
+  this->currentLocation->angle = getAngleToTarget(this->currentLocation);
+  this->currentLocation->time = millis();
+
+  return this->currentLocation;
+  
 }
 
-DataTimer *GpsMTK33x9::getCurrentDataTimer(){
+DateTime *GpsMTK33x9::getCurrentDateTime(){
 
   if (!this->readGps())
     return NULL;
 
-  DataTimer *dataTimer = new DataTimer();
-  dataTimer->day = this->gps->day;
-  dataTimer->month = this->gps->month;
-  dataTimer->year = this->gps->year;
-  dataTimer->hour = this->gps->hour;
-  dataTimer->minute = this->gps->minute;
-  dataTimer->seconds = this->gps->seconds;
+  this->currentDateTime->year = 2000 + this->gps->year;
+  this->currentDateTime->month = this->gps->month;
+  this->currentDateTime->day = this->gps->day;
+  this->currentDateTime->hour = this->gps->hour;
+  this->currentDateTime->minute = this->gps->minute;
+  this->currentDateTime->seconds = this->gps->seconds;
 
-  return dataTimer;
+  return this->currentDateTime;
 }

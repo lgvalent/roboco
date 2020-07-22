@@ -22,9 +22,6 @@ Location *GPS::getPreviousLocation(){
 
 void GPS::setTargetLocation(float latitude, float longitude){
 
-  if (this->targetLocation == NULL)
-    this->targetLocation = new Location;
-
   this->targetLocation->latitude = latitude;
   this->targetLocation->longitude = longitude;
 }
@@ -67,7 +64,7 @@ float GPS::getAngleToTarget(Location *currentLocation){
 void GPS::test(){
 
   Location *loc = getCurrentLocation();
-  // DataTimer *dat = getCurrentDataTimer();
+  // DateTime *dat = getCurrentDateTime();
   unsigned long timer = millis();
 
   // Para testar o GPS temporariamente estamos usando os prints no GPSNEO6M.cpp

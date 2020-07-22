@@ -20,6 +20,6 @@ class GpsNEO6M : public GPS{
         GpsNEO6M(int8_t pinRx, int8_t pinTx);
         GpsNEO6M(HardwareSerial *serial);
         Location *getCurrentLocation();
-        DataTimer *getCurrentDataTimer();
+        DateTime *getCurrentDateTime();
 };
 #endif

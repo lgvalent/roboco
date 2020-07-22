@@ -46,9 +46,8 @@ Location *GpsNEO6M::getCurrentLocation(){
 
    if (!this->readGps())
       return NULL;
-   delete this->previousLocation; // Libera a memória da localização anterior!
-   this->previousLocation = this->currentLocation;
-   Location *location = new Location();
+
+   *(this->previousLocation) = *(this->currentLocation);
    
    // Código temporário para teste.
    Serial.println(" ");
@@ -64,21 +63,18 @@ Location *GpsNEO6M::getCurrentLocation(){
 
    //delay(50);
 
-   location->longitude =  this->gps->location.lng();
-   location->latitude =  this->gps->location.lat();
-   location->angle = getAngleToTarget(location);
-   location->time = millis();
-   this->currentLocation = location;
+   this->currentLocation->longitude =  this->gps->location.lng();
+   this->currentLocation->latitude =  this->gps->location.lat();
+   this->currentLocation->angle = getAngleToTarget(this->currentLocation);
+   this->currentLocation->time = millis();
 
-   return location;
+   return this->currentLocation;
 }
 
-DataTimer *GpsNEO6M::getCurrentDataTimer(){
+DateTime *GpsNEO6M::getCurrentDateTime(){
 
    if (!this->readGps())
       return NULL;
-
-   DataTimer *dataTimer = new DataTimer();
 
    // Código temporário para teste.
    Serial.print(("------------------------------- Date: "));
@@ -118,12 +114,12 @@ DataTimer *GpsNEO6M::getCurrentDataTimer(){
    Serial.println(" ");
 
 
-   dataTimer->year = this->gps->date.year();
-   dataTimer->month = this->gps->date.month();
-   dataTimer->day = this->gps->date.day();
-   dataTimer->hour = this->gps->time.hour();
-   dataTimer->minute = this->gps->time.minute();
-   dataTimer->seconds = this->gps->time.second();
+   this->currentDateTime->year = this->gps->date.year();
+   this->currentDateTime->month = this->gps->date.month();
+   this->currentDateTime->day = this->gps->date.day();
+   this->currentDateTime->hour = this->gps->time.hour();
+   this->currentDateTime->minute = this->gps->time.minute();
+   this->currentDateTime->seconds = this->gps->time.second();
 
-   return dataTimer;
+   return this->currentDateTime;
 }
