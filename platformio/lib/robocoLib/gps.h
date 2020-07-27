@@ -3,8 +3,8 @@
 #include <Arduino.h>
 
 struct Location{
-    float latitude;
-    float longitude;
+    double latitude;
+    double longitude;
     float altitude;
     float angle;
     unsigned long time;
@@ -24,13 +24,13 @@ class GPS{
 
     protected:
         virtual void setup()=0;
-        virtual boolean readGps()=0;     
         Location* targetLocation = new Location();
         Location* previousLocation = new Location();
         Location* currentLocation = new Location();
         DateTime* currentDateTime = new DateTime();
 
     public:
+        virtual boolean readGps()=0;     
         virtual Location* getCurrentLocation()=0;
         virtual DateTime* getCurrentDateTime()=0;
         Location* getPreviousLocation();
@@ -38,6 +38,6 @@ class GPS{
         void setTargetLocation(float latitude, float longitude);
         float getDistanceToTarget();
         float getAngleToTarget(Location* currentLocation);
-        void test();
+        boolean test();
 };
 #endif

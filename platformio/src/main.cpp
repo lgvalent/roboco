@@ -11,8 +11,6 @@
 #include <gpsMTK33x9.h>
 #include <gpsNEO6M.h>
 
-/**/
-
 Roboco* roboco;
 GPS* gps;
 
@@ -39,7 +37,7 @@ void setup(){
   Output* output = new Output(1,2,3);
 
   // gps = new GpsMTK33x9(8,7);
-  gps = new GpsNEO6M(10,11);
+  gps = new GpsNEO6M(&Serial1); // pins 18tx e 19rx
 
   CollectRegister* collectRegister = new CollectRegister(1);
 
@@ -52,8 +50,10 @@ void setup(){
   roboco->setup();
 }
 
+
 void loop(){
   // if(digitalRead(12) == LOW && false){  // Define se o robô estará em modo normal ou de teste
  // roboco->run();
-  roboco->test();
+    gps->test();
+
 }

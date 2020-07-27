@@ -48,7 +48,6 @@ float GPS::getAngleToTarget(Location *currentLocation){
   if (this->previousLocation == NULL){
     return 0;
   }
-
   float cx0 = this->previousLocation->longitude;
   float cy0 = this->previousLocation->latitude;
   float cx1 = currentLocation->longitude;
@@ -61,36 +60,43 @@ float GPS::getAngleToTarget(Location *currentLocation){
   return angleBetweenLines(cx0, cy0, cx1, cy1, tx0, ty0, tx1, ty1);
 }
 
-void GPS::test(){
+boolean GPS::test(){
+  unsigned long start = millis();
+
+  do {            // Forma funcional do delay
+    readGps();
+  } while (millis() - start < 2000);
 
   Location *loc = getCurrentLocation();
   DateTime *dat = getCurrentDateTime();
-  unsigned long timer = millis();
 
-  // Para testar o GPS temporariamente estamos usando os prints no GPSNEO6M.cpp
-  
-  /*delay(500);
-  Serial.print("Testing GPS: ");
-  Serial.print(dat->year);
-  Serial.print("/");
-  Serial.print(dat->month);
-  Serial.print("/");
-  Serial.print(dat->day);
-  Serial.print(" ");
-  Serial.print(dat->hour);
-  Serial.print(":");
-  Serial.print(dat->minute);
-  Serial.print(":");
-  Serial.print(dat->seconds);
-  Serial.println();
-  Serial.print("Latitude: ");
-  Serial.println(loc->latitude, 6);
-  Serial.print("Longitude: ");
-  Serial.println(loc->longitude, 6);
-  Serial.print("Altitude: ");
-  Serial.println(loc->altitude);
-  Serial.print("Angle: ");
-  Serial.println(loc->angle);
-   delay(500);*/
-
+  if(loc != NULL && dat != NULL){  // verificação da leitura 
+    Serial.println(" ");
+    Serial.println("Testing GPS: ");
+    Serial.print("Date: ");
+    Serial.print(dat->day);
+    Serial.print("/");
+    Serial.print(dat->month);
+    Serial.print("/");
+    Serial.print(dat->year);
+    Serial.println(" ");
+    Serial.print("Time: ");
+    Serial.print(dat->hour);
+    Serial.print(":");
+    Serial.print(dat->minute);
+    Serial.print(":");
+    Serial.print(dat->seconds);
+    Serial.println();
+    Serial.print("Latitude: ");
+    Serial.println(loc->latitude, 6);
+    Serial.print("Longitude: ");
+    Serial.println(loc->longitude, 6);
+    Serial.print("Altitude: ");
+    Serial.println(loc->altitude);
+    Serial.print("Angle: ");
+    Serial.println(loc->angle);
+    return true;
+  } else {
+    return false;
+  }
 }
