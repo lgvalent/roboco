@@ -2,6 +2,7 @@
 #define SENSORS_H
 #include <Arduino.h>
 #include <Wire.h>
+#include <SPI.h>
 #include <Adafruit_Sensor.h>
 #include <Adafruit_BMP280.h>
 #include <SoftwareSerial.h>
@@ -21,7 +22,7 @@ class SensorValue{
 class Sensor{
 
   protected:
-    static enum SensorType{PRESSURE, ALTITUDE, TEMPERATURE, LUMINOSITY, CO2} SENSOR_TYPE;
+    static enum SensorType{LUMINOSITY, PRESSURE, ALTITUDE, TEMPERATURE, CO2} SENSOR_TYPE;
     static String SENSOR_TYPE_NAMES[];
 
   public:
@@ -35,7 +36,7 @@ class Co2Sensor: public Sensor {
 
   private:
     Stream* serial;
-    MHZ19 myMHZ19;
+    MHZ19* mhz19;
 
   public:
     Co2Sensor(int8_t pinRx, int8_t pinTx);

@@ -88,17 +88,16 @@ void Roboco::run(){
 
 void Roboco::test(){
 
+        Serial.println(" ");
         Serial.println("Testing Roboco...");
-        //this->sensors->test();
+        this->gps->test(); 
+        Serial.println(" ");
+        this->sensors->test();
         //this->output->test();
-
-        this->gps->test(); // TESTANDO SÓ O GPS 
-
         //this->collectRegister->test(); // em andamento
         //this->workflow->test();
         //this->motorLeft->test();
         //this->motorRight->test();
-
 }
 
 void Roboco::calibrateSensors(){

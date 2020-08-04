@@ -63,7 +63,7 @@ DateTime *GpsNEO6M::getCurrentDateTime(){
    }
 
    if (this->gps->time.isValid()){
-         this->currentDateTime->hour = this->gps->time.hour();
+         this->currentDateTime->hour = this->gps->time.hour()-3;
          this->currentDateTime->minute = this->gps->time.minute();
          this->currentDateTime->seconds = this->gps->time.second();
    } else {

@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include <sensors.h>
 
-String Sensor::SENSOR_TYPE_NAMES[] = {"Pressure", "Altitude", "Temperature", "Luminosity", "CO2"};
+String Sensor::SENSOR_TYPE_NAMES[] = {"Luminosity", "Pressure","Altitude", "Temperature", "CO2" };
 
 String Sensor::getTypeName(){
   return SENSOR_TYPE_NAMES[this->getType()];
@@ -16,6 +16,8 @@ Co2Sensor::Co2Sensor(int8_t pinRx, int8_t pinTx){
   SoftwareSerial *softwareSerial = new SoftwareSerial(pinRx, pinTx);
   softwareSerial->begin(9600);
   this->serial = softwareSerial;
+  this->mhz19 = new MHZ19();
+  mhz19->begin(*Co2Sensor::serial);
 }
 
 Sensor::SensorType Co2Sensor::getType(){
@@ -24,12 +26,12 @@ Sensor::SensorType Co2Sensor::getType(){
 
 String Co2Sensor ::read(){
   // Código de leitura Serial
-  return String(this->myMHZ19.getCO2(false));
+  return String(this->mhz19->getCO2(false));
 }; 
  
 boolean Co2Sensor::calibrate(){
   // Código de calibração do sensor!! DUrará horas??? 
-  this->myMHZ19.autoCalibration(false);
+  this->mhz19->autoCalibration(false);
   return true;
 }; 
  
@@ -50,6 +52,7 @@ boolean LuminositySensor::calibrate(){
 };
 
 TemperatureSensor::TemperatureSensor(Adafruit_BMP280 *sensor){
+  
   this->sensor = sensor;
 };
 
@@ -66,6 +69,7 @@ boolean TemperatureSensor::calibrate(){
 };
 
 PressureSensor::PressureSensor(Adafruit_BMP280 *sensor){
+
   this->sensor = sensor;
 };
 
@@ -82,6 +86,7 @@ boolean PressureSensor::calibrate(){
 };
 
 AltitudeSensor::AltitudeSensor(Adafruit_BMP280 *sensor){
+
   this->sensor = sensor;
 };
 
@@ -90,7 +95,7 @@ Sensor::SensorType AltitudeSensor::getType(){
 };
 
 String AltitudeSensor::read(){
-  return String(this->sensor->readAltitude());
+  return String(this->sensor->readAltitude(1013.25));
 }
 
 boolean AltitudeSensor::calibrate(){
@@ -116,18 +121,18 @@ Sensor *Sensors::getSensor(int index){
 void Sensors::test(){
 
   Serial.println("Testing Sensors...");
-  for (int i = 0; i < this->getSize(); i++){
-    Sensor *sensor = this->getSensor(i);
+  for (int index = 0; index < 5; index++){
+    Sensor *sensor = this->getSensor(index);
     Serial.print(sensor->getTypeName());
     Serial.print(":");
-    Serial.println(sensor->read());
+   Serial.println(sensor->read());
   }
 }
 
 boolean Sensors::calibrate(){
 
   Serial.println("Calibrating Sensors...");
-  for (int i = 0; i < this->getSize(); i++){
+  for (int i = 0; i < this->getSize();i++){
     Sensor *sensor = this->getSensor(i);
     Serial.print(sensor->getTypeName());
     Serial.print(":");

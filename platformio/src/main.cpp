@@ -14,25 +14,28 @@
 Roboco* roboco;
 GPS* gps;
 
+
+
 void setup(){
 
-  Serial.begin(115200);
+  Serial.begin(9600);
   Serial.println("Starting...\n");
 
-  /* Cria os sensores */
-  Adafruit_BMP280* bmp280 = new Adafruit_BMP280();
-  TemperatureSensor* tempSensor = new TemperatureSensor(bmp280);
-  AltitudeSensor* altSensor = new AltitudeSensor(bmp280);
-  PressureSensor* pressSensor = new PressureSensor(bmp280);
-  Co2Sensor* mhzSensor = new Co2Sensor(12, 13); 
+  /*/* Cria os sensores */
+  Adafruit_BMP280* bmp280 = new Adafruit_BMP280(); // no Arduino Mega 2560 os pinos de conexão I2C do BMP280 serão o 20 (SDA) e o 21 (SCL).
+  bmp280->begin(0x76); // necessario inicializar o bmp280
   LuminositySensor* ldrSensor = new LuminositySensor(A8);
+  PressureSensor* pressSensor = new PressureSensor(bmp280);
+  AltitudeSensor* altSensor = new AltitudeSensor(bmp280);
+  Co2Sensor* myMHZ19 = new Co2Sensor(10, 11);
+  TemperatureSensor* tempSensor = new TemperatureSensor(bmp280);
 
   Sensors* sensors = new Sensors(Roboco::_COUNT);
-  sensors->addSensor(Roboco::TEMPERATURE, tempSensor);
-  sensors->addSensor(Roboco::ALTITUDE, altSensor);
-  sensors->addSensor(Roboco::PRESSURE, pressSensor);
-  sensors->addSensor(Roboco::CO2, mhzSensor); 
   sensors->addSensor(Roboco::LUMINOSITY, ldrSensor);
+  sensors->addSensor(Roboco::PRESSURE, pressSensor);
+  sensors->addSensor(Roboco::ALTITUDE, altSensor);
+  sensors->addSensor(Roboco::CO2, myMHZ19); 
+  sensors->addSensor(Roboco::TEMPERATURE, tempSensor);
 
   Output* output = new Output(1,2,3);
 
@@ -53,7 +56,6 @@ void setup(){
 
 void loop(){
   // if(digitalRead(12) == LOW && false){  // Define se o robô estará em modo normal ou de teste
- // roboco->run();
-    gps->test();
-
+  // roboco->run();
+     roboco->test();
 }

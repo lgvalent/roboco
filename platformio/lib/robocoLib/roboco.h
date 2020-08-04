@@ -26,7 +26,7 @@ class Roboco{
 
   
   public:
-    static enum RobocoSensors{LUMINOSITY=0, PRESSURE, ALTITUDE, HUMIDITY, TEMPERATURE, CO2, _COUNT} ROBOCO_SENSORS;
+    static enum RobocoSensors{LUMINOSITY=0, PRESSURE=1, ALTITUDE=2,TEMPERATURE=3, CO2=4, _COUNT} ROBOCO_SENSORS;
     Roboco(Sensors* sensors, Output* output, GPS* gps, CollectRegister* collectRegister, Workflow* workflow, Motor* left, Motor* right);
     void setup();
     void reset();
