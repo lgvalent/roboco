@@ -37,7 +37,7 @@ class GPS{
         Location* getTargetLocation();
         void setTargetLocation(float latitude, float longitude);
         float getDistanceToTarget();
-        float getAngleToTarget(Location* currentLocation);
+        float getAngleToTarget();
         boolean test();
 };
 #endif

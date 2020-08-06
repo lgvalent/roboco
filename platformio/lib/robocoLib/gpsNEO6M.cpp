@@ -47,7 +47,7 @@ Location *GpsNEO6M::getCurrentLocation(){
       return NULL;
    }
 
-   this->currentLocation->angle = getAngleToTarget(this->currentLocation);
+   this->currentLocation->angle = this->getAngleToTarget();
 
    return this->currentLocation;
 }

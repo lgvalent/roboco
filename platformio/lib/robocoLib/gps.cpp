@@ -42,7 +42,7 @@ float angleBetweenLines(float cx0, float cy0, float cx1, float cy1, float tx0, f
   return 0;
 }
 
-float GPS::getAngleToTarget(Location *currentLocation){
+float GPS::getAngleToTarget(){
 
   // Verifica se tem um previous location != NULL
   if (this->previousLocation == NULL){
@@ -50,10 +50,10 @@ float GPS::getAngleToTarget(Location *currentLocation){
   }
   float cx0 = this->previousLocation->longitude;
   float cy0 = this->previousLocation->latitude;
-  float cx1 = currentLocation->longitude;
-  float cy1 = currentLocation->latitude;
-  float tx0 = currentLocation->longitude;
-  float ty0 = currentLocation->latitude;
+  float cx1 = this->currentLocation->longitude;
+  float cy1 = this->currentLocation->latitude;
+  float tx0 = this->currentLocation->longitude;
+  float ty0 = this->currentLocation->latitude;
   float tx1 = this->targetLocation->longitude;
   float ty1 = this->targetLocation->latitude;
 
