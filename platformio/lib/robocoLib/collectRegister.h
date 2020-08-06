@@ -3,6 +3,7 @@
 #include <SD.h>
 #include <gps.h>
 #include <sensors.h>
+#include <gpsNEO6M.h>
 
 class CollectRegister{
   
@@ -12,8 +13,8 @@ class CollectRegister{
     
   public:
     CollectRegister(int8_t pinSD);
-	  void open(Sensors* sensors);
-    void write(Location* location, Sensors* sensors);
+	  void open();
+    void write(Location* location,DateTime* dateTime, Sensors* sensors);
   	void close();
     void test();
 };

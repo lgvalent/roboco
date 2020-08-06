@@ -60,12 +60,9 @@ void Workflow::test(){
   if(this->getNextStep() == NULL){
     Serial.print("Error: Check sd card or empty file"); // 
   }else{
-
-    // Imprime na serial os dados do currentStep
-  //     workstep->latitude
-  // workstep->longitude = myFile.readStringUntil(',').toFloat();
-  // workstep->collectCount = myFile.readStringUntil(',').toInt();
-  // workstep->collectInterval//     this->backOneStep();
+    this->getNextStep();
+    // this->backOneStep();
+    // this->reset();
   }
   
 }

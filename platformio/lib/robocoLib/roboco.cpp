@@ -27,7 +27,6 @@ void Roboco::run(){
         //          1.1.1 Ler em um arquivo ROBOCO.TXT o valor gravado na primeira linha do arquivo
         //      1.2 Ler a linha do arquivo ROBOCO.TXT
         //      1.3 Guardar os valores em variáveis globais
-
         //      2º Deslocar-se até o destino
         this->gps->setTargetLocation(this->currentStep->latitude, this->currentStep->longitude);
         bool goToTarget = false;
