@@ -23,14 +23,21 @@ class Roboco{
     Motor* motorLeft,* motorRight;
     Workstep* currentStep;
     Location* currentLocation;
+    Workstep* origin;
 
-  
+  protected:
+    static int status;
+
   public:
     static enum RobocoSensors{LUMINOSITY=0, PRESSURE=1, ALTITUDE=2,TEMPERATURE=3, CO2=4, _COUNT} ROBOCO_SENSORS;
     Roboco(Sensors* sensors, Output* output, GPS* gps, CollectRegister* collectRegister, Workflow* workflow, Motor* left, Motor* right);
     void setup();
     void reset();
-    void run();  
+    void stabilizationOfSensors();
+    void collectData();
+    void run();
+    void runTarget();
+    void runBackToOrigin();  
     void test();
     void calibrateSensors();
 };

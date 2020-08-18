@@ -4,9 +4,9 @@
 
 float GPS::getDistanceToTarget(){
 
-  float lat1 = currentLocation->latitude * 3.1415927 / 180;
+  float lat1 = currentLocation->latitude * 3.1415927 / 180;     // atual
   float lon1 = currentLocation->longitude * 3.1415927 / 180;
-  float lat2 = targetLocation->latitude * 3.1415927 / 180;
+  float lat2 = targetLocation->latitude * 3.1415927 / 180;      // alvo
   float lon2 = targetLocation->longitude * 3.1415927 / 180;
   float Raio_da_terra = 6371000; // km
   float dLat = (lat2 - lat1);    //diferença das latitudes dos pontos em radianos
@@ -42,19 +42,21 @@ float angleBetweenLines(float cx0, float cy0, float cx1, float cy1, float tx0, f
   return 0;
 }
 
-float GPS::getAngleToTarget(Location *currentLocation){
+float GPS::getAngleToTarget(){
 
   // Verifica se tem um previous location != NULL
   if (this->previousLocation == NULL){
     return 0;
   }
-  float cx0 = this->previousLocation->longitude;
+  float cx0 = this->previousLocation->longitude; // anterior
   float cy0 = this->previousLocation->latitude;
-  float cx1 = currentLocation->longitude;
+
+  float cx1 = currentLocation->longitude; // atual
   float cy1 = currentLocation->latitude;
   float tx0 = currentLocation->longitude;
   float ty0 = currentLocation->latitude;
-  float tx1 = this->targetLocation->longitude;
+
+  float tx1 = this->targetLocation->longitude; // alvo
   float ty1 = this->targetLocation->latitude;
 
   return angleBetweenLines(cx0, cy0, cx1, cy1, tx0, ty0, tx1, ty1);

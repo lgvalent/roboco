@@ -41,7 +41,7 @@ Location* GpsMTK33x9::getCurrentLocation(){
   this->currentLocation->longitude = this->gps->longitudeDegrees;
   this->currentLocation->latitude = this->gps->latitudeDegrees;
   this->currentLocation->altitude = this->gps->altitude;
-  this->currentLocation->angle = getAngleToTarget(this->currentLocation);
+  this->currentLocation->angle = getAngleToTarget();
   this->currentLocation->time = millis();
 
   return this->currentLocation;

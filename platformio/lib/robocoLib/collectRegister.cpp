@@ -1,6 +1,5 @@
 
 #include <collectRegister.h>
-#include <gps.h>
 
 CollectRegister::CollectRegister(int8_t pinSD) {
 	this->pinSD = pinSD;

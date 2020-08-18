@@ -8,9 +8,9 @@
 struct Workstep{
   float latitude;
   float longitude;
-  int collectCount;
-  int collectInterval; // in seconds
-  byte currentStopIndex;
+  int collectCount; // contagem da coleta D3 ATE ACABAR O 5M
+  int collectInterval; // in seconds intervalo da coleta D2 5M
+  byte currentStopIndex; // indice de parada atual 
 };
 
 class Workflow{
