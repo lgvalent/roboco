@@ -1,4 +1,3 @@
-
 #include <collectRegister.h>
 
 CollectRegister::CollectRegister(int8_t pinSD) {
