@@ -12,124 +12,56 @@ Roboco::Roboco(Sensors *sensors, Output *output, GPS *gps, CollectRegister *coll
   this->motorRight = motorRight;
 }
 
-void Roboco::setup()
-{
-  //calibração dos sensores e GPS
-  //salvando a origim
+void Roboco::setup(){
+  // chamar calibração dos sensores (definir tempo) 
+  // start GPS
+  // salvando a origem do gps
   this->output->lcdPrint("ROBOCO²", 0, 0);
 }
 
-void Roboco::reset()
-{
+void Roboco::reset(){
   this->workflow->reset();
 }
 
-void Roboco::run()
-{
-  switch (this->state)
-  {
-  case SET_TARGET:
-    this->SetTarget();
-  break;
-  
-  case GO_TARGET:
-    this->runTarget();
-    this->state = COLLECT_DATA;
-  break;
-  
-  case COLLECT_DATA:
-    this->collectData();
-    this->state = GO_TARGET;
-  break;
-  
-  case RETURN_ORIGIN:
-    this->runBackToOrigin()
-    this->runTaget();
-    this->state = FINISH;
+void Roboco::run(){
+
+  switch (this->state){     // Máquina de estado
+    case SET_TARGET:        // Recebe o alvo 
+      this->setTarget();
+      this->state = GO_TARGET;
     break;
   
-  case INIT_SENSORS:
-    this->initSensors();
-  break;
-  case FINISH:
-    //terminou e esta na origem
-  break;
-  default:
+    case GO_TARGET:         // Vai para o alvo e controla a velocidade dos motores (perto=diminiu vel. /// longe=aumenta vel.)
+     if (this->workflow->getNextStep() != NULL){
+          this->goTarget();
+          this->state = COLLECT_DATA;
+      }else{
+        this->state = RETURN_ORIGIN;
+      }
+    break;
+  
+    case COLLECT_DATA:      // Coleta os dados dos sensores e salva no cartão de memória
+      this->collectData();
+      this->state = GO_TARGET;
+    break;
+  
+    case RETURN_ORIGIN:     // Volta para o ponto inicial
+      this->returnOrigin();
+      this->goTarget();
+      this->state = FINISH;
+    break;
+  
+    case INIT_SENSORS:      
+      // Inicializa os sensores, liga eles quando estiver chegando perto do ponto (implementar?)
+    break;
+
+    case FINISH:
+      //Desligar o robo (implementar)
     break;
   }
 }
 
-boolean Roboco::stabilizationOfSensors()
-{
-  //Estabilizar sensores por 120 segundos // iniciar timer 120segundos
-  //get valor do sensores a cada 1 Segundo //iniciar timer de 1segundo
-  boolean stabilization = false;
-  boolean getDate = false;
-  boolean calcMedia = false;
-  timer(120s){
-    stabilization = true;
-  }
-  timer(1s){
-    getDate = true;
-  }
-
-  /// puxar enum dos sensores
-  String arrayAtual[sensors->getSize()];
-  String arrayMedio[sensors->getSize()];
-  while(!stabilzation){ //enquanto tempo for menor 120segundos fica ai...
-    if(getDate){
-      for(int i =0; i<sensors->getSize();i++ ){}
-        arrayAtual[i] = sensors->getSensor(i)->read(); // 4 é o CO2
-      }
-      getDate = false;
-      calcMedia = true;
-    }// interrupção de 1 segundo
-    //paroooo
-    //volto
-    if(calcMedia){
-      for(int i = 0; i<sensors->getSize(); i++){
-        arrayMedio[i] = (arrayMedio[i]+arrayAtual[i])/2//montar função media movel....
-      }
-      calcMedia = false;
-    }
-    delay(1);
-  }
-  //passou 120segundos
-  // apresentar valores dos sensores e confirmar seu funcionamento/ mais a temperatura no local estava 30 graus
-  // lcd sensor de co2 ta com 400 confirma? 
-  // lcd sensor de temp ta com 35 graus? confirma?
-  // lcd sensor de luminosidade valor 1024? ta escuro? não, quer continuar ou interromper?
-}
-
-void Roboco::collectData()
-{
-
-  //     3.2 Coletar dados (metodo)
-  //              3.2. CO2, temperaturas, pressão, altitude, etc
-  //              3.2.1 Armazenar os dados no cartão
-  //                      3.2.2 Gravar uma linha para cada capitura
-  //                        TIME_STAMP, CO2, TEMP_INTERNA, PRESSÃO, ALTITUDE
-
-  //      3.3 Repetir 3.2 a cada NTERVALO_ENTRE_CAPTURAS segundos
-  //      3.4 Verificar o INTERVALO_AJUSTE_POSICIONAMENTO
-  //              3.4.1 Repetir as atividades do 2º passo para reposicionamento
-  //      3.5 Repetir 3.2 até esgotar o TEMPO_CAPTURA
-
-  unsigned long start = millis();
-
-  collectRegister->open();
-
-  do
-  {
-
-    collectRegister->write(this->gps->getCurrentLocation(), this->gps->getCurrentDateTime(), this->sensors);
-  } while (millis() - start < this->currentStep->collectCount);
-
-  collectRegister->close();
-}
-
-void Roboco::runTarget()
-{
+void Roboco::setTarget(){
   //      1º Ler o próximo destino no arquivo
   //      1.1 Verificar qual foi a última linhas do arquivo processada
   //          1.1.1 Ler em um arquivo ROBOCO.TXT o valor gravado na primeira linha do arquivo
@@ -147,6 +79,10 @@ void Roboco::runTarget()
   //      2.6 Volte para 2.1 até chegar
 
   this->gps->setTargetLocation(this->currentStep->latitude, this->currentStep->longitude);
+}
+
+void Roboco::goTarget(){
+
   bool goToTarget = false; // vai para o alvo
 
   do
@@ -178,29 +114,57 @@ void Roboco::runTarget()
   } while (goToTarget);
 }
 
-void Roboco::runBackToOrigin()
-{
+void Roboco::collectData(){
+
+  //     3.2 Coletar dados (metodo)
+  //              3.2. CO2, temperaturas, pressão, altitude, etc
+  //              3.2.1 Armazenar os dados no cartão
+  //                      3.2.2 Gravar uma linha para cada capitura
+  //                        TIME_STAMP, CO2, TEMP_INTERNA, PRESSÃO, ALTITUDE
+
+  //      3.3 Repetir 3.2 a cada NTERVALO_ENTRE_CAPTURAS segundos
+  //      3.4 Verificar o INTERVALO_AJUSTE_POSICIONAMENTO
+  //              3.4.1 Repetir as atividades do 2º passo para reposicionamento
+  //      3.5 Repetir 3.2 até esgotar o TEMPO_CAPTURA
+
+  unsigned long start = millis();
+
+  collectRegister->open();
+
+  do
+  {
+
+    collectRegister->write(this->gps->getCurrentLocation(), this->gps->getCurrentDateTime(), this->sensors);
+  } while (millis() - start < this->currentStep->collectCount);
+
+  collectRegister->close();
+}
+
+void Roboco::returnOrigin(){
   //      4 voltar para lugar de origem
   //      4.1 define as coordenadas de origem como proximo alvo do gps
   //      4.1  GO_TARGET
 }
 
-void Roboco::test()
-{
+void Roboco::initSensors(){
+ // implementar se for usar o estado INIT_SENSORS
+}
+
+void Roboco::calibrateSensors(){
+  // Controla a calibração (20 min.) periodica dos sensores, não tem necessidade de ser executada toda a vez que liga o robo
+  this->sensors->calibrate();
+}
+
+void Roboco::test(){
 
   Serial.println(" ");
   Serial.println("Testing Roboco...");
   this->gps->test();
   Serial.println(" ");
   this->sensors->test();
-  //this->output->test();
+  this->output->test();
   //this->collectRegister->test(); // em andamento
-  //this->workflow->test();
-  //this->motorLeft->test();
-  //this->motorRight->test();
-}
-
-void Roboco::calibrateSensors()
-{
-  this->sensors->calibrate();
+  this->workflow->test();
+  this->motorLeft->test();
+  this->motorRight->test();
 }

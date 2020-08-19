@@ -12,7 +12,7 @@ class Roboco{
   public: 
     const int TARGET_SOFT_APPROACH_METER = 3;
     const float TARGET_MINIMAL_DISTANCE_APPROACH_FACTOR = 0.1;
-    enum RobocoStates{READING_NEXT_STEP, READING_CURRENT_LOCATION, KEEPING_TRACK, READING_SENSORS,FINISH};
+    enum RobocoStates{READING_NEXT_STEP, READING_CURRENT_LOCATION, KEEPING_TRACK, READING_SENSORS};
 
   private:
     Sensors* sensors;
@@ -24,19 +24,21 @@ class Roboco{
     Workstep* currentStep;
     Location* currentLocation;
     Location* originLocation;
-    static enum RobocoState{SET_TARGET,GO_TARGET,TARGET_APPROACH,NEXT_TARGET,INIT_SENSORS,COLLECT_DATA,RETURN_ORIGIN} state;
+    
   public:
+    static enum RobocoState{SET_TARGET, GO_TARGET, TARGET_APPROACH, INIT_SENSORS, COLLECT_DATA, RETURN_ORIGIN, FINISH} state;
     static enum RobocoSensors{LUMINOSITY=0, PRESSURE=1, ALTITUDE=2,TEMPERATURE=3, CO2=4, _COUNT} ROBOCO_SENSORS;
     Roboco(Sensors* sensors, Output* output, GPS* gps, CollectRegister* collectRegister, Workflow* workflow, Motor* left, Motor* right);
-    void setup(); //
-    void reset(); //
-    boolean stabilizationOfSensors();  // estado de estabilização dos sensores
-    void collectData(); //get dados dos sensores
-    void run(); //estado central da maquina de estads
-    void runTarget(); //ir ao local indicado
-    void runBackToOrigin();  //voltar para o começo do codigo
+    void setup(); 
+    void reset(); 
+    void run(); // estado central da maquina de estados
+    void setTarget(); 
+    void goTarget(); // ir ao local indicado
+    void collectData(); // get dados dos sensores
+    void returnOrigin();  // voltar para o lugar de origem
+    void initSensors(); // inicializa os sensores
+    void calibrateSensors(); // Controla a calibração periodica dos sensores, pois não tem necessidade de ser executada toda a vez que liga o robo
     void test(); 
-    void calibrateSensors(); //calibrção periodica dos sensores
 };
 #endif
 
