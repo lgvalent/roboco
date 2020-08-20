@@ -106,6 +106,6 @@ class Sensors{
     Sensor* getSensor(int index);
     void test();
     boolean calibrate();
-    boolean stabilizationOfSensors();  // estado de estabilização dos sensores PRECISA SER IMPLEMENTADO
+    void stabilizationOfSensors();  // estado de estabilização dos sensores PRECISA SER IMPLEMENTADO
 };
 #endif

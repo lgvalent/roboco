@@ -35,7 +35,7 @@ class GPS{
         virtual DateTime* getCurrentDateTime()=0;
         Location* getPreviousLocation();
         Location* getTargetLocation();
-        void setTargetLocation(float latitude, float longitude);
+        void setTargetLocation(double latitude, double longitude);
         float getDistanceToTarget();
         float getAngleToTarget();
         boolean test();

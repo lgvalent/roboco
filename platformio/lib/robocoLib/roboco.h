@@ -26,13 +26,13 @@ class Roboco{
     Location* originLocation;
     
   public:
-    static enum RobocoState{SET_TARGET, GO_TARGET, TARGET_APPROACH, INIT_SENSORS, COLLECT_DATA, RETURN_ORIGIN, FINISH} state;
+    static enum RobocoState{GET_TARGET, GO_TARGET, TARGET_APPROACH, INIT_SENSORS, COLLECT_DATA, RETURN_ORIGIN, FINISH} state;
     static enum RobocoSensors{LUMINOSITY=0, PRESSURE=1, ALTITUDE=2,TEMPERATURE=3, CO2=4, _COUNT} ROBOCO_SENSORS;
     Roboco(Sensors* sensors, Output* output, GPS* gps, CollectRegister* collectRegister, Workflow* workflow, Motor* left, Motor* right);
     void setup(); 
     void reset(); 
     void run(); // estado central da maquina de estados
-    void setTarget(); 
+    Location* getTarget(); 
     void goTarget(); // ir ao local indicado
     void collectData(); // get dados dos sensores
     void returnOrigin();  // voltar para o lugar de origem

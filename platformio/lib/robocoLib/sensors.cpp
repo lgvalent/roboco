@@ -121,7 +121,7 @@ Sensor *Sensors::getSensor(int index){
 void Sensors::test(){
 
   Serial.println("Testing Sensors...");
-  for (int index = 0; index < 5; index++){
+  for (int index = 0; index < getSize(); index++){
     Sensor *sensor = this->getSensor(index);
     Serial.print(sensor->getTypeName());
     Serial.print(":");
@@ -142,44 +142,15 @@ boolean Sensors::calibrate(){
   return true;
 }
 
-boolean Sensors::stabilizationOfSensors(){ 
-  /*
-  //Estabilizar sensores por 120 segundos // iniciar timer 120segundos
-  //get valor do sensores a cada 1 Segundo //iniciar timer de 1segundo
-  boolean stabilization = false;
-  boolean getDate = false;
-  boolean calcMedia = false;
-  timer(120s){
-    stabilization = true;
-  }
-  timer(1s){
-    getDate = true;
-  }
+void Sensors::stabilizationOfSensors(){ 
+  
+  unsigned long start = millis();
 
-  /// puxar enum dos sensores
-  String arrayAtual[sensors->getSize()];
-  String arrayMedio[sensors->getSize()];
-  while(!stabilzation){ //enquanto tempo for menor 120segundos fica ai...
-    if(getDate){
-      for(int i =0; i<sensors->getSize();i++ ){}
-        arrayAtual[i] = sensors->getSensor(i)->read(); // 4 é o CO2
-      }
-      getDate = false;
-      calcMedia = true;
-    }// interrupção de 1 segundo
-    //paroooo
-    //volto
-    if(calcMedia){
-      for(int i = 0; i<sensors->getSize(); i++){
-        arrayMedio[i] = (arrayMedio[i]+arrayAtual[i])/2//montar função media movel....
-      }
-      calcMedia = false;
+ do{
+    for (int index = 0; index < getSize(); index++){
+    Sensor *sensor = this->getSensor(index);
+    sensor->read();
     }
-    delay(1);
-  }
-  //passou 120segundos
-  // apresentar valores dos sensores e confirmar seu funcionamento/ mais a temperatura no local estava 30 graus
-  // lcd sensor de co2 ta com 400 confirma? 
-  // lcd sensor de temp ta com 35 graus? confirma?
-  // lcd sensor de luminosidade valor 1024? ta escuro? não, quer continuar ou interromper? */
+ } while (millis() - start < 2000); // fica por aqui por 2s
+
 }
