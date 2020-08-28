@@ -17,7 +17,7 @@ void Roboco::setup(){
   this->sensors->stabilizationOfSensors(); // start sensores, fica por aqui por 2s
   this->originLocation = this->gps->getCurrentLocation(); // salvando a origem do gps ao ligar o robo
 
-  this->output->lcdPrint("ROBOCO²", 0, 0);
+  //this->output->lcdPrint("ROBOCO²", 0, 0);
 }
 
 void Roboco::reset(){
@@ -28,17 +28,16 @@ void Roboco::run(){
 
   switch (this->state){     // Máquina de estado
     case GET_TARGET:        // Recebe o alvo 
-      this->getTarget();
-      this->state = GO_TARGET;
+      if(this->getTarget()!= NULL){
+        this->state = GO_TARGET;
+      } else{
+        this->state = RETURN_ORIGIN;
+      }
     break;
   
     case GO_TARGET:         // Vai para o alvo e controla a velocidade dos motores (perto=diminiu vel. /// longe=aumenta vel.)
-     if (this->workflow->getNextStep() != NULL){
           this->goTarget();
           this->state = COLLECT_DATA;
-      }else{
-        this->state = RETURN_ORIGIN;
-      }
     break;
   
     case COLLECT_DATA:      // Coleta os dados dos sensores e salva no cartão de memória
@@ -77,12 +76,13 @@ Location* Roboco::getTarget(){
   //      2.5 Volte para 2.3 x(distamcia) vezes, onde x pode ser uma razão entre a posição atual e o destino
   //      2.6 Volte para 2.1 até chegar
 
-  if (this->workflow->getNextStep() != NULL){
     this->currentStep = this->workflow->getNextStep();
-    this->gps->setTargetLocation(this->currentStep->latitude, this->currentStep->longitude);
-  }else{
-    this->gps->setTargetLocation(this->originLocation->latitude, this->originLocation->longitude);
-  }
+    if(this->currentStep != NULL){
+      this->gps->setTargetLocation(this->currentStep->latitude, this->currentStep->longitude);
+    } else {
+      return NULL;
+    }
+  
   return this->gps->getTargetLocation();
 }
 
@@ -134,19 +134,15 @@ void Roboco::collectData(){
 
   unsigned long start = millis();
   collectRegister->open();
-  do
-  {
-    collectRegister->write(this->gps->getCurrentLocation(), this->gps->getCurrentDateTime(), this->sensors);
-  } while (millis() - start < this->currentStep->collectCount);
+  collectRegister->write(this->gps->getCurrentLocation(), this->gps->getCurrentDateTime(), this->sensors);
   collectRegister->close();
 }
 
 void Roboco::returnOrigin(){
   //      4 voltar para lugar de origem
   //      4.1 define as coordenadas de origem como proximo alvo do gps
-  this->getTarget();
+  this->gps->setTargetLocation(this->originLocation->latitude, this->originLocation->longitude);
   this->goTarget();
-  
   }
 
 void Roboco::initSensors(){
@@ -159,15 +155,13 @@ void Roboco::calibrateSensors(){
 }
 
 void Roboco::test(){
-
-  Serial.println(" ");
   Serial.println("Testing Roboco...");
-  this->gps->test();
+  //this->gps->test();
   Serial.println(" ");
-  this->sensors->test();
-  this->output->test();
+  //this->sensors->test();
+  //this->output->test();
   //this->collectRegister->test(); // em andamento
-  this->workflow->test();
-  this->motorLeft->test();
-  this->motorRight->test();
+  //this->workflow->test();
+  //this->motorLeft->test();
+  //this->motorRight->test();
 }

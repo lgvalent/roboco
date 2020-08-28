@@ -1,6 +1,6 @@
 #include <Arduino.h>
 #include <SD.h>
-/* Use these includes for Arduido IDE production */
+#include <SPI.h>
 #include <roboco.h>
 #include <sensors.h>
 #include <output.h>
@@ -13,49 +13,51 @@
 
 Roboco* roboco;
 GPS* gps;
-
-
+CollectRegister* collectRegister;
+ 
 
 void setup(){
 
   Serial.begin(9600);
   Serial.println("Starting...\n");
 
-  /*/* Cria os sensores */
-  Adafruit_BMP280* bmp280 = new Adafruit_BMP280(); // no Arduino Mega 2560 os pinos de conexão I2C do BMP280 serão o 20 (SDA) e o 21 (SCL).
-  bmp280->begin(0x76); // necessario inicializar o bmp280
+  // Cria os sensores
+  Adafruit_BMP280* bmp280 = new Adafruit_BMP280();  // no Arduino Mega 2560 os pinos de conexão I2C do BMP280 serão o 20 (SDA) e o 21 (SCL).
+  bmp280->begin(0x76);                              // necessario inicializar o bmp280
   LuminositySensor* ldrSensor = new LuminositySensor(A8);
   PressureSensor* pressSensor = new PressureSensor(bmp280);
   AltitudeSensor* altSensor = new AltitudeSensor(bmp280);
-  Co2Sensor* myMHZ19 = new Co2Sensor(10, 11);
+  //Co2Sensor* myMHZ19 = new Co2Sensor(10, 11);     // OBS 1: esta dando conflito nos poinos com o módulo shield v1r3 (SD card). Se for testar o SD comente o sensor co2
   TemperatureSensor* tempSensor = new TemperatureSensor(bmp280);
 
   Sensors* sensors = new Sensors(Roboco::_COUNT);
   sensors->addSensor(Roboco::LUMINOSITY, ldrSensor);
   sensors->addSensor(Roboco::PRESSURE, pressSensor);
   sensors->addSensor(Roboco::ALTITUDE, altSensor);
-  sensors->addSensor(Roboco::CO2, myMHZ19); 
+  //sensors->addSensor(Roboco::CO2, myMHZ19); 
   sensors->addSensor(Roboco::TEMPERATURE, tempSensor);
 
   Output* output = new Output(1,2,3);
 
   // gps = new GpsMTK33x9(8,7);
-  gps = new GpsNEO6M(&Serial1); // pins 18tx e 19rx
+  gps = new GpsNEO6M(&Serial1);                               // pins 18tx e 19rx
 
-  CollectRegister* collectRegister = new CollectRegister(1);
+  CollectRegister* collectRegister = new CollectRegister(53); // para arduino uno use o pin10
 
-  Workflow* workflow = new Workflow(1);
+  Workflow* workflow = new Workflow(53);                      // para arduino uno use o pin10
 
   Motor* motorLeft = new Motor(2,4,3);
   Motor* motorRight = new Motor(5,6,9);
 
   roboco = new Roboco(sensors, output, gps, collectRegister, workflow, motorLeft, motorRight);
-  roboco->setup();
+  //roboco->setup(); // OBS 2: Setup comentado pq quando testamos o sd com ele, da problema.
+ 
+  collectRegister->test(gps->getCurrentLocation(), gps->getCurrentDateTime(), sensors); // OBS 3: esta no setup para ser executado só uma vez
 }
-
 
 void loop(){
   // if(digitalRead(12) == LOW && false){  // Define se o robô estará em modo normal ou de teste
   // roboco->run();
-     roboco->test();
+  // gps->test();
+
 }

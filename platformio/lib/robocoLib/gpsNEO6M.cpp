@@ -28,11 +28,13 @@ void GpsNEO6M::setup(){
 }
 
 boolean GpsNEO6M::readGps(){
-
-   bool result = true;
-   while (this->serial->available()){
-      result = this->gps->encode(this->serial->read());
-   }
+unsigned long start = millis();
+bool result = true;
+   do {            // Forma funcional do delay
+      while (this->serial->available()){
+         result = this->gps->encode(this->serial->read());
+      }
+   } while (millis() - start < 2000);
    return result;
 }
 
