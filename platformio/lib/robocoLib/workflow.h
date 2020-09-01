@@ -16,12 +16,12 @@ struct Workstep{
 class Workflow{
   
   private:
-    int8_t pinSD;
+    SDClass* sd;
     byte currentStepIndex;
     
 
   public:
-    Workflow(int8_t pinSD);
+    Workflow(SDClass& sd);
 	  Workstep* getNextStep();
 	  void backOneStep();
     void reset();

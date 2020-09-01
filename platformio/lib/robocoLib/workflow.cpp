@@ -2,8 +2,8 @@
 
 #define EEPROM_STEP_ADDRESS 0
 
-Workflow::Workflow(int8_t pinSD){
-  this->pinSD = pinSD;
+Workflow::Workflow(SDClass& sd){
+  this->sd = &sd;
   this->currentStepIndex = EEPROM.read(EEPROM_STEP_ADDRESS);
 }
 
@@ -22,11 +22,9 @@ Workstep* Workflow::getNextStep(){
   File myFile;
   int currentLine = 0;
 
-  if (!SD.begin(pinSD)){ 
-    myFile = SD.open("roboco.txt", FILE_READ);
-    if(!myFile){
-      return NULL;
-     }
+  myFile = sd->open("roboco.txt", FILE_READ);
+  if(!myFile){
+    return NULL;
   }
   
   while (currentLine != this->currentStepIndex){

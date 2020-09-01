@@ -9,11 +9,11 @@
 class CollectRegister{
   
   private:
-    int8_t pinSD;
+    SDClass* sd;
 	  File file;
 
   public:
-    CollectRegister(int8_t pinSD);
+    CollectRegister(SDClass& sd);
 	  void open();
     void write(Location* location,DateTime* dateTime, Sensors* sensors);
   	void close();

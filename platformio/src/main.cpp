@@ -41,11 +41,15 @@ void setup(){
   Output* output = new Output(1,2,3);
 
   // gps = new GpsMTK33x9(8,7);
-  gps = new GpsNEO6M(&Serial1);                               // pins 18tx e 19rx
+  gps = new GpsNEO6M(&Serial1);  
+  
+  // Prepare SD Card, pinSD is a select SPI pin, MEGA: 50,51,52 and 53, 
+  pinMode(53, OUTPUT);
+  SD.begin(53);
 
-  CollectRegister* collectRegister = new CollectRegister(53); // para arduino uno use o pin10
+  CollectRegister* collectRegister = new CollectRegister(SD); // para arduino uno use o pin10
 
-  Workflow* workflow = new Workflow(53);                      // para arduino uno use o pin10
+  Workflow* workflow = new Workflow(SD);                      // para arduino uno use o pin10
 
   Motor* motorLeft = new Motor(2,4,3);
   Motor* motorRight = new Motor(5,6,9);
@@ -58,6 +62,9 @@ void setup(){
 void loop(){
   // if(digitalRead(12) == LOW && false){  // Define se o robô estará em modo normal ou de teste
   // roboco->run();
+  gps->test(); // 'Aquece' o GPS
+  
   collectRegister->test(gps->getCurrentLocation(), gps->getCurrentDateTime(), sensors); // OBS 3: esta no setup para ser executado só uma vez
  
+  while(true);
 }

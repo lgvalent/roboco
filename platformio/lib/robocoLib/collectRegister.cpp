@@ -1,18 +1,17 @@
 #include <collectRegister.h>
 
-CollectRegister::CollectRegister(int8_t pinSD) {
-	this->pinSD = pinSD;
-	pinMode(pinSD, OUTPUT);
-		if (SD.begin()) { 							// Inicializa o SD Card (if temporário)
-		Serial.println("SD Card pronto para uso."); 
-		} else {
-		Serial.println("Falha na inicialização do SD Card.");
-		return;
-		}
+CollectRegister::CollectRegister(SDClass& sd) {
+	this->sd = &sd;
 }
 
 void CollectRegister::open() {
-	this->file = SD.open("result.txt", FILE_WRITE); 
+	this->file = this->sd->open("result.txt", FILE_WRITE);
+	if (this->file) { 							// Inicializa o SD Card (if temporário)
+		Serial.println("O Arquivo pronto para uso."); 
+	} else {
+		Serial.println("Falha ao abrir o arquivo.");
+		return;
+	}
 }
 
 void CollectRegister::write(Location* location, DateTime* dateTime, Sensors* sensors) {
@@ -59,7 +58,7 @@ void CollectRegister::write(Location* location, DateTime* dateTime, Sensors* sen
 }
 
 void CollectRegister::close() {
-	file.close();
+	this->file.close();
 }
 
 void CollectRegister::test(Location* location, DateTime* dateTime, Sensors* sensors) {

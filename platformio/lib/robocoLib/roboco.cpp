@@ -134,7 +134,7 @@ void Roboco::collectData(){
 
   unsigned long start = millis();
   collectRegister->open();
-  collectRegister->write(this->gps->getCurrentLocation(), this->gps->getCurrentDateTime(), this->sensors);
+  collectRegister->write(this->currentLocation, this->gps->getCurrentDateTime(), this->sensors);
   collectRegister->close();
 }
 
