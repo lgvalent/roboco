@@ -56,11 +56,22 @@ Workstep* Workflow::getNextStep(){
 void Workflow::test(){
 
   Serial.print("Testing Workflow... ");
+  Workstep* saida;
 
   if(this->getNextStep() == NULL){
-    Serial.print("Error: Check sd card or empty file"); // 
+    Serial.print("Error: Check sd card or empty file"); 
   }else{
-    this->getNextStep();
+    saida = this->getNextStep();
+    Serial.print("Lat ");
+    Serial.println(saida->latitude);
+    Serial.print("Lon ");
+    Serial.println(saida->longitude);
+    Serial.print("collectCount ");
+    Serial.println(saida->collectCount);
+    Serial.print("collectInterval ");
+    Serial.println(saida->collectInterval);
+
+
     // this->backOneStep();
     // this->reset();
   }

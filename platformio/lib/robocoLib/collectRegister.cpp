@@ -16,7 +16,10 @@ void CollectRegister::open() {
 }
 
 void CollectRegister::write(Location* location, DateTime* dateTime, Sensors* sensors) {
-	
+	location = new Location();
+	location->altitude = 123;
+	location->longitude = 152;
+
 	if (file) {
 		Serial.println("Passei por aqui 2.1"); 
 		file.print("Longitude: ");

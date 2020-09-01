@@ -18,6 +18,7 @@ class Workflow{
   private:
     int8_t pinSD;
     byte currentStepIndex;
+    
 
   public:
     Workflow(int8_t pinSD);
