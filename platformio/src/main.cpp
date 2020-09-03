@@ -56,15 +56,9 @@ void setup(){
 
   roboco = new Roboco(sensors, output, gps, collectRegister, workflow, motorLeft, motorRight);
   //roboco->setup(); // OBS 2: Setup comentado pq quando testamos o sd com ele, da problema.
- 
+  roboco->collectData();
 }
 
 void loop(){
   // if(digitalRead(12) == LOW && false){  // Define se o robô estará em modo normal ou de teste
-  // roboco->run();
-  gps->test(); // 'Aquece' o GPS
-  
-  collectRegister->test(gps->getCurrentLocation(), gps->getCurrentDateTime(), sensors); // OBS 3: esta no setup para ser executado só uma vez
- 
-  while(true);
 }

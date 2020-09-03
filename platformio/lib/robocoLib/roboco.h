@@ -24,6 +24,7 @@ class Roboco{
     Workstep* currentStep;
     Location* currentLocation;
     Location* originLocation;
+    DateTime* currentDataTime;
     
   public:
     static enum RobocoState{GET_TARGET, GO_TARGET, TARGET_APPROACH, INIT_SENSORS, COLLECT_DATA, RETURN_ORIGIN, FINISH} state;

@@ -6,7 +6,7 @@ CollectRegister::CollectRegister(SDClass& sd) {
 
 void CollectRegister::open() {
 	this->file = this->sd->open("result.txt", FILE_WRITE);
-	if (this->file) { 							// Inicializa o SD Card (if temporário)
+	if (this->file) { 									// Inicializa o SD Card (if temporário)
 		Serial.println("O Arquivo pronto para uso."); 
 	} else {
 		Serial.println("Falha ao abrir o arquivo.");
@@ -15,12 +15,8 @@ void CollectRegister::open() {
 }
 
 void CollectRegister::write(Location* location, DateTime* dateTime, Sensors* sensors) {
-	location = new Location();
-	location->altitude = 123;
-	location->longitude = 152;
 
-	if (file) {
-		Serial.println("Passei por aqui 2.1"); 
+	if (file) { 
 		file.print("Longitude: ");
 		file.println(location->longitude);
 		file.print("Latitude: ");
@@ -40,16 +36,13 @@ void CollectRegister::write(Location* location, DateTime* dateTime, Sensors* sen
     	file.print(":");
     	file.print(dateTime->seconds);
     	file.println();
-
-		for (int i = 0; i < sensors->getSize(); i++) {
-			file.print(sensors->getSensor(i)->getTypeName());
-			file.print(", ");
-		}
 		file.println();
 
 		for (int i = 0; i < sensors->getSize(); i++) {
+			file.print(sensors->getSensor(i)->getTypeName());
+			file.print(": ");
 			file.print(sensors->getSensor(i)->read());
-			file.print(", ");
+			file.println();
 		}
 		file.println();
 	} else {										  // Se o Arquivo não abrir
@@ -61,13 +54,12 @@ void CollectRegister::close() {
 	this->file.close();
 }
 
-void CollectRegister::test(Location* location, DateTime* dateTime, Sensors* sensors) {
+void CollectRegister::test() {
 // pegamos os valores que estão sendo criados na mais, para não criar os virtuais
 
-Serial.println("Testing collectRegister...");
+	Serial.println("Testing collectRegister...");
 
-	/* Criados valores virtuais para teste, usados anteriormente mas sem sucesso
-
+	//Criados valores virtuais para teste
 	Adafruit_BMP280* bmp = new Adafruit_BMP280(); 
   	bmp->begin(0x76); 
     LuminositySensor* Sensor = new LuminositySensor(A8);
@@ -79,22 +71,30 @@ Serial.println("Testing collectRegister...");
   	s->addSensor(1, Sensor2);
   	s->addSensor(2, Sensor3);
 
-  	GPS* g = new GpsNEO6M(&Serial1);*/
+  	GPS* g = new GpsNEO6M(&Serial1);
 
-	open();  								// Abrir os regitrso 
-	write(location, dateTime, sensors); 
-	close(); 								// Fechar o registro
+	unsigned long start = millis();
 
-	file = SD.open("result.txt"); 			// Abre o Arquivo
+	do{ 											// Forma funcional do delay, precisa desse do while para gravar os dados do gps
+	g->readGps();
+	} while (millis() - start < 2000);
+
+	Location *loc = g->getCurrentLocation();
+	DateTime *dat = g->getCurrentDateTime();
+	open(); 										
+	write(loc, dat, s);
+	close(); 										
+
+	// Apartir daqui mostra no monitor o conteudo do arquivo
+	file = SD.open("result.txt"); 					
 
 	if (file){
-		Serial.println("Conteúdo do Arquivo:"); 
-		while (file.available()){ 			// Exibe o conteúdo do Arquivo
+		Serial.println("Conteúdo do Arquivo:");
+		while (file.available()){ 						// Exibe o conteúdo do Arquivo
 			Serial.write(file.read());
 		}
-		file.close(); 						// Fecha o Arquivo após ler
-
+		file.close(); 									// Fecha o Arquivo após ler
 	} else {
-		Serial.println("Erro ao Abrir Arquivo .txt"); // Imprime na tela
+		Serial.println("Erro ao Abrir Arquivo .txt"); 
 	}
 }

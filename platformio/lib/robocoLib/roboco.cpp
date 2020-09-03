@@ -132,10 +132,31 @@ void Roboco::collectData(){
   //              3.4.1 Repetir as atividades do 2º passo para reposicionamento
   //      3.5 Repetir 3.2 até esgotar o TEMPO_CAPTURA
 
-  unsigned long start = millis();
-  collectRegister->open();
-  collectRegister->write(this->currentLocation, this->gps->getCurrentDateTime(), this->sensors);
-  collectRegister->close();
+
+	// Usando a mesma forma do modo teste do collectRegister, mas por aqui só funcionou quando damos esses NEWs que estão comentados
+
+	// Adafruit_BMP280* bmp = new Adafruit_BMP280(); 
+  // 	bmp->begin(0x76); 
+  //   LuminositySensor* Sensor = new LuminositySensor(A8);
+  //   PressureSensor* Sensor2 = new PressureSensor(bmp);
+	// AltitudeSensor* Sensor3 = new AltitudeSensor(bmp);
+
+  // 	Sensors* s = new Sensors(3);
+  // 	s->addSensor(0, Sensor);
+  // 	s->addSensor(1, Sensor2);
+  // 	s->addSensor(2, Sensor3);
+
+  // 	GPS* g = new GpsNEO6M(&Serial1);
+
+	unsigned long start = millis();
+
+	do{ 											      // Forma funcional do delay, precisa desse do while para gravar os dados do gps
+	gps->readGps();
+	} while (millis() - start < 2000);
+
+	this->collectRegister->open(); 										
+	this->collectRegister->write(this->currentLocation, this->currentDataTime, this->sensors);
+	this->collectRegister->close(); 							
 }
 
 void Roboco::returnOrigin(){
@@ -157,7 +178,6 @@ void Roboco::calibrateSensors(){
 void Roboco::test(){
   Serial.println("Testing Roboco...");
   //this->gps->test();
-  Serial.println(" ");
   //this->sensors->test();
   //this->output->test();
   //this->collectRegister->test(); // em andamento

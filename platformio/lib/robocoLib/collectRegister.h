@@ -17,7 +17,7 @@ class CollectRegister{
 	  void open();
     void write(Location* location,DateTime* dateTime, Sensors* sensors);
   	void close();
-    void test(Location* location, DateTime* dateTime, Sensors* sensors); // pegamos os valores que estão sendo criados na mais, para não criar os hipotéticos
+    void test(); // pegamos os valores que estão sendo criados na mais, para não criar os hipotéticos
 };
 #endif
 
