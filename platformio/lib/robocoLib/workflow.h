@@ -18,7 +18,6 @@ class Workflow{
   private:
     SDClass* sd;
     byte currentStepIndex;
-    
 
   public:
     Workflow(SDClass& sd);

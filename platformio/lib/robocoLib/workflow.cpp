@@ -21,26 +21,25 @@ Workstep* Workflow::getNextStep(){
 
   File myFile;
   int currentLine = 0;
+  Workstep* workstep = new Workstep();
+  myFile = sd->open("ROBOCO.txt", FILE_READ);
 
-  myFile = sd->open("roboco.txt", FILE_READ);
   if(!myFile){
     return NULL;
   }
   
   while (currentLine != this->currentStepIndex){
-    if(myFile.readStringUntil('\n').length()>0){
+    if(myFile.readStringUntil('\n').length()>=0){
+        workstep->latitude = myFile.readStringUntil(',').toDouble();
+        workstep->longitude = myFile.readStringUntil(',').toDouble();
+        workstep->collectCount = myFile.readStringUntil(',').toInt();
+        workstep->collectInterval = myFile.readStringUntil(',').toInt();
         currentLine++;
-    }else{
-      return NULL;
-    } 
+        return workstep;
+        } else{
+          return NULL;
+        } 
   }
-
-  Workstep* workstep = new Workstep();
- 
-  workstep->latitude = myFile.readStringUntil(',').toFloat();
-  workstep->longitude = myFile.readStringUntil(',').toFloat();
-  workstep->collectCount = myFile.readStringUntil(',').toInt();
-  workstep->collectInterval = myFile.readStringUntil(',').toInt();
 
   myFile.close();
   
@@ -68,7 +67,6 @@ void Workflow::test(){
     Serial.println(saida->collectCount);
     Serial.print("collectInterval ");
     Serial.println(saida->collectInterval);
-
 
     // this->backOneStep();
     // this->reset();

@@ -6,11 +6,11 @@ Output::Output(int8_t pinLed0, int8_t pinLed1, int8_t pinLed2){
     this->pinLed0 = pinLed0;
     this->pinLed1 = pinLed1;
     this->pinLed2 = pinLed2;
-    this->lcd = new LiquidCrystal_I2C(0x27,16,2);
+   // this->lcd = new LiquidCrystal_I2C(0x27,16,2);
     pinMode(pinLed0, OUTPUT);
     pinMode(pinLed1, OUTPUT);
     pinMode(pinLed2, OUTPUT);
-    lcd->init();
+    //lcd->init();
     lcd->backlight();
 }
 

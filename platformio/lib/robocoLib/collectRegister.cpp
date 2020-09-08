@@ -38,16 +38,16 @@ void CollectRegister::write(Location* location, DateTime* dateTime, Sensors* sen
     	file.println();
 		file.println();
 
-		for (int i = 0; i < sensors->getSize(); i++) {
+		for (int i = 0; i < (sensors->getSize()-1); i++) { // sensors->getSize()-1 será iguual a 4 pois não estamos usando o sensor mhz19 ainda resultando em 4 sensores usados
 			file.print(sensors->getSensor(i)->getTypeName());
 			file.print(": ");
 			file.print(sensors->getSensor(i)->read());
 			file.println();
 		}
-		file.println();
-	} else {										  // Se o Arquivo não abrir
+	 	file.println();
+	 } else {										  // Se o Arquivo não abrir
 		Serial.println("Erro ao Abrir Arquivo .txt"); 
-	}
+	 }
 }
 
 void CollectRegister::close() {
