@@ -29,17 +29,14 @@ Workstep* Workflow::getNextStep(){
   }
   
   while (currentLine != this->currentStepIndex){
-    if(myFile.readStringUntil('\n').length()>=0){
-        workstep->latitude = myFile.readStringUntil(',').toDouble();
-        workstep->longitude = myFile.readStringUntil(',').toDouble();
-        workstep->collectCount = myFile.readStringUntil(',').toInt();
-        workstep->collectInterval = myFile.readStringUntil(',').toInt();
+        myFile.readStringUntil('\n'); // Pula uma linha no arquivo
         currentLine++;
-        return workstep;
-        } else{
-          return NULL;
-        } 
   }
+
+  workstep->latitude = myFile.readStringUntil(',').toDouble();
+  workstep->longitude = myFile.readStringUntil(',').toDouble();
+  workstep->collectCount = myFile.readStringUntil(',').toInt();
+  workstep->collectInterval = myFile.readStringUntil('\n').toInt();
 
   myFile.close();
   
