@@ -45,6 +45,8 @@ Location *GpsNEO6M::getCurrentLocation(){
       this->currentLocation->longitude =  this->gps->location.lng();
       this->currentLocation->latitude =  this->gps->location.lat();
       this->currentLocation->altitude = this->gps->altitude.meters();
+      this->currentLocation->angle = getAngleToTarget();
+      this->currentLocation->time = millis();
    }else {
       return NULL;
    }
