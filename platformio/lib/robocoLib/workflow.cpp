@@ -33,7 +33,10 @@ Workstep* Workflow::getNextStep(){
         currentLine++;
   }
 
-  workstep->latitude = myFile.readStringUntil(',').toDouble();
+  String val = myFile.readStringUntil(',');
+  if(val.length() == 0) return NULL; // Acabou o arquivo
+  workstep->latitude = val.toDouble();
+  
   workstep->longitude = myFile.readStringUntil(',').toDouble();
   workstep->collectCount = myFile.readStringUntil(',').toInt();
   workstep->collectInterval = myFile.readStringUntil('\n').toInt();
@@ -44,18 +47,16 @@ Workstep* Workflow::getNextStep(){
   EEPROM.write(EEPROM_STEP_ADDRESS, this->currentStepIndex); //Escrevendo na EPROMM o currentStepIndex https://www.arduino.cc/en/Tutorial/EEPROMWrite
 
   return workstep;
-  
 }
 
 void Workflow::test(){
 
   Serial.print("Testing Workflow... ");
-  Workstep* saida;
+  Workstep* saida = this->getNextStep();
 
-  if(this->getNextStep() == NULL){
+  if(saida == NULL){
     Serial.print("Error: Check sd card or empty file"); 
   }else{
-    saida = this->getNextStep();
     Serial.print("Lat ");
     Serial.println(saida->latitude);
     Serial.print("Lon ");
