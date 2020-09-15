@@ -3,7 +3,6 @@
 #include <Arduino.h>
 #include <gps.h>
 #include <Adafruit_GPS.h>
-#include <SoftwareSerial.h>
 
 class GpsMTK33x9 : public GPS{
 
