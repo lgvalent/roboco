@@ -5,6 +5,10 @@
 #include <SPI.h>
 #include <Adafruit_Sensor.h>
 #include <Adafruit_BMP280.h>
+
+#include <Adafruit_Sensor.h>
+#include <Adafruit_HMC5883_U.h>
+
 #include <SoftwareSerial.h>
 #include <MHZ19.h>
 
@@ -22,7 +26,7 @@ class SensorValue{
 class Sensor{
 
   protected:
-    static enum SensorType{LUMINOSITY, PRESSURE, ALTITUDE, TEMPERATURE, CO2} SENSOR_TYPE;
+    static enum SensorType{LUMINOSITY, PRESSURE, ALTITUDE, TEMPERATURE, CO2, COMPASS} SENSOR_TYPE;
     static String SENSOR_TYPE_NAMES[];
 
   public:
@@ -88,6 +92,18 @@ class AltitudeSensor: public Sensor{
 
   public:
     AltitudeSensor(Adafruit_BMP280* sensor); 
+    SensorType getType(); 
+    String read(); 
+    boolean calibrate();
+};
+
+class MagSensor: public Sensor{
+  
+  private:
+    Adafruit_HMC5883_Unified* mag;
+
+  public:
+    MagSensor(Adafruit_HMC5883_Unified* sensor); 
     SensorType getType(); 
     String read(); 
     boolean calibrate();

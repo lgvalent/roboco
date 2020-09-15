@@ -48,6 +48,11 @@ float angleBetweenLines(float cx0, float cy0, float cx1, float cy1, float tx0, f
 
 float GPS::getAngleToTarget(){
 
+  if ( /*tem bussuloa*/ 0 ){
+
+  }else{
+
+
   // Verifica se tem um previous location != NULL
   if (this->previousLocation == NULL){
     return 0;
@@ -64,6 +69,7 @@ float GPS::getAngleToTarget(){
   float ty1 = this->targetLocation->latitude;
 
   return angleBetweenLines(cx0, cy0, cx1, cy1, tx0, ty0, tx1, ty1);
+  }
 }
 
 boolean GPS::test(){

@@ -20,10 +20,9 @@ void Workflow::backOneStep(){
 
 Workstep* Workflow::getNextStep(){
   Serial.println("Começo do getNextStep - workflow");
-  File myFile;
+  File myFile = sd->open("ROBOCO.txt", FILE_READ);
   int currentLine = 0;
   Workstep* workstep = new Workstep();
-  myFile = sd->open("ROBOCO.txt", FILE_READ);
 
   if(!myFile){
     return NULL;

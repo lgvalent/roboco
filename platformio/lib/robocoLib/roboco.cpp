@@ -134,7 +134,7 @@ void Roboco::goTarget(){
                                                                                           // motorRight = motor->move;
     }
 
-    goToTarget = distanceFactor > TARGET_MINIMAL_DISTANCE_APPROACH_FACTOR;
+    goToTarget =  distanceFactor > TARGET_MINIMAL_DISTANCE_APPROACH_FACTOR;
 
   } while (goToTarget);
 }
