@@ -1,6 +1,9 @@
 #include <Arduino.h>
 #include <roboco.h>
 
+
+Roboco::RobocoState Roboco::state = GET_TARGET;
+
 Roboco::Roboco(Sensors *sensors, Output *output, GPS *gps, CollectRegister *collectRegister, Workflow *workflow, Motor *motorLeft, Motor *motorRight)
 {
   this->sensors = sensors;
@@ -13,12 +16,17 @@ Roboco::Roboco(Sensors *sensors, Output *output, GPS *gps, CollectRegister *coll
 }
 
 void Roboco::setup(){
-  
-  this->sensors->stabilizationOfSensors(); // start sensores, fica por aqui por 2s
-  this->originLocation = this->gps->getCurrentLocation(); // salvando a origem do gps ao ligar o robo
 
-  //this->output->lcdPrint("ROBOCO²", 0, 0);
-}
+  // this->sensors->stabilizationOfSensors(); //start sensores, fica por aqui por 2s (quando utilizamos esse metodo ele fica resetando o metodo setup, ARRUMAR ISSO)
+	unsigned long start = millis();
+
+	do{ 											                              // Forma funcional do delay, precisa desse do while para gravar os dados do gps
+	gps->readGps();
+	} while (millis() - start < 2000);
+
+  this->originLocation = this->gps->getCurrentLocation(); // salvando a origem do gps ao ligar o robo
+ //this->output->lcdPrint("ROBOCO²", 0, 0);
+ }
 
 void Roboco::reset(){
   this->workflow->reset();
@@ -29,8 +37,10 @@ void Roboco::run(){
   switch (this->state){     // Máquina de estado
     case GET_TARGET:        // Recebe o alvo 
       if(this->getTarget()!= NULL){
+        Serial.println("indo para goTarget");
         this->state = GO_TARGET;
       } else{
+        Serial.println("indo para returnOrigin");
         this->state = RETURN_ORIGIN;
       }
     break;
@@ -46,6 +56,7 @@ void Roboco::run(){
     break;
   
     case RETURN_ORIGIN:     // Volta para o ponto inicial
+      Serial.println("passei no case RETURN_ORIGIN");
       this->returnOrigin();
       this->state = FINISH;
     break;
@@ -75,11 +86,13 @@ Location* Roboco::getTarget(){
   //      2.4 Avançar
   //      2.5 Volte para 2.3 x(distamcia) vezes, onde x pode ser uma razão entre a posição atual e o destino
   //      2.6 Volte para 2.1 até chegar
-
+    Serial.println("ESTOU no getTarget");
     this->currentStep = this->workflow->getNextStep();
     if(this->currentStep != NULL){
+      Serial.println("passei no if do getTarget");
       this->gps->setTargetLocation(this->currentStep->latitude, this->currentStep->longitude);
     } else {
+      Serial.println("passei no else do getTarget");
       return NULL;
     }
   
@@ -89,23 +102,30 @@ Location* Roboco::getTarget(){
 void Roboco::goTarget(){
 
   bool goToTarget = false; // vai para o alvo
+  Serial.println("ESTOU no goTarget");
 
   do
   {
     float distanceFactor;
     float angleFactor;
 
+    Serial.println("ESTOU no do while do goTarget");
     this->currentLocation = this->gps->getCurrentLocation();
+    this->currentDataTime = this->gps->getCurrentDateTime();
 
     angleFactor = map(this->currentLocation->angle, -180, 180, -100, 100) / 100.0; // sera o valor do angulo mapeado entre -100 e 100
     // map(valor, deMenor, deMaior, paraMenor, paraMaior);
     distanceFactor = this->gps->getDistanceToTarget();
+    Serial.print ("distanceFactor 1: ");
+    Serial.println (distanceFactor);
     distanceFactor = distanceFactor > TARGET_SOFT_APPROACH_METER ? 1 : distanceFactor / TARGET_SOFT_APPROACH_METER; //  a distancia (em metros) do alvo influenciara a velocidade do motor
+    Serial.print ("distanceFactor 2: ");
+    Serial.println (distanceFactor);
+    
     int motorLeftFactor = distanceFactor - (distanceFactor * angleFactor);
     int motorRightFactor = distanceFactor + (distanceFactor * angleFactor);
 
-    if (currentLocation->angle != 0 && distanceFactor != 0)
-    {
+    if (currentLocation->angle != 0 && distanceFactor != 0){
       if (currentLocation->angle < 180)
         this->motorLeft->move(CLOCKWISE, map(motorLeftFactor * 100, 0, 100, 225, 255)); // move motor da esqueda
       // motorLeft = motor->move;
@@ -161,10 +181,10 @@ void Roboco::calibrateSensors(){
 
 void Roboco::test(){
   Serial.println("Testing Roboco...");
-  //this->gps->test();
-  //this->sensors->test();
-  //this->output->test();
-  this->collectRegister->test(); 
+  // this->gps->test();
+  // this->sensors->test();
+  // this->output->test();
+  // this->collectRegister->test(); 
   //this->workflow->test();
   //this->motorLeft->test();
   //this->motorRight->test();

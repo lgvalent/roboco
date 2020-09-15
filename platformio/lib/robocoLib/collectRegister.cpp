@@ -18,9 +18,9 @@ void CollectRegister::write(Location* location, DateTime* dateTime, Sensors* sen
 
 	if (file) { 
 		file.print("Longitude: ");
-		file.println(location->longitude);
+		file.println(location->longitude, 6);
 		file.print("Latitude: ");
-		file.println(location->latitude);
+		file.println(location->latitude, 6);
 
 		file.print("Date: ");
     	file.print(dateTime->day);

@@ -55,13 +55,12 @@ void setup(){
   Motor* motorRight = new Motor(5,6,9);
 
   roboco = new Roboco(sensors, output, gps, collectRegister, workflow, motorLeft, motorRight);
-  //roboco->setup(); // OBS 2: Setup comentado pq quando testamos o sd com ele, da problema.
+  roboco->setup(); // OBS 2: Setup comentado pq quando testamos o sd com ele, da problema.
   workflow->reset();
 }
 
 void loop(){
   // if(digitalRead(12) == LOW && false){  // Define se o robô estará em modo normal ou de teste
-  // gps->test();
-  //roboco->collectData();
-  roboco->test();
+  roboco->run(); 
+  //gps->test();
 }

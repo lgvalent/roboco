@@ -24,7 +24,7 @@ Location* GPS::getTargetLocation(){
   return this->targetLocation;
 }
 
-void GPS::setTargetLocation(double latitude, double longitude){
+void GPS::setTargetLocation(float latitude, float longitude){
 
   this->targetLocation->latitude = latitude;
   this->targetLocation->longitude = longitude;

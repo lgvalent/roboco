@@ -9,6 +9,7 @@ Workflow::Workflow(SDClass& sd){
 
 void Workflow::reset(){
   this->currentStepIndex = 0;
+  //this->currentLine = 0;
   EEPROM.write(EEPROM_STEP_ADDRESS, 0);
 }
 
@@ -18,7 +19,7 @@ void Workflow::backOneStep(){
 }
 
 Workstep* Workflow::getNextStep(){
-
+  Serial.println("Começo do getNextStep - workflow");
   File myFile;
   int currentLine = 0;
   Workstep* workstep = new Workstep();
@@ -29,10 +30,13 @@ Workstep* Workflow::getNextStep(){
   }
   
   while (currentLine != this->currentStepIndex){
+        Serial.println("while - workflow");
         myFile.readStringUntil('\n'); // Pula uma linha no arquivo
         currentLine++;
   }
 
+  Serial.print("currentLine do workflow: ");
+  Serial.println(currentLine);
   String val = myFile.readStringUntil(',');
   if(val.length() == 0) return NULL; // Acabou o arquivo
   workstep->latitude = val.toDouble();
@@ -43,9 +47,14 @@ Workstep* Workflow::getNextStep(){
 
   myFile.close();
   
+  Serial.print("currentStepIndex sem ++: ");
+  Serial.println(this->currentStepIndex);
   this->currentStepIndex++;
-  EEPROM.write(EEPROM_STEP_ADDRESS, this->currentStepIndex); //Escrevendo na EPROMM o currentStepIndex https://www.arduino.cc/en/Tutorial/EEPROMWrite
+  Serial.print("currentStepIndex com ++: ");
+  Serial.println(this->currentStepIndex);
 
+  EEPROM.write(EEPROM_STEP_ADDRESS, this->currentStepIndex); //Escrevendo na EPROMM o currentStepIndex https://www.arduino.cc/en/Tutorial/EEPROMWrite
+  Serial.println("Final do getNextStep - workflow");
   return workstep;
 }
 
