@@ -1,17 +1,22 @@
 #include <Arduino.h>
 #include <sensors.h>
 
-String Sensor::SENSOR_TYPE_NAMES[] = {"Luminosity", "Pressure","Altitude", "Temperature", "CO2" };
+String Sensor::SENSOR_TYPE_NAMES[] = {"Luminosity", "Pressure", "Altitude", "Temperature", "CO2", "Compass"};
 
-String Sensor::getTypeName(){
+String Sensor::getTypeName()
+{
   return SENSOR_TYPE_NAMES[this->getType()];
 }
 
-boolean Sensor::calibrate(){
-   return true;
+boolean Sensor::calibrate()
+{
+  return true;
 }
 
-Co2Sensor::Co2Sensor(int8_t pinRx, int8_t pinTx){
+/*******************************************************/
+
+Co2Sensor::Co2Sensor(int8_t pinRx, int8_t pinTx)
+{
 
   SoftwareSerial *softwareSerial = new SoftwareSerial(pinRx, pinTx);
   softwareSerial->begin(9600);
@@ -20,119 +25,253 @@ Co2Sensor::Co2Sensor(int8_t pinRx, int8_t pinTx){
   mhz19->begin(*Co2Sensor::serial);
 }
 
-Sensor::SensorType Co2Sensor::getType(){
+Sensor::SensorType Co2Sensor::getType()
+{
   return CO2;
 }
 
-String Co2Sensor ::read(){
+String Co2Sensor ::read()
+{
   // Código de leitura Serial
   return String(this->mhz19->getCO2(false));
-}; 
- 
-boolean Co2Sensor::calibrate(){
-  // Código de calibração do sensor!! DUrará horas??? 
+};
+
+boolean Co2Sensor::calibrate()
+{
+  // Código de calibração do sensor!! DUrará horas???
   this->mhz19->autoCalibration(false);
   return true;
-}; 
- 
-LuminositySensor::LuminositySensor(int8_t pin){
+};
+
+/*******************************************************/
+
+LuminositySensor::LuminositySensor(int8_t pin)
+{
   pinMode(pin, INPUT);
 };
 
-Sensor::SensorType LuminositySensor::getType(){
+Sensor::SensorType LuminositySensor::getType()
+{
   return LUMINOSITY;
 };
 
-String LuminositySensor:: read(){
+String LuminositySensor::read()
+{
   return String(analogRead(this->pin));
 };
 
-boolean LuminositySensor::calibrate(){
+boolean LuminositySensor::calibrate()
+{
   return true;
 };
 
-TemperatureSensor::TemperatureSensor(Adafruit_BMP280 *sensor){
-  
+/*******************************************************/
+
+TemperatureSensor::TemperatureSensor(Adafruit_BMP280 *sensor)
+{
+
   this->sensor = sensor;
 };
 
-Sensor::SensorType TemperatureSensor::getType(){
+Sensor::SensorType TemperatureSensor::getType()
+{
   return TEMPERATURE;
 };
 
-String TemperatureSensor::read(){
+String TemperatureSensor::read()
+{
   return String(this->sensor->readTemperature());
 };
 
-boolean TemperatureSensor::calibrate(){
+boolean TemperatureSensor::calibrate()
+{
   return true;
 };
 
-PressureSensor::PressureSensor(Adafruit_BMP280 *sensor){
+/*******************************************************/
+
+PressureSensor::PressureSensor(Adafruit_BMP280 *sensor)
+{
 
   this->sensor = sensor;
 };
 
-Sensor::SensorType PressureSensor::getType(){
+Sensor::SensorType PressureSensor::getType()
+{
   return PRESSURE;
 };
 
-String PressureSensor::read(){
+String PressureSensor::read()
+{
   return String(this->sensor->readPressure());
 };
 
-boolean PressureSensor::calibrate(){
+boolean PressureSensor::calibrate()
+{
   return true;
 };
 
-AltitudeSensor::AltitudeSensor(Adafruit_BMP280 *sensor){
+/*******************************************************/
+
+AltitudeSensor::AltitudeSensor(Adafruit_BMP280 *sensor)
+{
 
   this->sensor = sensor;
 };
 
-Sensor::SensorType AltitudeSensor::getType(){
+Sensor::SensorType AltitudeSensor::getType()
+{
   return ALTITUDE;
 };
 
-String AltitudeSensor::read(){
+String AltitudeSensor::read()
+{
   return String(this->sensor->readAltitude(1013.25));
 }
 
-boolean AltitudeSensor::calibrate(){
+boolean AltitudeSensor::calibrate()
+{
   return true;
 };
 
-Sensors::Sensors(int8_t maxNumberOfSensors) : size(maxNumberOfSensors){
+/*******************************************************/
+
+CompassSensor::CompassSensor(QMC5883LCompass *sensor)
+{
+
+  this->sensor = sensor;
+  this->sensor->init();
+  this->sensor->setSmoothing(10, true);
+};
+
+Sensor::SensorType CompassSensor::getType()
+{
+  return COMPASS;
+};
+
+String CompassSensor::read()
+{
+  /* Code to read in degrees*/
+
+  return String(this->sensor->getAzimuth());
+}
+
+boolean CompassSensor::calibrate()
+{
+
+  int calibrationData[3][2];
+  bool changed = false;
+  bool done = false;
+  int t = 0;
+  int c = 0;
+
+  while (!done)
+  {
+    int x, y, z;
+
+    // Read this->sensor->values
+    this->sensor->read();
+
+    // Return XYZ readings
+    x = this->sensor->getX();
+    y = this->sensor->getY();
+    z = this->sensor->getZ();
+
+    changed = false;
+
+    if (x < calibrationData[0][0])
+    {
+      calibrationData[0][0] = x;
+      changed = true;
+    }
+    if (x > calibrationData[0][1])
+    {
+      calibrationData[0][1] = x;
+      changed = true;
+    }
+
+    if (y < calibrationData[1][0])
+    {
+      calibrationData[1][0] = y;
+      changed = true;
+    }
+    if (y > calibrationData[1][1])
+    {
+      calibrationData[1][1] = y;
+      changed = true;
+    }
+
+    if (z < calibrationData[2][0])
+    {
+      calibrationData[2][0] = z;
+      changed = true;
+    }
+    if (z > calibrationData[2][1])
+    {
+      calibrationData[2][1] = z;
+      changed = true;
+    }
+
+    if (changed && !done)
+    {
+      Serial.println("CALIBRATING... Keep moving your sensor around.");
+      c = millis();
+    }
+    t = millis();
+
+    if ((t - c > 5000) && !done)
+    {
+      done = true;
+
+      this->sensor->setCalibration(calibrationData[0][0], calibrationData[0][1], calibrationData[1][0], calibrationData[1][1], calibrationData[2][0], calibrationData[2][1]);
+      /*TODO Armazenar na EPROM a última calibração */
+    }
+  }
+
+  return true;
+};
+
+/*******************************************************/
+
+Sensors::Sensors(int8_t maxNumberOfSensors) : size(maxNumberOfSensors)
+{
   this->sensors = new Sensor *[maxNumberOfSensors];
 }
 
-int8_t Sensors::getSize(){
+int8_t Sensors::getSize()
+{
   return this->size;
 };
 
-void Sensors::addSensor(int index, Sensor *sensor){
+void Sensors::addSensor(int index, Sensor *sensor)
+{
   this->sensors[index] = sensor;
 };
 
-Sensor *Sensors::getSensor(int index){
+Sensor *Sensors::getSensor(int index)
+{
   return this->sensors[index];
 };
 
-void Sensors::test(){
+void Sensors::test()
+{
 
   Serial.println("Testing Sensors...");
-  for (int index = 0; index < getSize(); index++){
+  for (int index = 0; index < getSize(); index++)
+  {
     Sensor *sensor = this->getSensor(index);
     Serial.print(sensor->getTypeName());
     Serial.print(":");
-   Serial.println(sensor->read());
+    Serial.println(sensor->read());
   }
 }
 
-boolean Sensors::calibrate(){
+boolean Sensors::calibrate()
+{
 
   Serial.println("Calibrating Sensors...");
-  for (int i = 0; i < this->getSize();i++){
+  for (int i = 0; i < this->getSize(); i++)
+  {
     Sensor *sensor = this->getSensor(i);
     Serial.print(sensor->getTypeName());
     Serial.print(":");
@@ -142,15 +281,17 @@ boolean Sensors::calibrate(){
   return true;
 }
 
-void Sensors::stabilizationOfSensors(){ 
-  
+void Sensors::stabilizationOfSensors()
+{
+
   unsigned long start = millis();
 
- do{
-    for (int index = 0; index < getSize(); index++){
-    Sensor *sensor = this->getSensor(index);
-    sensor->read();
+  do
+  {
+    for (int index = 0; index < getSize(); index++)
+    {
+      Sensor *sensor = this->getSensor(index);
+      sensor->read();
     }
- } while (millis() - start < 2000); // fica por aqui por 2s
-
+  } while (millis() - start < 2000); // fica por aqui por 2s
 }

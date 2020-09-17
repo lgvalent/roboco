@@ -6,8 +6,7 @@
 #include <Adafruit_Sensor.h>
 #include <Adafruit_BMP280.h>
 
-#include <Adafruit_Sensor.h>
-#include <Adafruit_HMC5883_U.h>
+#include <QMC5883LCompass.h>
 
 #include <SoftwareSerial.h>
 #include <MHZ19.h>
@@ -97,13 +96,13 @@ class AltitudeSensor: public Sensor{
     boolean calibrate();
 };
 
-class MagSensor: public Sensor{
+class CompassSensor: public Sensor{
   
   private:
-    Adafruit_HMC5883_Unified* mag;
+    QMC5883LCompass* sensor;
 
   public:
-    MagSensor(Adafruit_HMC5883_Unified* sensor); 
+    CompassSensor(QMC5883LCompass* sensor); 
     SensorType getType(); 
     String read(); 
     boolean calibrate();

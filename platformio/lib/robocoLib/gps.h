@@ -1,6 +1,7 @@
 #ifndef GPS_CPP
 #define GPS_CPP
 #include <Arduino.h>
+#include <sensors.h>
 
 struct Location{
     float latitude;
@@ -21,6 +22,7 @@ struct DateTime
 };
 
 class GPS{
+    CompassSensor* compassSensor;
 
     protected:
         virtual void setup()=0;
@@ -39,5 +41,7 @@ class GPS{
         float getDistanceToTarget();
         float getAngleToTarget();
         boolean test();
+
+        /* set e get compassSensor */
 };
 #endif

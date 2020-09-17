@@ -48,7 +48,7 @@ float angleBetweenLines(float cx0, float cy0, float cx1, float cy1, float tx0, f
 
 float GPS::getAngleToTarget(){
 
-  if ( /*tem bussuloa*/ 0 ){
+  if ( /*tem compass*/ 0 ){
 
   }else{
 
