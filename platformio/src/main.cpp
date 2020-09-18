@@ -15,7 +15,6 @@ Roboco* roboco;
 GPS* gps;
 CollectRegister* collectRegister;
 Sensors* sensors;
- 
 
 void setup(){
 
@@ -25,18 +24,21 @@ void setup(){
   // Cria os sensores
   Adafruit_BMP280* bmp280 = new Adafruit_BMP280();  // no Arduino Mega 2560 os pinos de conexão I2C do BMP280 serão o 20 (SDA) e o 21 (SCL).
   bmp280->begin(0x76);                              // necessario inicializar o bmp280
-  LuminositySensor* ldrSensor = new LuminositySensor(A8);
-  PressureSensor* pressSensor = new PressureSensor(bmp280);
-  AltitudeSensor* altSensor = new AltitudeSensor(bmp280);
-  //Co2Sensor* myMHZ19 = new Co2Sensor(10, 11);     // OBS 1: esta dando conflito nos poinos com o módulo shield v1r3 (SD card). Se for testar o SD comente o sensor co2
-  TemperatureSensor* tempSensor = new TemperatureSensor(bmp280);
+  QMC5883LCompass* c = new QMC5883LCompass();
+  CompassSensor* compass = new CompassSensor(c);
+  // LuminositySensor* ldrSensor = new LuminositySensor(A8);
+  // PressureSensor* pressSensor = new PressureSensor(bmp280);
+  // AltitudeSensor* altSensor = new AltitudeSensor(bmp280);
+  // Co2Sensor* myMHZ19 = new Co2Sensor(10, 11);     // OBS 1: esta dando conflito nos poinos com o módulo shield v1r3 (SD card). Se for testar o SD comente o sensor co2
+  // TemperatureSensor* tempSensor = new TemperatureSensor(bmp280);
 
   sensors = new Sensors(Roboco::_COUNT);
-  sensors->addSensor(Roboco::LUMINOSITY, ldrSensor);
-  sensors->addSensor(Roboco::PRESSURE, pressSensor);
-  sensors->addSensor(Roboco::ALTITUDE, altSensor);
-  //sensors->addSensor(Roboco::CO2, myMHZ19); 
-  sensors->addSensor(Roboco::TEMPERATURE, tempSensor);
+  // sensors->addSensor(Roboco::LUMINOSITY, ldrSensor);
+  // sensors->addSensor(Roboco::PRESSURE, pressSensor);
+  // sensors->addSensor(Roboco::ALTITUDE, altSensor);
+  // //sensors->addSensor(Roboco::CO2, myMHZ19); 
+  // sensors->addSensor(Roboco::TEMPERATURE, tempSensor);
+  sensors->addSensor(Roboco::COMPASS, compass);
 
   Output* output = new Output(1,2,3);
 
@@ -55,12 +57,14 @@ void setup(){
   Motor* motorRight = new Motor(5,6,9);
 
   roboco = new Roboco(sensors, output, gps, collectRegister, workflow, motorLeft, motorRight);
-  roboco->setup(); // OBS 2: Setup comentado pq quando testamos o sd com ele, da problema.
-  workflow->reset();
+  //roboco->setup(); // OBS 2: Setup comentado pq quando testamos o sd com ele, da problema.
+  //workflow->reset();
 }
 
 void loop(){
   // if(digitalRead(12) == LOW && false){  // Define se o robô estará em modo normal ou de teste
-  roboco->run(); 
+  //roboco->run(); 
+
+  sensors->test();
   //gps->test();
 }

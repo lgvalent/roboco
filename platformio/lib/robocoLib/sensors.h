@@ -5,9 +5,7 @@
 #include <SPI.h>
 #include <Adafruit_Sensor.h>
 #include <Adafruit_BMP280.h>
-
 #include <QMC5883LCompass.h>
-
 #include <SoftwareSerial.h>
 #include <MHZ19.h>
 

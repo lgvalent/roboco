@@ -152,6 +152,21 @@ Sensor::SensorType CompassSensor::getType()
 String CompassSensor::read()
 {
   /* Code to read in degrees*/
+  /*this->sensor->read();
+  
+  byte a = this->sensor->getAzimuth();
+
+  char myArray[3];
+  this->sensor->getDirection(myArray, a);
+  int i = this->sensor->getAzimuth();
+  Serial.print(i);
+  Serial.print(" ");
+  Serial.print(myArray[0]);
+  Serial.print(myArray[1]);
+  Serial.print(myArray[2]);
+  Serial.println();
+  
+  delay(250);*/
 
   return String(this->sensor->getAzimuth());
 }
@@ -257,7 +272,7 @@ void Sensors::test()
 {
 
   Serial.println("Testing Sensors...");
-  for (int index = 0; index < getSize(); index++)
+  for (int index = 0; index < 1; index++)
   {
     Sensor *sensor = this->getSensor(index);
     Serial.print(sensor->getTypeName());
