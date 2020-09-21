@@ -26,18 +26,18 @@ void setup(){
   bmp280->begin(0x76);                              // necessario inicializar o bmp280
   QMC5883LCompass* c = new QMC5883LCompass();
   CompassSensor* compass = new CompassSensor(c);
-  // LuminositySensor* ldrSensor = new LuminositySensor(A8);
-  // PressureSensor* pressSensor = new PressureSensor(bmp280);
-  // AltitudeSensor* altSensor = new AltitudeSensor(bmp280);
-  // Co2Sensor* myMHZ19 = new Co2Sensor(10, 11);     // OBS 1: esta dando conflito nos poinos com o módulo shield v1r3 (SD card). Se for testar o SD comente o sensor co2
-  // TemperatureSensor* tempSensor = new TemperatureSensor(bmp280);
+  LuminositySensor* ldrSensor = new LuminositySensor(A8);
+  PressureSensor* pressSensor = new PressureSensor(bmp280);
+  AltitudeSensor* altSensor = new AltitudeSensor(bmp280);
+  Co2Sensor* myMHZ19 = new Co2Sensor(10, 11);     // OBS 1: esta dando conflito nos poinos com o módulo shield v1r3 (SD card). Se for testar o SD comente o sensor co2
+  TemperatureSensor* tempSensor = new TemperatureSensor(bmp280);
 
   sensors = new Sensors(Roboco::_COUNT);
-  // sensors->addSensor(Roboco::LUMINOSITY, ldrSensor);
-  // sensors->addSensor(Roboco::PRESSURE, pressSensor);
-  // sensors->addSensor(Roboco::ALTITUDE, altSensor);
-  // //sensors->addSensor(Roboco::CO2, myMHZ19); 
-  // sensors->addSensor(Roboco::TEMPERATURE, tempSensor);
+  sensors->addSensor(Roboco::LUMINOSITY, ldrSensor);
+  sensors->addSensor(Roboco::PRESSURE, pressSensor);
+  sensors->addSensor(Roboco::ALTITUDE, altSensor);
+  sensors->addSensor(Roboco::CO2, myMHZ19); 
+  sensors->addSensor(Roboco::TEMPERATURE, tempSensor);
   sensors->addSensor(Roboco::COMPASS, compass);
 
   Output* output = new Output(1,2,3);
