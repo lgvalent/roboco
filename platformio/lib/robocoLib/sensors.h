@@ -17,10 +17,10 @@ class SensorValue{
 };
 
 enum SensorType{LUMINOSITY, PRESSURE, ALTITUDE, TEMPERATURE, CO2, COMPASS};
-String SENSOR_TYPE_NAMES[] = {"Luminosity", "Pressure", "Altitude", "Temperature", "CO2", "Compass"};
 
 class Sensor{
-
+  protected:
+    static String SENSOR_TYPE_NAMES[];
   public:
     virtual SensorType getType() = 0;
     virtual String read() = 0;

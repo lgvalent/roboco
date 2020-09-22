@@ -1,6 +1,8 @@
 #include <Arduino.h>
 #include <sensors.h>
 
+String Sensor::SENSOR_TYPE_NAMES[] = {"Luminosity", "Pressure", "Altitude", "Temperature", "CO2", "Compass"};
+
 String Sensor::getTypeName()
 {
   return SENSOR_TYPE_NAMES[this->getType()];
