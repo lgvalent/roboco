@@ -25,7 +25,7 @@ void setup(){
   Adafruit_BMP280* bmp280 = new Adafruit_BMP280();  // no Arduino Mega 2560 os pinos de conexão I2C do BMP280 serão o 20 (SDA) e o 21 (SCL).
   bmp280->begin(0x76);                              // necessario inicializar o bmp280
   QMC5883LCompass* c = new QMC5883LCompass();
-  CompassSensor* compass = new CompassSensor(c);
+  CompassSensorQMC5883* compass = new CompassSensorQMC5883(c);
   LuminositySensor* ldrSensor = new LuminositySensor(A8);
   PressureSensor* pressSensor = new PressureSensor(bmp280);
   AltitudeSensor* altSensor = new AltitudeSensor(bmp280);
@@ -44,7 +44,8 @@ void setup(){
 
   // gps = new GpsMTK33x9(8,7);
   gps = new GpsNEO6M(&Serial1);  
-  
+  gps->setCompassSensor(compass);
+   
   // Prepare SD Card, pinSD is a select SPI pin, MEGA: 50,51,52 and 53, 
   pinMode(53, OUTPUT);
   SD.begin(53);

@@ -3,11 +3,7 @@
 #include <Arduino.h>
 #include <Wire.h>
 #include <SPI.h>
-#include <Adafruit_Sensor.h>
-#include <Adafruit_BMP280.h>
-#include <QMC5883LCompass.h>
 #include <SoftwareSerial.h>
-#include <MHZ19.h>
 
 class Unit{
   public:
@@ -20,11 +16,10 @@ class SensorValue{
     Unit unit;
 };
 
-class Sensor{
+enum SensorType{LUMINOSITY, PRESSURE, ALTITUDE, TEMPERATURE, CO2, COMPASS};
+String SENSOR_TYPE_NAMES[] = {"Luminosity", "Pressure", "Altitude", "Temperature", "CO2", "Compass"};
 
-  protected:
-    static enum SensorType{LUMINOSITY, PRESSURE, ALTITUDE, TEMPERATURE, CO2, COMPASS} SENSOR_TYPE;
-    static String SENSOR_TYPE_NAMES[];
+class Sensor{
 
   public:
     virtual SensorType getType() = 0;
@@ -33,6 +28,7 @@ class Sensor{
     boolean calibrate();
 };
 
+#include <MHZ19.h>
 class Co2Sensor: public Sensor {
 
   private:
@@ -58,6 +54,7 @@ class LuminositySensor: public Sensor{
     boolean calibrate();
 };
 
+#include <Adafruit_BMP280.h>
 class TemperatureSensor: public Sensor{
 
   private:
@@ -94,13 +91,28 @@ class AltitudeSensor: public Sensor{
     boolean calibrate();
 };
 
-class CompassSensor: public Sensor{
+#include <QMC5883LCompass.h>
+class CompassSensorQMC5883: public Sensor{
   
   private:
     QMC5883LCompass* sensor;
 
   public:
-    CompassSensor(QMC5883LCompass* sensor); 
+    CompassSensorQMC5883(QMC5883LCompass* sensor); 
+    SensorType getType(); 
+    String read(); 
+    boolean calibrate();
+};
+
+#include <Adafruit_Sensor.h>
+#include <Adafruit_HMC5883_U.h>
+class CompassSensorHMC5883: public Sensor{
+  
+  private:
+    Adafruit_HMC5883_Unified* sensor;
+
+  public:
+    CompassSensorHMC5883(Adafruit_HMC5883_Unified* sensor); 
     SensorType getType(); 
     String read(); 
     boolean calibrate();

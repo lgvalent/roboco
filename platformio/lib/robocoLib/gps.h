@@ -22,9 +22,9 @@ struct DateTime
 };
 
 class GPS{
-    CompassSensor* compassSensor;
 
     protected:
+        Sensor* compassSensor;
         virtual void setup()=0;
         Location* targetLocation = new Location();
         Location* previousLocation = new Location();
@@ -42,6 +42,7 @@ class GPS{
         float getAngleToTarget();
         boolean test();
 
-        /* set e get compassSensor */
+        void setCompassSensor(Sensor* compassSensor);
+        Sensor* getCompassSensor();        
 };
 #endif

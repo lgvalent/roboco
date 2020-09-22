@@ -2,6 +2,17 @@
 #include <gps.h>
 #include <math.h>
 
+void GPS::setCompassSensor(Sensor* compassSensor){
+  if(compassSensor->getType() == COMPASS)
+    this->compassSensor = compassSensor;
+  else
+    Serial.println("Sensor is not a COMPASS type.");
+}
+
+Sensor* GPS::getCompassSensor(){
+  return this->compassSensor;
+}
+   
 float GPS::getDistanceToTarget(){
 
   float lat1 = currentLocation->latitude * 3.1415927 / 180;     // atual

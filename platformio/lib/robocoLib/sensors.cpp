@@ -1,8 +1,6 @@
 #include <Arduino.h>
 #include <sensors.h>
 
-String Sensor::SENSOR_TYPE_NAMES[] = {"Luminosity", "Pressure", "Altitude", "Temperature", "CO2", "Compass"};
-
 String Sensor::getTypeName()
 {
   return SENSOR_TYPE_NAMES[this->getType()];
@@ -25,7 +23,7 @@ Co2Sensor::Co2Sensor(int8_t pinRx, int8_t pinTx)
   mhz19->begin(*Co2Sensor::serial);
 }
 
-Sensor::SensorType Co2Sensor::getType()
+SensorType Co2Sensor::getType()
 {
   return CO2;
 }
@@ -50,7 +48,7 @@ LuminositySensor::LuminositySensor(int8_t pin)
   pinMode(pin, INPUT);
 };
 
-Sensor::SensorType LuminositySensor::getType()
+SensorType LuminositySensor::getType()
 {
   return LUMINOSITY;
 };
@@ -73,7 +71,7 @@ TemperatureSensor::TemperatureSensor(Adafruit_BMP280 *sensor)
   this->sensor = sensor;
 };
 
-Sensor::SensorType TemperatureSensor::getType()
+SensorType TemperatureSensor::getType()
 {
   return TEMPERATURE;
 };
@@ -96,7 +94,7 @@ PressureSensor::PressureSensor(Adafruit_BMP280 *sensor)
   this->sensor = sensor;
 };
 
-Sensor::SensorType PressureSensor::getType()
+SensorType PressureSensor::getType()
 {
   return PRESSURE;
 };
@@ -119,7 +117,7 @@ AltitudeSensor::AltitudeSensor(Adafruit_BMP280 *sensor)
   this->sensor = sensor;
 };
 
-Sensor::SensorType AltitudeSensor::getType()
+SensorType AltitudeSensor::getType()
 {
   return ALTITUDE;
 };
@@ -136,7 +134,7 @@ boolean AltitudeSensor::calibrate()
 
 /*******************************************************/
 
-CompassSensor::CompassSensor(QMC5883LCompass *sensor)
+CompassSensorQMC5883::CompassSensorQMC5883(QMC5883LCompass *sensor)
 {
 
   this->sensor = sensor;
@@ -144,19 +142,19 @@ CompassSensor::CompassSensor(QMC5883LCompass *sensor)
   this->sensor->setSmoothing(10, true);
 };
 
-Sensor::SensorType CompassSensor::getType()
+SensorType CompassSensorQMC5883::getType()
 {
   return COMPASS;
 };
 
-String CompassSensor::read()
+String CompassSensorQMC5883::read()
 {
   /* Code to read in degrees*/
   this->sensor->read();
   return String(this->sensor->getAzimuth());
 }
 
-boolean CompassSensor::calibrate()
+boolean CompassSensorQMC5883::calibrate()
 {
 
   int calibrationData[3][2];
@@ -228,6 +226,55 @@ boolean CompassSensor::calibrate()
     }
   }
 
+  return true;
+};
+
+/*******************************************************/
+CompassSensorHMC5883::CompassSensorHMC5883(Adafruit_HMC5883_Unified* sensor *sensor)
+{
+
+  this->sensor = sensor;
+};
+
+SensorType CompassSensorHMC5883::getType()
+{
+  return COMPASS;
+};
+
+String CompassSensorHMC5883::read()
+{
+  /* SOURCE: https://platformio.org/lib/show/380/Adafruit%20HMC5883%20Unified*/
+  /* Get a new sensor event */ 
+  sensors_event_t event; 
+  this->sensor->getEvent(&event);
+
+  // Hold the module so that Z is pointing 'up' and you can measure the heading with x&y
+  // Calculate heading when the magnetometer is level, then correct for signs of axis.
+  float heading = atan2(event.magnetic.y, event.magnetic.x);
+  
+  // Once you have your heading, you must then add your 'Declination Angle', which is the 'Error' of the magnetic field in your location.
+  // Find yours here: http://www.magnetic-declination.com/
+  // Mine is: -13* 2' W, which is ~13 Degrees, or (which we need) 0.22 radians
+  // If you cannot find your Declination, comment out these two lines, your compass will be slightly off.
+  // float declinationAngle = 0.22;
+  // heading += declinationAngle;
+  
+  // Correct for when signs are reversed.
+  if(heading < 0)
+    heading += 2*PI;
+    
+  // Check for wrap due to addition of declination.
+  if(heading > 2*PI)
+    heading -= 2*PI;
+   
+  // Convert radians to degrees for readability.
+  float headingDegrees = heading * 180/M_PI; 
+  
+  return String(headingDegrees);
+}
+
+boolean CompassSensorHMC5883::calibrate()
+{
   return true;
 };
 
