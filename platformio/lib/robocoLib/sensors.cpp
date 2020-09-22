@@ -230,7 +230,7 @@ boolean CompassSensorQMC5883::calibrate()
 };
 
 /*******************************************************/
-CompassSensorHMC5883::CompassSensorHMC5883(Adafruit_HMC5883_Unified* sensor *sensor)
+CompassSensorHMC5883::CompassSensorHMC5883(Adafruit_HMC5883_Unified* sensor)
 {
 
   this->sensor = sensor;
