@@ -59,27 +59,45 @@ float angleBetweenLines(float cx0, float cy0, float cx1, float cy1, float tx0, f
 
 float GPS::getAngleToTarget(){
 
-  if ( /*tem compass*/ 0 ){
+  if (this->compassSensor != NULL){
 
+    // Compute the forward azimuth
+    // SOURCE:
+    // **************************************************
+    float currentLongitudeRad = radians(currentLocation->longitude);
+    float currentLatitudeRad = radians(currentLocation->latitude);
+    float targetLongitudeRad = radians(this->targetLocation->longitude);
+    float targetLatitudeRad = radians(this->targetLocation->latitude);
+
+    float angleToTarget = atan2(sin(targetLongitudeRad - currentLongitudeRad) * cos(targetLatitudeRad),
+                                cos(currentLatitudeRad) * sin(targetLatitudeRad) - sin(currentLatitudeRad) * cos(targetLatitudeRad) * cos(targetLongitudeRad - currentLongitudeRad));
+
+    angleToTarget = angleToTarget * 180 / PI; // Convert from radians to degrees
+
+    // Always convert to positive angles
+    if (angleToTarget < 0)
+    {
+      angleToTarget += 360;
+    }
+
+    return angleToTarget;
   }else{
+    // Verifica se tem um previous location != NULL
+    if (this->previousLocation == NULL){
+      return 0;
+    }
+    float cx0 = this->previousLocation->longitude; // anterior
+    float cy0 = this->previousLocation->latitude;
 
+    float cx1 = currentLocation->longitude; // atual
+    float cy1 = currentLocation->latitude;
+    float tx0 = currentLocation->longitude;
+    float ty0 = currentLocation->latitude;
 
-  // Verifica se tem um previous location != NULL
-  if (this->previousLocation == NULL){
-    return 0;
-  }
-  float cx0 = this->previousLocation->longitude; // anterior
-  float cy0 = this->previousLocation->latitude;
+    float tx1 = this->targetLocation->longitude; // alvo
+    float ty1 = this->targetLocation->latitude;
 
-  float cx1 = currentLocation->longitude; // atual
-  float cy1 = currentLocation->latitude;
-  float tx0 = currentLocation->longitude;
-  float ty0 = currentLocation->latitude;
-
-  float tx1 = this->targetLocation->longitude; // alvo
-  float ty1 = this->targetLocation->latitude;
-
-  return angleBetweenLines(cx0, cy0, cx1, cy1, tx0, ty0, tx1, ty1);
+    return angleBetweenLines(cx0, cy0, cx1, cy1, tx0, ty0, tx1, ty1);
   }
 }
 

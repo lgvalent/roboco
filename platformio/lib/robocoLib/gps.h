@@ -24,7 +24,7 @@ struct DateTime
 class GPS{
 
     protected:
-        Sensor* compassSensor;
+        Sensor* compassSensor = NULL;
         virtual void setup()=0;
         Location* targetLocation = new Location();
         Location* previousLocation = new Location();
