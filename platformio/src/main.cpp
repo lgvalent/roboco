@@ -24,8 +24,11 @@ void setup(){
   // Cria os sensores
   Adafruit_BMP280* bmp280 = new Adafruit_BMP280();  // no Arduino Mega 2560 os pinos de conexão I2C do BMP280 serão o 20 (SDA) e o 21 (SCL).
   bmp280->begin(0x76);                              // necessario inicializar o bmp280
-  QMC5883LCompass* c = new QMC5883LCompass();
-  CompassSensorQMC5883* compass = new CompassSensorQMC5883(c);
+  //QMC5883LCompass* c = new QMC5883LCompass();
+  //CompassSensorQMC5883* compass = new CompassSensorQMC5883(c);
+  Adafruit_HMC5883_Unified* c = new Adafruit_HMC5883_Unified(12345);
+  CompassSensorHMC5883* compass = new CompassSensorHMC5883(c);
+
   LuminositySensor* ldrSensor = new LuminositySensor(A8);
   PressureSensor* pressSensor = new PressureSensor(bmp280);
   AltitudeSensor* altSensor = new AltitudeSensor(bmp280);
@@ -67,5 +70,5 @@ void loop(){
   //roboco->run(); 
 
   sensors->test();
-  //gps->test();
+  gps->test();
 }

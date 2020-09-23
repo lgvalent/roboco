@@ -234,8 +234,11 @@ boolean CompassSensorQMC5883::calibrate()
 /*******************************************************/
 CompassSensorHMC5883::CompassSensorHMC5883(Adafruit_HMC5883_Unified* sensor)
 {
-
   this->sensor = sensor;
+  if(!sensor->begin())
+  {
+      Serial.println("HMC5883 not detected ... Check your wiring!");
+  }
 };
 
 SensorType CompassSensorHMC5883::getType()
@@ -258,8 +261,8 @@ String CompassSensorHMC5883::read()
   // Find yours here: http://www.magnetic-declination.com/
   // Mine is: -13* 2' W, which is ~13 Degrees, or (which we need) 0.22 radians
   // If you cannot find your Declination, comment out these two lines, your compass will be slightly off.
-  // float declinationAngle = 0.22;
-  // heading += declinationAngle;
+  float declinationAngle = 0.33;
+  heading += declinationAngle;
   
   // Correct for when signs are reversed.
   if(heading < 0)
@@ -315,8 +318,8 @@ void Sensors::test()
     Serial.print(":");
     Serial.println(sensor->read());
   }
-  // delay(2000);
-  // Serial.println("******************* ");
+  //delay(2000);
+  //Serial.println("******************* ");
 }
 
 boolean Sensors::calibrate()
