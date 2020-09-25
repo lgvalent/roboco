@@ -138,10 +138,9 @@ boolean AltitudeSensor::calibrate()
 
 CompassSensorQMC5883::CompassSensorQMC5883(QMC5883LCompass *sensor)
 {
-
   this->sensor = sensor;
   this->sensor->init();
-  this->sensor->setSmoothing(10, true);
+  this->sensor->setSmoothing(10, true); 
 };
 
 SensorType CompassSensorQMC5883::getType()

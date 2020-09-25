@@ -3,8 +3,10 @@
 #include <math.h>
 
 void GPS::setCompassSensor(Sensor* compassSensor){
-  if(compassSensor->getType() == COMPASS)
+  if(compassSensor->getType() == COMPASS){
     this->compassSensor = compassSensor;
+    Serial.println (compassSensor->getType());
+  }
   else
     Serial.println("Sensor is not a COMPASS type.");
 }
@@ -16,15 +18,23 @@ Sensor* GPS::getCompassSensor(){
 float GPS::getDistanceToTarget(){
 
   float lat1 = currentLocation->latitude * 3.1415927 / 180;     // atual
-  float lon1 = currentLocation->longitude * 3.1415927 / 180;
+  float lon1 =  currentLocation->longitude * 3.1415927 / 180;
   float lat2 = targetLocation->latitude * 3.1415927 / 180;      // alvo
   float lon2 = targetLocation->longitude * 3.1415927 / 180;
-  float Raio_da_terra = 6371000; // km
+  float Raio_da_terra = 6371; // km
   float dLat = (lat2 - lat1);    //diferença das latitudes dos pontos em radianos
   float dLon = (lon2 - lon1);    //diferença das longitudes dos pontos em radianos
   float a = sin(dLat / 2) * sin(dLat / 2) + cos(lat1) * cos(lat2) * sin(dLon / 2) * sin(dLon / 2);
   float c = 2 * atan2(sqrt(a), sqrt(1 - a));
-  return Raio_da_terra * c; //distancia em metros
+  Serial.println ("currentLocation Latitude / longitude: ");
+  Serial.println (currentLocation->latitude, 6);
+  Serial.println (currentLocation -> longitude, 6);
+  Serial.println ("targetLocation Latitude / longitude: ");
+  Serial.println (targetLocation->latitude, 6);
+  Serial.println (targetLocation->longitude, 6);
+  Serial.println ("Distancia: ");
+  Serial.println ((Raio_da_terra* c) *1000);
+  return (Raio_da_terra* c) *1000; //distancia em metros
 }
 
 Location *GPS::getPreviousLocation(){
@@ -64,6 +74,7 @@ float GPS::getAngleToTarget(){
     // Compute the forward azimuth
     // SOURCE:
     // **************************************************
+    
     float currentLongitudeRad = radians(currentLocation->longitude);
     float currentLatitudeRad = radians(currentLocation->latitude);
     float targetLongitudeRad = radians(this->targetLocation->longitude);
@@ -79,10 +90,10 @@ float GPS::getAngleToTarget(){
     {
       angleToTarget += 360;
     }
-
     return angleToTarget;
+
   }else{
-    // Verifica se tem um previous location != NULL
+    //Verifica se tem um previous location != NULL
     if (this->previousLocation == NULL){
       return 0;
     }
@@ -96,7 +107,7 @@ float GPS::getAngleToTarget(){
 
     float tx1 = this->targetLocation->longitude; // alvo
     float ty1 = this->targetLocation->latitude;
-
+  
     return angleBetweenLines(cx0, cy0, cx1, cy1, tx0, ty0, tx1, ty1);
   }
 }

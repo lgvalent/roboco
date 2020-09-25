@@ -19,7 +19,6 @@ void Workflow::backOneStep(){
 }
 
 Workstep* Workflow::getNextStep(){
-  Serial.println("Começo do getNextStep - workflow");
   File myFile = sd->open("ROBOCO.txt", FILE_READ);
   int currentLine = 0;
   Workstep* workstep = new Workstep();
@@ -29,13 +28,11 @@ Workstep* Workflow::getNextStep(){
   }
   
   while (currentLine != this->currentStepIndex){
-        Serial.println("while - workflow");
+        
         myFile.readStringUntil('\n'); // Pula uma linha no arquivo
         currentLine++;
   }
 
-  Serial.print("currentLine do workflow: ");
-  Serial.println(currentLine);
   String val = myFile.readStringUntil(',');
   if(val.length() == 0) return NULL; // Acabou o arquivo
   workstep->latitude = val.toDouble();
@@ -45,15 +42,10 @@ Workstep* Workflow::getNextStep(){
   workstep->collectInterval = myFile.readStringUntil('\n').toInt();
 
   myFile.close();
-  
-  Serial.print("currentStepIndex sem ++: ");
-  Serial.println(this->currentStepIndex);
+   
   this->currentStepIndex++;
-  Serial.print("currentStepIndex com ++: ");
-  Serial.println(this->currentStepIndex);
 
   EEPROM.write(EEPROM_STEP_ADDRESS, this->currentStepIndex); //Escrevendo na EPROMM o currentStepIndex https://www.arduino.cc/en/Tutorial/EEPROMWrite
-  Serial.println("Final do getNextStep - workflow");
   return workstep;
 }
 
