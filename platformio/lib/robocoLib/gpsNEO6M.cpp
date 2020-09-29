@@ -38,6 +38,12 @@ bool result = true;
 
 Location *GpsNEO6M::getCurrentLocation(){
 
+   unsigned long start = millis();
+
+  do {            // Forma funcional do delay
+    readGps();
+  } while (millis() - start < 500);
+
    if (this->gps->location.isValid()){
       *(this->previousLocation)=*(this->currentLocation); // guardando currentLocation
       this->currentLocation->longitude =  this->gps->location.lng();
@@ -55,6 +61,12 @@ Location *GpsNEO6M::getCurrentLocation(){
 }
 
 DateTime *GpsNEO6M::getCurrentDateTime(){
+
+   unsigned long start = millis();
+
+  do {            // Forma funcional do delay
+    readGps();
+  } while (millis() - start < 500);
 
    if (this->gps->date.isValid()) {
       this->currentDateTime->day = this->gps->date.day();

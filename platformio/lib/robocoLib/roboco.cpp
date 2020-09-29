@@ -18,11 +18,6 @@ Roboco::Roboco(Sensors *sensors, Output *output, GPS *gps, CollectRegister *coll
 void Roboco::setup(){
 
   // this->sensors->stabilizationOfSensors(); //start sensores, fica por aqui por 2s (quando utilizamos esse metodo ele fica resetando o metodo setup, ARRUMAR ISSO)
-	
-  unsigned long start = millis();
-	do{ 											                              // Forma funcional do delay, precisa desse do while para gravar os dados do gps
-	gps->readGps();
-	} while (millis() - start < 2000);
 
   this->originLocation = this->gps->getCurrentLocation(); // salvando a origem do gps ao ligar o robo
  //this->output->lcdPrint("ROBOCO²", 0, 0);
@@ -108,11 +103,6 @@ void Roboco::goTarget(){
     float distanceFactor;
     float angleFactor;
     
-    unsigned long start = millis();
-    do{ // Forma funcional do delay
-      gps->readGps();
-    } while (millis() - start < 2000);
-    
     Serial.println("ESTOU no do while do goTarget");
     this->currentLocation = this->gps->getCurrentLocation();
     this->currentDataTime = this->gps->getCurrentDateTime();
@@ -186,7 +176,7 @@ void Roboco::calibrateSensors(){
 
 void Roboco::test(){
   Serial.println("Testing Roboco...");
-  // this->gps->test();
+   this->gps->test();
   // this->sensors->test();
   // this->output->test();
   // this->collectRegister->test(); 

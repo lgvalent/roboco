@@ -13,7 +13,10 @@ Motor::Motor(int8_t pin1, int8_t pin2, int8_t pinPwm){
 }
 
 void Motor::stop(){
+  digitalWrite(pin1, LOW);
+  digitalWrite(pin2, LOW);
   analogWrite(pinPwm, 0);
+  delay (2000);
 }
 
 void Motor::move(MotorDirection direction, unsigned char speed){
@@ -31,13 +34,19 @@ void Motor::move(MotorDirection direction, unsigned char speed){
 void Motor::test(){
     Serial.print("Testing Motor: ");
     int i=0;
-    for (i = i+5; i <= 255; i++){
+    for (i = 1; i <= 255; i++){
+        Serial.println ("primeiro for:");
+        Serial.println (i);
         move(CLOCKWISE, i);
-        delay (100);
+        i=i+20;
+        
     }
-    i=0;
-    for(i=i+5 ; i<= 255; i++){
+    for(i=1; i<= 255; i++){
+        Serial.println ("segundo for:");
+        Serial.println (i);
         move(ANTICLOCKWISE, i);
-        delay (100);
+        i=i+20;
+        
       }
+      stop();
 }

@@ -17,10 +17,10 @@ Sensor* GPS::getCompassSensor(){
    
 float GPS::getDistanceToTarget(){
 
-  float lat1 = currentLocation->latitude * 3.1415927 / 180;     // atual
-  float lon1 =  currentLocation->longitude * 3.1415927 / 180;
-  float lat2 = targetLocation->latitude * 3.1415927 / 180;      // alvo
-  float lon2 = targetLocation->longitude * 3.1415927 / 180;
+  float lat1 = currentLocation->latitude * PI / 180;     // atual
+  float lon1 =  currentLocation->longitude * PI / 180;
+  float lat2 = targetLocation->latitude * PI / 180;      // alvo
+  float lon2 = targetLocation->longitude * PI / 180;
   float Raio_da_terra = 6371; // km
   float dLat = (lat2 - lat1);    //diferença das latitudes dos pontos em radianos
   float dLon = (lon2 - lon1);    //diferença das longitudes dos pontos em radianos
@@ -113,11 +113,6 @@ float GPS::getAngleToTarget(){
 }
 
 boolean GPS::test(){
-  unsigned long start = millis();
-
-  do {            // Forma funcional do delay
-    readGps();
-  } while (millis() - start < 2000);
 
   Location *loc = getCurrentLocation();
   DateTime *dat = getCurrentDateTime();
