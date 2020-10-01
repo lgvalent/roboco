@@ -66,12 +66,13 @@ void setup(){
   //roboco->setup(); // OBS 2: Setup comentado pq quando testamos o sd com ele, da problema.
   workflow->reset();
   //workflow->test();
+  //workflow->test();
 }
 
 void loop(){
   // if(digitalRead(12) == LOW && false){  // Define se o robô estará em modo normal ou de teste
-  //roboco->run(); 
-  roboco->test();
+  roboco->run(); 
+  // roboco->getTarget();
   //sensors->test();
   //gps->test();
   //gps->getDistanceToTarget();

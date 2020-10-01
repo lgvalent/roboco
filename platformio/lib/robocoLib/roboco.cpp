@@ -85,7 +85,9 @@ Location* Roboco::getTarget(){
     this->currentStep = this->workflow->getNextStep();
     if(this->currentStep != NULL){
       Serial.println("passei no if do getTarget");
-      this->gps->setTargetLocation(this->currentStep->latitude, this->currentStep->longitude);
+      //this->gps->setTargetLocation(this->currentStep->latitude, this->currentStep->longitude);
+      this->gps->setTargetLocation(-24.033768, -52.361821); // teste com alvo fixo. Endereço da esquina da rua da Bruna de Campo Mourão.
+
     } else {
       Serial.println("passei no else do getTarget");
       return NULL;
@@ -129,8 +131,8 @@ void Roboco::goTarget(){
                                                                                           // motorRight = motor->move;
     }
 
-    goToTarget =  distanceFactor > TARGET_MINIMAL_DISTANCE_APPROACH_FACTOR;
-
+    goToTarget = distanceFactor < TARGET_MINIMAL_DISTANCE_APPROACH_FACTOR;
+      
   } while (goToTarget);
 }
 
@@ -176,11 +178,11 @@ void Roboco::calibrateSensors(){
 
 void Roboco::test(){
   Serial.println("Testing Roboco...");
-   this->gps->test();
+  // this->gps->test();
   // this->sensors->test();
   // this->output->test();
   // this->collectRegister->test(); 
-  //this->workflow->test();
+  this->workflow->test();
   //this->motorLeft->test();
   //this->motorRight->test();
 }

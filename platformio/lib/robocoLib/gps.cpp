@@ -28,7 +28,7 @@ float GPS::getDistanceToTarget(){
   float c = 2 * atan2(sqrt(a), sqrt(1 - a));
   Serial.println ("currentLocation Latitude / longitude: ");
   Serial.println (currentLocation->latitude, 6);
-  Serial.println (currentLocation -> longitude, 6);
+  Serial.println (currentLocation->longitude, 6);
   Serial.println ("targetLocation Latitude / longitude: ");
   Serial.println (targetLocation->latitude, 6);
   Serial.println (targetLocation->longitude, 6);
@@ -118,6 +118,7 @@ boolean GPS::test(){
   DateTime *dat = getCurrentDateTime();
 
   if(loc != NULL && dat != NULL){  // verificação da leitura 
+
     Serial.println(" ");
     Serial.println("Testing GPS: ");
     Serial.print("Date: ");
@@ -135,9 +136,9 @@ boolean GPS::test(){
     Serial.print(dat->seconds);
     Serial.println();
     Serial.print("Latitude: ");
-    Serial.println(loc->latitude, 6);
+    Serial.println(loc->latitude, 9);
     Serial.print("Longitude: ");
-    Serial.println(loc->longitude, 6);
+    Serial.println(loc->longitude, 9);
     Serial.print("Altitude: ");
     Serial.println(loc->altitude);
     Serial.print("Angle: ");

@@ -28,20 +28,19 @@ Workstep* Workflow::getNextStep(){
   }
   
   while (currentLine != this->currentStepIndex){
-        
         myFile.readStringUntil('\n'); // Pula uma linha no arquivo
         currentLine++;
   }
 
   String val = myFile.readStringUntil(',');
   if(val.length() == 0) return NULL; // Acabou o arquivo
-  workstep->latitude = val.toDouble();
   
-  workstep->longitude = myFile.readStringUntil(',').toDouble();
+  workstep->latitude = val.toFloat();
+  workstep->longitude = myFile.readStringUntil(',').toFloat();
   workstep->collectCount = myFile.readStringUntil(',').toInt();
   workstep->collectInterval = myFile.readStringUntil('\n').toInt();
 
-  myFile.close();
+  // myFile.close();
    
   this->currentStepIndex++;
 
@@ -58,16 +57,16 @@ void Workflow::test(){
     Serial.print("Error: Check sd card or empty file"); 
   }else{
     Serial.print("Lat ");
-    Serial.println(saida->latitude);
+    Serial.println(saida->latitude,6);
     Serial.print("Lon ");
-    Serial.println(saida->longitude);
+    Serial.println(saida->longitude,6);
     Serial.print("collectCount ");
     Serial.println(saida->collectCount);
     Serial.print("collectInterval ");
     Serial.println(saida->collectInterval);
 
-    // this->backOneStep();
-    // this->reset();
+    //this->backOneStep();
+    //this->reset();
   }
   
 }

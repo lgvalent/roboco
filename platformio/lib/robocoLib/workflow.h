@@ -6,8 +6,8 @@
 #include <EEPROM.h>
 
 struct Workstep{
-  double latitude;
-  double longitude;
+  float latitude;
+  float longitude;
   int collectCount; // contagem da coleta D3 ATE ACABAR O 5M
   int collectInterval; // in seconds intervalo da coleta D2 5M
   byte currentStopIndex; // indice de parada atual 

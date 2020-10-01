@@ -75,10 +75,6 @@ void CollectRegister::test() {
 
 	unsigned long start = millis();
 
-	do{ 											// Forma funcional do delay, precisa desse do while para gravar os dados do gps
-	g->readGps();
-	} while (millis() - start < 2000);
-
 	Location *loc = g->getCurrentLocation();
 	DateTime *dat = g->getCurrentDateTime();
 	open(); 										
