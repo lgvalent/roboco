@@ -85,8 +85,8 @@ Location* Roboco::getTarget(){
     this->currentStep = this->workflow->getNextStep();
     if(this->currentStep != NULL){
       Serial.println("passei no if do getTarget");
-      //this->gps->setTargetLocation(this->currentStep->latitude, this->currentStep->longitude);
-      this->gps->setTargetLocation(-24.033768, -52.361821); // teste com alvo fixo. Endereço da esquina da rua da Bruna de Campo Mourão.
+      this->gps->setTargetLocation(this->currentStep->latitude, this->currentStep->longitude);
+      //this->gps->setTargetLocation(-24.034241, -52.362065); // teste com alvo fixo. Endereço da esquina da rua da Bruna de Campo Mourão.
 
     } else {
       Serial.println("passei no else do getTarget");
@@ -98,12 +98,12 @@ Location* Roboco::getTarget(){
 
 void Roboco::goTarget(){
 
-  bool goToTarget = false; // vai para o alvo
+  bool goToTarget = true; // vai para o alvo
   Serial.println("ESTOU no goTarget");
 
-  do{
-    float distanceFactor;
+  while(goToTarget){
     float angleFactor;
+    float distanceFactor;
     
     Serial.println("ESTOU no do while do goTarget");
     this->currentLocation = this->gps->getCurrentLocation();
@@ -115,7 +115,7 @@ void Roboco::goTarget(){
     distanceFactor = this->gps->getDistanceToTarget();
     // Serial.print ("distanceFactor 1: ");
     // Serial.println (distanceFactor);
-    distanceFactor = distanceFactor > TARGET_SOFT_APPROACH_METER ? 1 : distanceFactor / TARGET_SOFT_APPROACH_METER; //  a distancia (em metros) do alvo influenciara a velocidade do motor
+    // distanceFactor = distanceFactor > TARGET_SOFT_APPROACH_METER ? 1 : distanceFactor / TARGET_SOFT_APPROACH_METER; //  a distancia (em metros) do alvo influenciara a velocidade do motor
     // Serial.print ("distanceFactor 2: ");
     // Serial.println (distanceFactor);
     
@@ -131,9 +131,15 @@ void Roboco::goTarget(){
                                                                                           // motorRight = motor->move;
     }
 
-    goToTarget = distanceFactor < TARGET_MINIMAL_DISTANCE_APPROACH_FACTOR;
-      
-  } while (goToTarget);
+    //goToTarget = distanceFactor < 2;
+    if(distanceFactor < TARGET_MINIMAL_DISTANCE_APPROACH_FACTOR){
+      goToTarget = false;
+    }else{ 
+      goToTarget = true;
+    }
+    Serial.println (distanceFactor);
+    Serial.println(goToTarget);
+  } 
 }
 
 void Roboco::collectData(){

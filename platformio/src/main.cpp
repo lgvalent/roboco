@@ -32,7 +32,7 @@ void setup(){
   LuminositySensor* ldrSensor = new LuminositySensor(A8);
   PressureSensor* pressSensor = new PressureSensor(bmp280);
   AltitudeSensor* altSensor = new AltitudeSensor(bmp280);
-  //Co2Sensor* myMHZ19 = new Co2Sensor(10, 11);     // OBS 1: esta dando conflito nos poinos com o módulo shield v1r3 (SD card). Se for testar o SD comente o sensor co2
+  //Co2Sensor* myMHZ19 = new Co2Sensor(0,1);     // OBS 1: esta dando conflito nos poinos com o módulo shield v1r3 (SD card). Se for testar o SD comente o sensor co2
   TemperatureSensor* tempSensor = new TemperatureSensor(bmp280);
 
   sensors = new Sensors(Roboco::_COUNT);
@@ -47,7 +47,7 @@ void setup(){
 
   // gps = new GpsMTK33x9(8,7);
   gps = new GpsNEO6M(&Serial1);  
-  //gps->setCompassSensor(compass);
+  // gps->setCompassSensor(compass);
    
   // Prepare SD Card, pinSD is a select SPI pin, MEGA: 50,51,52 and 53, 
   pinMode(53, OUTPUT);
@@ -59,21 +59,12 @@ void setup(){
 
   Motor* motorLeft = new Motor(5,6,3);
   Motor* motorRight = new Motor(8,9,3);
-  //motorLeft->test();
-  //motorRight->test();
 
   roboco = new Roboco(sensors, output, gps, collectRegister, workflow, motorLeft, motorRight);
   //roboco->setup(); // OBS 2: Setup comentado pq quando testamos o sd com ele, da problema.
   workflow->reset();
-  //workflow->test();
-  //workflow->test();
 }
 
 void loop(){
-  // if(digitalRead(12) == LOW && false){  // Define se o robô estará em modo normal ou de teste
-  roboco->run(); 
-  // roboco->getTarget();
-  //sensors->test();
-  //gps->test();
-  //gps->getDistanceToTarget();
+  //roboco->run(); 
 }
