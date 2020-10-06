@@ -82,10 +82,12 @@ float GPS::getAngleToTarget(){
 
     float angleToTarget = atan2(sin(targetLongitudeRad - currentLongitudeRad) * cos(targetLatitudeRad),
                                 cos(currentLatitudeRad) * sin(targetLatitudeRad) - sin(currentLatitudeRad) * cos(targetLatitudeRad) * cos(targetLongitudeRad - currentLongitudeRad));
+    angleToTarget = angleToTarget * 180 / PI; // Convert from radians to degrees -180° a 180°
 
-    angleToTarget = angleToTarget * 180 / PI; // Convert from radians to degrees
+    float currentAngle = this->compassSensor->read().toFloat(); // Compass return 360°
+    currentAngle = currentAngle > 180? currentAngle - 360: currentAngle;
 
-    return angleToTarget;
+    return currentAngle - angleToTarget;
 
   }else{
     //Verifica se tem um previous location != NULL
