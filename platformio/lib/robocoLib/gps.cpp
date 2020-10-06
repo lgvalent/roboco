@@ -85,11 +85,6 @@ float GPS::getAngleToTarget(){
 
     angleToTarget = angleToTarget * 180 / PI; // Convert from radians to degrees
 
-    // Always convert to positive angles
-    if (angleToTarget < 0)
-    {
-      angleToTarget += 360;
-    }
     return angleToTarget;
 
   }else{

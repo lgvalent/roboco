@@ -98,12 +98,11 @@ Location* Roboco::getTarget(){
 
 void Roboco::goTarget(){
 
-  bool goToTarget = true; // vai para o alvo
   Serial.println("ESTOU no goTarget");
+  float angleFactor;
+  float distanceFactor, distanceToTarget;
 
-  while(goToTarget){
-    float angleFactor;
-    float distanceFactor;
+  do{
     
     Serial.println("ESTOU no do while do goTarget");
     this->currentLocation = this->gps->getCurrentLocation();
@@ -112,34 +111,20 @@ void Roboco::goTarget(){
     angleFactor = map(this->currentLocation->angle, -180, 180, -100, 100) / 100.0; // sera o valor do angulo mapeado entre -100 e 100
     //Serial.println(angleFactor);
     // map(valor, deMenor, deMaior, paraMenor, paraMaior);
-    distanceFactor = this->gps->getDistanceToTarget();
+    distanceToTarget = this->gps->getDistanceToTarget();
     // Serial.print ("distanceFactor 1: ");
     // Serial.println (distanceFactor);
-    // distanceFactor = distanceFactor > TARGET_SOFT_APPROACH_METER ? 1 : distanceFactor / TARGET_SOFT_APPROACH_METER; //  a distancia (em metros) do alvo influenciara a velocidade do motor
+    distanceFactor = distanceToTarget > TARGET_SOFT_APPROACH_METER ? 1 : distanceToTarget / TARGET_SOFT_APPROACH_METER; //  a distancia (em metros) do alvo influenciara a velocidade do motor
     // Serial.print ("distanceFactor 2: ");
     // Serial.println (distanceFactor);
     
-    int motorLeftFactor = distanceFactor - (distanceFactor * angleFactor);
-    int motorRightFactor = distanceFactor + (distanceFactor * angleFactor);
+    float motorLeftFactor = distanceFactor - (distanceFactor * angleFactor);
+    float motorRightFactor = distanceFactor + (distanceFactor * angleFactor);
 
-    if (currentLocation->angle != 0 && distanceFactor != 0){
-      if (currentLocation->angle < 180)
-        this->motorLeft->move(CLOCKWISE, map(motorLeftFactor * 100, 0, 100, 225, 255)); // move motor da esqueda
-      // motorLeft = motor->move;
-      else
-        this->motorRight->move(CLOCKWISE, map(motorRightFactor * 100, 0, 100, 225, 255)); // move o motor da direita
-                                                                                          // motorRight = motor->move;
-    }
-
-    //goToTarget = distanceFactor < 2;
-    if(distanceFactor < TARGET_MINIMAL_DISTANCE_APPROACH_FACTOR){
-      goToTarget = false;
-    }else{ 
-      goToTarget = true;
-    }
-    Serial.println (distanceFactor);
-    Serial.println(goToTarget);
-  } 
+    this->motorLeft->move(CLOCKWISE, map(motorLeftFactor * 100, 0, 100, 225, 255));
+    this->motorRight->move(CLOCKWISE, map(motorRightFactor * 100, 0, 100, 225, 255));
+ 
+  }while(distanceToTarget > TARGET_MINIMAL_DISTANCE_APPROACH_METER);
 }
 
 void Roboco::collectData(){
