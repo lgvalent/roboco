@@ -32,14 +32,14 @@ void setup(){
   LuminositySensor* ldrSensor = new LuminositySensor(A8);
   PressureSensor* pressSensor = new PressureSensor(bmp280);
   AltitudeSensor* altSensor = new AltitudeSensor(bmp280);
-  //Co2Sensor* myMHZ19 = new Co2Sensor(0,1);     // OBS 1: esta dando conflito nos poinos com o módulo shield v1r3 (SD card). Se for testar o SD comente o sensor co2
+  Co2Sensor* myMHZ19 = new Co2Sensor(&Serial2);     // OBS 1: esta dando conflito nos poinos com o módulo shield v1r3 (SD card). Se for testar o SD comente o sensor co2
   TemperatureSensor* tempSensor = new TemperatureSensor(bmp280);
 
   sensors = new Sensors(Roboco::_COUNT);
   sensors->addSensor(Roboco::LUMINOSITY, ldrSensor);
   sensors->addSensor(Roboco::PRESSURE, pressSensor);
   sensors->addSensor(Roboco::ALTITUDE, altSensor);
-  //sensors->addSensor(Roboco::CO2, myMHZ19); 
+  sensors->addSensor(Roboco::CO2, myMHZ19); 
   sensors->addSensor(Roboco::TEMPERATURE, tempSensor);
   sensors->addSensor(Roboco::COMPASS, compass);
 
@@ -66,5 +66,6 @@ void setup(){
 }
 
 void loop(){
-  //roboco->run(); 
+  roboco->run(); 
+  //roboco->test();
 }

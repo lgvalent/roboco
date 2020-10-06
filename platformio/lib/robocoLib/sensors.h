@@ -37,6 +37,7 @@ class Co2Sensor: public Sensor {
 
   public:
     Co2Sensor(int8_t pinRx, int8_t pinTx);
+    Co2Sensor(HardwareSerial *serial);
     SensorType getType();
     String read();
     boolean calibrate();

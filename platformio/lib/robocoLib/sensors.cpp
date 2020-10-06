@@ -25,6 +25,15 @@ Co2Sensor::Co2Sensor(int8_t pinRx, int8_t pinTx)
   mhz19->begin(*Co2Sensor::serial);
 }
 
+Co2Sensor::Co2Sensor(HardwareSerial *serial)
+{
+
+  serial->begin(9600);
+  this->serial = serial;
+  this->mhz19 = new MHZ19();
+  mhz19->begin(*Co2Sensor::serial);
+}
+
 SensorType Co2Sensor::getType()
 {
   return CO2;

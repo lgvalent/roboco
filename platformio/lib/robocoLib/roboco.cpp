@@ -155,15 +155,17 @@ void Roboco::collectData(){
   //              3.4.1 Repetir as atividades do 2º passo para reposicionamento
   //      3.5 Repetir 3.2 até esgotar o TEMPO_CAPTURA
 
-	unsigned long start = millis();
+	Serial.print(this->currentStep->collectCount); // contagem da coleta ATE ACABAR O tempo
+  for (int i = 0; i < this->currentStep->collectCount; i++){
+      // unsigned long start = millis();
 
-	do{ 											      // Forma funcional do delay, precisa desse do while para gravar os dados do gps
-	gps->readGps();
-	} while (millis() - start < 2000);
+      // do{ 											      
+      // } while (millis() - start < 2000);
 
-	this->collectRegister->open(); 										
-	this->collectRegister->write(this->gps->getCurrentLocation(), this->gps->getCurrentDateTime(), this->sensors);
-	this->collectRegister->close(); 							
+      this->collectRegister->open(); 										
+      this->collectRegister->write(this->gps->getCurrentLocation(), this->gps->getCurrentDateTime(), this->sensors);
+      this->collectRegister->close(); 							
+  }						
 }
 
 void Roboco::returnOrigin(){
@@ -185,10 +187,10 @@ void Roboco::calibrateSensors(){
 void Roboco::test(){
   Serial.println("Testing Roboco...");
   // this->gps->test();
-  // this->sensors->test();
+  this->sensors->test();
   // this->output->test();
   // this->collectRegister->test(); 
-  this->workflow->test();
+  //this->workflow->test();
   //this->motorLeft->test();
   //this->motorRight->test();
 }
