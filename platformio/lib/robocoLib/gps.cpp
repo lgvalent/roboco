@@ -91,6 +91,7 @@ float GPS::getAngleToTarget(){
 
   }else{
     //Verifica se tem um previous location != NULL
+
     if (this->previousLocation == NULL){
       return 0;
     }

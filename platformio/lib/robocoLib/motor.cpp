@@ -16,7 +16,7 @@ void Motor::stop(){
   digitalWrite(pin1, LOW);
   digitalWrite(pin2, LOW);
   analogWrite(pinPwm, 0);
-  delay (2000);
+  //delay (2000);
 }
 
 void Motor::move(MotorDirection direction, unsigned char speed){
@@ -38,14 +38,14 @@ void Motor::test(){
         Serial.println ("primeiro for:");
         Serial.println (i);
         move(CLOCKWISE, i);
-        i=i+20;
+        i=i+10;
         
     }
     for(i=1; i<= 255; i++){
         Serial.println ("segundo for:");
         Serial.println (i);
         move(ANTICLOCKWISE, i);
-        i=i+20;
+        i=i+10;
         
       }
       stop();

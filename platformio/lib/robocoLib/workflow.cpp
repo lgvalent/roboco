@@ -33,13 +33,15 @@ Workstep* Workflow::getNextStep(){
   }
 
   String val = myFile.readStringUntil(',');
-  if(val.length() == 0) return NULL; // Acabou o arquivo
-  
   workstep->latitude = val.toFloat();
   workstep->longitude = myFile.readStringUntil(',').toFloat();
   workstep->collectCount = myFile.readStringUntil(',').toInt();
   workstep->collectInterval = myFile.readStringUntil('\n').toInt();
 
+  if(myFile.readStringUntil('.').length() == 0){
+    return NULL; // Acabou o arquivo
+  } 
+  
   // myFile.close();
    
   this->currentStepIndex++;

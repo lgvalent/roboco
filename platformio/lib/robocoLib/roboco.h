@@ -31,6 +31,7 @@ class Roboco{
     static enum RobocoSensors{LUMINOSITY=0, PRESSURE=1, ALTITUDE=2,TEMPERATURE=3, CO2=4, COMPASS=5, _COUNT} ROBOCO_SENSORS;
     Roboco(Sensors* sensors, Output* output, GPS* gps, CollectRegister* collectRegister, Workflow* workflow, Motor* left, Motor* right);
     void setup(); 
+    void origin();
     void reset(); 
     void run(); // estado central da maquina de estados
     Location* getTarget(); 

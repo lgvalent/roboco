@@ -47,7 +47,7 @@ void setup(){
 
   // gps = new GpsMTK33x9(8,7);
   gps = new GpsNEO6M(&Serial1);  
-  // gps->setCompassSensor(compass);
+  gps->setCompassSensor(compass);
    
   // Prepare SD Card, pinSD is a select SPI pin, MEGA: 50,51,52 and 53, 
   pinMode(53, OUTPUT);
@@ -57,15 +57,16 @@ void setup(){
 
   Workflow* workflow = new Workflow(SD);                      // para arduino uno use o pin10
 
-  Motor* motorLeft = new Motor(5,6,3);
-  Motor* motorRight = new Motor(8,9,3);
+  Motor* motorLeft = new Motor(2,4,3);
+  Motor* motorRight = new Motor(5,6,3);
 
   roboco = new Roboco(sensors, output, gps, collectRegister, workflow, motorLeft, motorRight);
   //roboco->setup(); // OBS 2: Setup comentado pq quando testamos o sd com ele, da problema.
   workflow->reset();
+  roboco->origin();
 }
 
 void loop(){
   roboco->run(); 
-  //roboco->test();
+  
 }
