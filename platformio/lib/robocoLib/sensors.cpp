@@ -302,18 +302,20 @@ SensorType MQ2Sensor::getType()
   return CH4;
 };
 
-void MQ2Sensor::calibrate(){
+boolean MQ2Sensor::calibrate(){
     Ro = MQCalibration();
     Serial.print("Ro: ");
     Serial.print(Ro);
     Serial.println(" kohm");
+
+    return true;
 }
 
 float MQ2Sensor::readLPG(){
     if (millis()<(lastReadTime + 10000) && lpg != 0){
         return lpg;
     }else{
-        return lpg = MQGetGasPercentage(MQRead()/10,GAS_LPG);
+        return lpg = MQGetGasPercentage(MQRead()/Ro,GAS_LPG);
     }
 }
 
@@ -321,7 +323,7 @@ float MQ2Sensor::readCO(){
     if (millis()<(lastReadTime + 10000) && co != 0){
         return co;
     }else{
-        return co = MQGetGasPercentage(MQRead()/10,GAS_CO);
+        return co = MQGetGasPercentage(MQRead()/Ro,GAS_CO);
     }
 }
 
@@ -329,7 +331,7 @@ float MQ2Sensor::readSmoke(){
     if (millis()<(lastReadTime + 10000) && smoke != 0){
         return smoke;
     }else{
-        return smoke = MQGetGasPercentage(MQRead()/10,GAS_SMOKE);
+        return smoke = MQGetGasPercentage(MQRead()/Ro,GAS_SMOKE);
     }
 }
 
@@ -337,7 +339,7 @@ float MQ2Sensor::readCH4(){
     if (millis()<(lastReadTime + 10000) && ch4 != 0){
         return ch4;
     }else{
-        return ch4 = MQGetGasPercentage(MQRead()/10,GAS_CH4);
+        return ch4 = MQGetGasPercentage(MQRead()/Ro,GAS_CH4);
     }
 }
 

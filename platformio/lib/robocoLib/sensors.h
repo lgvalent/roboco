@@ -127,7 +127,7 @@ public:
 	MQ2Sensor(int pin);
   SensorType getType(); 
   String read(); 
-	void calibrate();
+	boolean calibrate();
 	float readLPG();
 	float readCO();
 	float readSmoke();
