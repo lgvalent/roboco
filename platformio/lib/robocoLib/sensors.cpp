@@ -293,23 +293,23 @@ boolean CompassSensorHMC5883::calibrate()
 
 
 /*******************************************************/
-MQ2::MQ2(int pin) {
-  _pin = pin;
+MQ2Sensor::MQ2Sensor(int pin) {
+  this->pin = pin;
 }
 
-SensorType MQ2::getType()
+SensorType MQ2Sensor::getType()
 {
   return CH4;
 };
 
-void MQ2::calibrate(){
+void MQ2Sensor::calibrate(){
     Ro = MQCalibration();
     Serial.print("Ro: ");
     Serial.print(Ro);
     Serial.println(" kohm");
 }
 
-float MQ2::readLPG(){
+float MQ2Sensor::readLPG(){
     if (millis()<(lastReadTime + 10000) && lpg != 0){
         return lpg;
     }else{
@@ -317,7 +317,7 @@ float MQ2::readLPG(){
     }
 }
 
-float MQ2::readCO(){
+float MQ2Sensor::readCO(){
     if (millis()<(lastReadTime + 10000) && co != 0){
         return co;
     }else{
@@ -325,7 +325,7 @@ float MQ2::readCO(){
     }
 }
 
-float MQ2::readSmoke(){
+float MQ2Sensor::readSmoke(){
     if (millis()<(lastReadTime + 10000) && smoke != 0){
         return smoke;
     }else{
@@ -333,7 +333,7 @@ float MQ2::readSmoke(){
     }
 }
 
-float MQ2::readCH4(){
+float MQ2Sensor::readCH4(){
     if (millis()<(lastReadTime + 10000) && ch4 != 0){
         return ch4;
     }else{
@@ -342,15 +342,15 @@ float MQ2::readCH4(){
 }
 
 
-float MQ2::MQResistanceCalculation(int raw_adc) {
+float MQ2Sensor::MQResistanceCalculation(int raw_adc) {
    return (((float)RL_VALUE*(1023-raw_adc)/raw_adc));
 }
 
-float MQ2::MQCalibration() {
+float MQ2Sensor::MQCalibration() {
   float val=0;
  
   for (int i=0;i<CALIBARAION_SAMPLE_TIMES;i++) {            //take multiple samples
-    val += MQResistanceCalculation(analogRead(_pin));
+    val += MQResistanceCalculation(analogRead(pin));
     delay(CALIBRATION_SAMPLE_INTERVAL);
   }
   val = val/CALIBARAION_SAMPLE_TIMES;                   //calculate the average value
@@ -359,10 +359,10 @@ float MQ2::MQCalibration() {
                                                         //according to the chart in the datasheet 
   return val; 
 }
-float MQ2::MQRead() {
+float MQ2Sensor::MQRead() {
   int i;
   float rs=0;
-  int val = analogRead(_pin);
+  int val = analogRead(pin);
 
   for (i=0;i<READ_SAMPLE_TIMES;i++) {
     rs += MQResistanceCalculation(val);
@@ -372,23 +372,25 @@ float MQ2::MQRead() {
   rs = rs/READ_SAMPLE_TIMES;
   return rs;  
 }
-float MQ2::MQGetGasPercentage(float rs_ro_ratio, int gas_id) {
-  if ( gas_id == GAS_LPG ) {
-     return MQGetPercentage(rs_ro_ratio,LPGCurve);
-  } else if ( gas_id == GAS_CO ) {
-     return MQGetPercentage(rs_ro_ratio,COCurve);
-  } else if ( gas_id == GAS_SMOKE ) {
-     return MQGetPercentage(rs_ro_ratio,SmokeCurve);
-  } else if ( gas_id == GAS_CH4 ) {
-     return MQGetPercentage(rs_ro_ratio,CH4Curve);
-  }    
+float MQ2Sensor::MQGetGasPercentage(float rs_ro_ratio, GasType gasType) {
+  
+  switch (gasType)
+  {
+  case GAS_LPG: return MQGetPercentage(rs_ro_ratio,LPGCurve);
+  case GAS_CO: return MQGetPercentage(rs_ro_ratio,COCurve);
+  case GAS_SMOKE: return MQGetPercentage(rs_ro_ratio,SmokeCurve);
+  case GAS_CH4: return MQGetPercentage(rs_ro_ratio,CH4Curve);
+  default:
+    break;
+  }
+
   return 0;
 }
-int MQ2::MQGetPercentage(float rs_ro_ratio, float *pcurve) {
+int MQ2Sensor::MQGetPercentage(float rs_ro_ratio, float *pcurve) {
   return (pow(10,(((log(rs_ro_ratio)-pcurve[1])/pcurve[2]) + pcurve[0])));
 }
 
-String MQ2::read(){
+String MQ2Sensor::read(){
   return String(readCH4());
 }
 

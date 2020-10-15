@@ -35,7 +35,7 @@ void setup(){
   Co2Sensor* myMHZ19 = new Co2Sensor(&Serial2);     // OBS 1: esta dando conflito nos poinos com o módulo shield v1r3 (SD card). Se for testar o SD comente o sensor co2
   TemperatureSensor* tempSensor = new TemperatureSensor(bmp280);
   setPinMode(A2, OUTPUT);
-  MQ2* mq2 = new MQ2(A2);
+  MQ2Sensor* mq2 = new MQ2Sensor(A2);
 
   sensors = new Sensors(Roboco::_COUNT);
   sensors->addSensor(Roboco::LUMINOSITY, ldrSensor);

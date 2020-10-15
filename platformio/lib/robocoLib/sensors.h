@@ -122,9 +122,9 @@ class CompassSensorHMC5883: public Sensor{
 /* MQ2 ===========================================================================
    SOURCE: https://create.arduino.cc/projecthub/Junezriyaz/how-to-connect-mq2-gas-sensor-to-arduino-f6a456
            https://jualabs.wordpress.com/2016/11/30/sensoriamento-de-gases-em-tempo-real-atraves-de-sensores-mq-0-9/ */
-class MQ2: public Sensor {
+class MQ2Sensor: public Sensor {
 public: 
-	MQ2(int pin);
+	MQ2Sensor(int pin);
   SensorType getType(); 
   String read(); 
 	void calibrate();
@@ -133,7 +133,7 @@ public:
 	float readSmoke();
 	float readCH4();
 private:
-	int _pin;
+	int pin;
 	int RL_VALUE = 5;     //define the load resistance on the board, in kilo ohms
 	int RO_CLEAN_AIR_FACTOR = 9.83;  
 	int CALIBARAION_SAMPLE_TIMES = 5; 
@@ -151,10 +151,7 @@ private:
 	float LPGCurve[3]  =  {2.3,0.21,-0.47}; 
 	float Ro = 10;             
  
-  int GAS_LPG = 0;
-	int GAS_CO = 1;
-	int GAS_SMOKE = 2;
-	int GAS_CH4 = 3;
+  enum GasType{GAS_LPG, GAS_CO, GAS_SMOKE, GAS_CH4};
 
 	float lpg = 0;
 	float co = 0;
@@ -162,7 +159,7 @@ private:
 	float ch4 = 0;
 	
 	float MQRead();
-	float MQGetGasPercentage(float rs_ro_ratio, int gas_id);
+	float MQGetGasPercentage(float rs_ro_ratio, GasType gasType);
 	int MQGetPercentage(float rs_ro_ratio, float *pcurve);
 	float MQCalibration();
 	float MQResistanceCalculation(int raw_adc);
