@@ -35,7 +35,7 @@ void setup(){
   Co2Sensor* myMHZ19 = new Co2Sensor(&Serial2);     // OBS 1: esta dando conflito nos poinos com o módulo shield v1r3 (SD card). Se for testar o SD comente o sensor co2
   TemperatureSensor* tempSensor = new TemperatureSensor(bmp280);
   setPinMode(A2, OUTPUT);
-  MQ2* mq2 = new MQ2(A2);
+  MQ2Sensor* mq2 = new MQ2Sensor(A0);
 
   sensors = new Sensors(Roboco::_COUNT);
   sensors->addSensor(Roboco::LUMINOSITY, ldrSensor);
@@ -43,8 +43,8 @@ void setup(){
   sensors->addSensor(Roboco::ALTITUDE, altSensor);
   sensors->addSensor(Roboco::CO2, myMHZ19); 
   sensors->addSensor(Roboco::TEMPERATURE, tempSensor);
-  sensors->addSensor(Roboco::COMPASS, compass);
   sensors->addSensor(Roboco::CH4, mq2);
+  sensors->addSensor(Roboco::COMPASS, compass);
 
   Output* output = new Output(1,2,3);
 
@@ -65,11 +65,11 @@ void setup(){
 
   roboco = new Roboco(sensors, output, gps, collectRegister, workflow, motorLeft, motorRight);
   //roboco->setup(); // OBS 2: Setup comentado pq quando testamos o sd com ele, da problema.
-  workflow->reset();
-  roboco->origin();
+ // workflow->reset();
+ // roboco->origin();
 }
 
 void loop(){
-  roboco->run(); 
-  
+  //roboco->run(); 
+  roboco->test();
 }

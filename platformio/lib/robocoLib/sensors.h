@@ -122,52 +122,40 @@ class CompassSensorHMC5883: public Sensor{
 /* MQ2 ===========================================================================
    SOURCE: https://create.arduino.cc/projecthub/Junezriyaz/how-to-connect-mq2-gas-sensor-to-arduino-f6a456
            https://jualabs.wordpress.com/2016/11/30/sensoriamento-de-gases-em-tempo-real-atraves-de-sensores-mq-0-9/ */
-class MQ2: public Sensor {
-public: 
-	MQ2(int pin);
-  SensorType getType(); 
-  String read(); 
-	void calibrate();
-	float readLPG();
-	float readCO();
-	float readSmoke();
-	float readCH4();
+class MQ2Sensor: public Sensor {
 private:
-	int _pin;
+	int pin;
 	int RL_VALUE = 5;     //define the load resistance on the board, in kilo ohms
-	int RO_CLEAN_AIR_FACTOR = 9.83;  
-	int CALIBARAION_SAMPLE_TIMES = 5; 
-	int CALIBRATION_SAMPLE_INTERVAL = 50;
-	int READ_SAMPLE_INTERVAL = 50;
-	int READ_SAMPLE_TIMES = 5;
+	int RO_CLEAN_AIR_FACTOR = 9.83;  //Resistência do sensor em ar limpo 9.83 de acordo com o datasheet
+	int CALIBRATION_SAMPLE_INTERVAL = 50; //numero de leituras para calibracao
+	int READ_SAMPLE_TIMES = 5; //numero de leituras para analise
 
-	float COCurve[3]  =  {2.3,0.72,-0.34};   
 	float CH4Curve[3]  =  {2.3,0.48,-0.44}; //curva CH4 aproximada baseada na sensibilidade descrita no datasheet {x,y,deslocamento} baseada em dois pontos 
                                           //p1: (log200, log3), p2: (log10000, log0.7)
                                           //inclinacao = (Y2-Y1)/(X2-X1)
                                           //vetor={x, y, inclinacao}
-   
+	float COCurve[3]  =  {2.3,0.72,-0.34};   
 	float SmokeCurve[3] = {2.3,0.53,-0.42};                                                       
-	float LPGCurve[3]  =  {2.3,0.21,-0.47}; 
 	float Ro = 10;             
  
-  int GAS_LPG = 0;
-	int GAS_CO = 1;
-	int GAS_SMOKE = 2;
-	int GAS_CH4 = 3;
-
-	float lpg = 0;
-	float co = 0;
-	float smoke = 0;
-	float ch4 = 0;
+	int GAS_CH4 = 1;
+	int GAS_CO = 2;
+	int GAS_SMOKE = 3;
 	
 	float MQRead();
-	float MQGetGasPercentage(float rs_ro_ratio, int gas_id);
-	int MQGetPercentage(float rs_ro_ratio, float *pcurve);
-	float MQCalibration();
-	float MQResistanceCalculation(int raw_adc);
+	float MQGetGasPercentage(float rs_ro, int gas_id);
+	int MQGetPercentage(float rs_ro, float *pcurve); //Rs/R0 é fornecido para calcular a concentracao em PPM do gas em questao. O calculo eh em potencia de 10 para sair da logaritmica
+	float MQResistanceCalculation(int raw_adc); //funcao que recebe o tensao (dado cru) e calcula a resistencia efetuada pelo sensor. O sensor e a resistência de carga forma um divisor de tensão. 
 
-	int lastReadTime = 0;
+public: 
+	MQ2Sensor(int pin);
+  SensorType getType(); 
+  String read(); 
+	boolean calibrate();
+	float MQCalibration(); //funcao que calibra o sensor em um ambiente limpo utilizando a resistencia do sensor em ar limpo 9.83
+	float readCH4();
+	float readCO();
+	float readSmoke();
 };
 
 class Sensors{
