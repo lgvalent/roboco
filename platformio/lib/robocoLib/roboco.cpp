@@ -200,7 +200,7 @@ void Roboco::calibrateSensors(){
 void Roboco::test(){
   Serial.println("Testing Roboco...");
   //this->gps->test();
-  this->sensors->test();
+  //this->sensors->test();
   // this->output->test();
   // this->collectRegister->test(); 
   //this->workflow->test();
