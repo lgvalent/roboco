@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include <sensors.h>
 
-String Sensor::SENSOR_TYPE_NAMES[] = {"Luminosity", "Pressure", "Altitude", "Temperature", "CO2", "Compass"};
+String Sensor::SENSOR_TYPE_NAMES[] = {"Luminosity", "Pressure", "Altitude", "Temperature", "CO2", "CH4", "Compass"};
 
 String Sensor::getTypeName()
 {
@@ -292,90 +292,56 @@ boolean CompassSensorHMC5883::calibrate()
 };
 
 
-/*******************************************************/
+/********************************************************************************************/
 MQ2Sensor::MQ2Sensor(int pin) {
-  this->pin = pin;
+  pinMode(pin, INPUT);
+  Serial.begin (9600);
 }
 
-SensorType MQ2Sensor::getType()
-{
+SensorType MQ2Sensor::getType(){
   return CH4;
 };
 
 boolean MQ2Sensor::calibrate(){
     Ro = MQCalibration();
-    Serial.print("Ro: ");
-    Serial.print(Ro);
-    Serial.println(" kohm");
-
     return true;
 }
-
-float MQ2Sensor::readLPG(){
-    if (millis()<(lastReadTime + 10000) && lpg != 0){
-        return lpg;
-    }else{
-        return lpg = MQGetGasPercentage(MQRead()/Ro,GAS_LPG);
-    }
-}
-
-float MQ2Sensor::readCO(){
-    if (millis()<(lastReadTime + 10000) && co != 0){
-        return co;
-    }else{
-        return co = MQGetGasPercentage(MQRead()/Ro,GAS_CO);
-    }
-}
-
-float MQ2Sensor::readSmoke(){
-    if (millis()<(lastReadTime + 10000) && smoke != 0){
-        return smoke;
-    }else{
-        return smoke = MQGetGasPercentage(MQRead()/Ro,GAS_SMOKE);
-    }
-}
-
-float MQ2Sensor::readCH4(){
-    if (millis()<(lastReadTime + 10000) && ch4 != 0){
-        return ch4;
-    }else{
-        return ch4 = MQGetGasPercentage(MQRead()/Ro,GAS_CH4);
-    }
-}
-
 
 float MQ2Sensor::MQResistanceCalculation(int raw_adc) {
    return (((float)RL_VALUE*(1023-raw_adc)/raw_adc));
 }
 
 float MQ2Sensor::MQCalibration() {
-  float val=0;
+  float val = 0;
  
-  for (int i=0;i<CALIBARAION_SAMPLE_TIMES;i++) {            //take multiple samples
-    val += MQResistanceCalculation(analogRead(pin));
-    delay(CALIBRATION_SAMPLE_INTERVAL);
+  for (int i = 0; i<CALIBRATION_SAMPLE_INTERVAL; i++) {            //take multiple samples
+    val += MQResistanceCalculation(analogRead(this->pin));
+    delay(500);
   }
-  val = val/CALIBARAION_SAMPLE_TIMES;                   //calculate the average value
+  val = val/CALIBRATION_SAMPLE_INTERVAL;                   //calculate the average value
  
   val = val/RO_CLEAN_AIR_FACTOR;                        //divided by RO_CLEAN_AIR_FACTOR yields the Ro 
                                                         //according to the chart in the datasheet 
   return val; 
 }
-float MQ2Sensor::MQRead() {
-  int i;
-  float rs=0;
-  int val = analogRead(pin);
 
-  for (i=0;i<READ_SAMPLE_TIMES;i++) {
+float MQ2Sensor::MQRead() {
+ 
+  float rs = 0;
+  float val = analogRead(this->pin);
+
+  for (int i = 0; i<READ_SAMPLE_TIMES; i++) {
     rs += MQResistanceCalculation(val);
     delay(READ_SAMPLE_INTERVAL);
   }
  
   rs = rs/READ_SAMPLE_TIMES;
+
   return rs;  
 }
+
 float MQ2Sensor::MQGetGasPercentage(float rs_ro_ratio, GasType gasType) {
-  
+
   switch (gasType)
   {
   case GAS_LPG: return MQGetPercentage(rs_ro_ratio,LPGCurve);
@@ -386,17 +352,18 @@ float MQ2Sensor::MQGetGasPercentage(float rs_ro_ratio, GasType gasType) {
     break;
   }
 
-  return 0;
 }
-int MQ2Sensor::MQGetPercentage(float rs_ro_ratio, float *pcurve) {
+
+float MQ2Sensor::MQGetPercentage(float rs_ro_ratio, float *pcurve) {
+  rs_ro_ratio = MQRead()/Ro;
   return (pow(10,(((log(rs_ro_ratio)-pcurve[1])/pcurve[2]) + pcurve[0])));
 }
 
 String MQ2Sensor::read(){
-  return String(readCH4());
+  return String(MQGetGasPercentage((MQRead()/this->Ro),GAS_CH4));
 }
 
-/*******************************************************/
+/********************************************************************************************/
 
 Sensors::Sensors(int8_t maxNumberOfSensors) : size(maxNumberOfSensors)
 {

@@ -5,7 +5,6 @@
 void GPS::setCompassSensor(Sensor* compassSensor){
   if(compassSensor->getType() == COMPASS){
     this->compassSensor = compassSensor;
-    Serial.println (compassSensor->getType());
   }
   else
     Serial.println("Sensor is not a COMPASS type.");

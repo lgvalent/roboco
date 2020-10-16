@@ -128,14 +128,11 @@ public:
   SensorType getType(); 
   String read(); 
 	boolean calibrate();
-	float readLPG();
-	float readCO();
-	float readSmoke();
-	float readCH4();
+
 private:
 	int pin;
 	int RL_VALUE = 5;     //define the load resistance on the board, in kilo ohms
-	int RO_CLEAN_AIR_FACTOR = 9.83;  
+	float RO_CLEAN_AIR_FACTOR = 9.83;  
 	int CALIBARAION_SAMPLE_TIMES = 5; 
 	int CALIBRATION_SAMPLE_INTERVAL = 50;
 	int READ_SAMPLE_INTERVAL = 50;
@@ -156,15 +153,14 @@ private:
 	float lpg = 0;
 	float co = 0;
 	float smoke = 0;
-	float ch4 = 0;
+	float ch4 = 0;                          // só estamos observando os valores deste gas
 	
 	float MQRead();
 	float MQGetGasPercentage(float rs_ro_ratio, GasType gasType);
-	int MQGetPercentage(float rs_ro_ratio, float *pcurve);
+	float MQGetPercentage(float rs_ro_ratio, float *pcurve);
 	float MQCalibration();
 	float MQResistanceCalculation(int raw_adc);
 
-	int lastReadTime = 0;
 };
 
 class Sensors{
