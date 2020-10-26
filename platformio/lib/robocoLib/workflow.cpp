@@ -1,6 +1,6 @@
 #include <workflow.h>
-
-#define EEPROM_STEP_ADDRESS 0
+#include <stdio.h>
+#include <EEPROM.h>
 
 Workflow::Workflow(SDClass& sd){
   this->sd = &sd;
@@ -9,7 +9,6 @@ Workflow::Workflow(SDClass& sd){
 
 void Workflow::reset(){
   this->currentStepIndex = 0;
-  //this->currentLine = 0;
   EEPROM.write(EEPROM_STEP_ADDRESS, 0);
 }
 
@@ -28,22 +27,20 @@ Workstep* Workflow::getNextStep(){
   }
   
   while (currentLine != this->currentStepIndex){
-        myFile.readStringUntil('\n'); // Pula uma linha no arquivo
-        currentLine++;
+    myFile.readStringUntil('\n'); // Pula uma linha no arquivo
+    currentLine++;
   }
 
-  String val = myFile.readStringUntil(',');
-  workstep->latitude = val.toFloat();
+  workstep->collectName = myFile.readStringUntil(',');
+  workstep->latitude = myFile.readStringUntil(',').toFloat();
   workstep->longitude = myFile.readStringUntil(',').toFloat();
   workstep->collectCount = myFile.readStringUntil(',').toInt();
   workstep->collectInterval = myFile.readStringUntil('\n').toInt();
-
-  if(myFile.readStringUntil('.').length() == 0){
-    return NULL; // Acabou o arquivo
-  } 
-  
-  // myFile.close();
    
+  if(myFile.readStringUntil('\n').length() == 0){
+    return NULL; 
+  } 
+
   this->currentStepIndex++;
 
   EEPROM.write(EEPROM_STEP_ADDRESS, this->currentStepIndex); //Escrevendo na EPROMM o currentStepIndex https://www.arduino.cc/en/Tutorial/EEPROMWrite
@@ -52,12 +49,14 @@ Workstep* Workflow::getNextStep(){
 
 void Workflow::test(){
 
-  Serial.print("Testing Workflow... ");
+  Serial.println("Testing Workflow... ");
   Workstep* saida = this->getNextStep();
 
   if(saida == NULL){
     Serial.print("Error: Check sd card or empty file"); 
-  }else{
+  } else{
+    Serial.print("Nome do arq: ");
+    Serial.println(saida->collectName);
     Serial.print("Lat ");
     Serial.println(saida->latitude,6);
     Serial.print("Lon ");
@@ -67,7 +66,7 @@ void Workflow::test(){
     Serial.print("collectInterval ");
     Serial.println(saida->collectInterval);
 
-    //this->backOneStep();
+    // this->backOneStep();
     //this->reset();
   }
   

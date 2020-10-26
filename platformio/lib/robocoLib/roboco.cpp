@@ -18,14 +18,9 @@ Roboco::Roboco(Sensors *sensors, Output *output, GPS *gps, CollectRegister *coll
 void Roboco::setup(){
 
   // this->sensors->stabilizationOfSensors(); //start sensores, fica por aqui por 2s (quando utilizamos esse metodo ele fica resetando o metodo setup, ARRUMAR ISSO)
-
   this->originLocation = this->gps->getCurrentLocation(); // salvando a origem do gps ao ligar o robo
-  Serial.print("latitude origem:");
-  Serial.println(this->originLocation->latitude); // contagem da coleta ATE ACABAR O tempo
-  Serial.print("longitude origem:");
-  Serial.println(this->originLocation->longitude);
-
  //this->output->lcdPrint("ROBOCO²", 0, 0);
+
  }
 
 void Roboco::reset(){
@@ -56,7 +51,6 @@ void Roboco::run(){
     break;
   
     case RETURN_ORIGIN:     // Volta para o ponto inicial
-      Serial.println("passei no case RETURN_ORIGIN");
       this->returnOrigin();
       this->state = FINISH;
     break;
@@ -67,13 +61,12 @@ void Roboco::run(){
 
     case FINISH:
       //Desligar o robo (implementar)
-      Serial.println("FINALIZADO");
       this->motorLeft->stop();
       this->motorRight->stop();
-      while (1){
-      Serial.println("missão cumprida");
+      // while (1){
+      // Serial.println("missão cumprida");
+      //}
       break;
-      }
   }
 }
 
@@ -92,17 +85,18 @@ Location* Roboco::getTarget(){
   //      2.4 Avançar
   //      2.5 Volte para 2.3 x(distamcia) vezes, onde x pode ser uma razão entre a posição atual e o destino
   //      2.6 Volte para 2.1 até chegar
-    Serial.println("ESTOU no getTarget");
-    this->currentStep = this->workflow->getNextStep();
-    if(this->currentStep != NULL){
-      Serial.println("passei no if do getTarget");
-      this->gps->setTargetLocation(this->currentStep->latitude, this->currentStep->longitude);
-      //this->gps->setTargetLocation(-24.034241, -52.362065); // teste com alvo fixo. Endereço da esquina da rua da Bruna de Campo Mourão.
-
-    } else {
-      Serial.println("passei no else do getTarget");
-      return NULL;
-    }
+   
+  this->currentStep = this->workflow->getNextStep();
+  
+  if(this->currentStep != NULL){
+    Serial.println("passei no if (getTarget)");
+    this->gps->setTargetLocation(this->currentStep->latitude, this->currentStep->longitude);
+    //this->gps->setTargetLocation(-24.034241, -52.362065); // teste com alvo fixo. Endereço da esquina da rua da Bruna de Campo Mourão.
+   
+  }else{
+    Serial.println("passei no else (getTarget)");
+    return NULL;
+  }
   
   return this->gps->getTargetLocation();
 }
@@ -116,15 +110,13 @@ void Roboco::goTarget(){
     this->currentDataTime = this->gps->getCurrentDateTime();
 
     angleFactor = map(this->currentLocation->angle, -180, 180, -100, 100) / 100.0; // sera o valor do angulo mapeado entre -100 e 100
+    Serial.print("AngleFactor: ");
     Serial.println(angleFactor);
     // map(valor, deMenor, deMaior, paraMenor, paraMaior);
     distanceToTarget = this->gps->getDistanceToTarget();
-    // Serial.print ("distanceFactor 1: ");
-    // Serial.println (distanceFactor);
-    distanceFactor = distanceToTarget > TARGET_SOFT_APPROACH_METER ? 1 : distanceToTarget / TARGET_SOFT_APPROACH_METER; //  a distancia (em metros) do alvo influenciara a velocidade do motor
-    // Serial.print ("distanceFactor 2: ");
-    // Serial.println (distanceFactor);
     
+    distanceFactor = distanceToTarget > TARGET_SOFT_APPROACH_METER ? 1 : distanceToTarget / TARGET_SOFT_APPROACH_METER; //  a distancia (em metros) do alvo influenciara a velocidade do motor
+
     float motorLeftFactor = distanceFactor + (distanceFactor * angleFactor);
     float motorRightFactor = distanceFactor + (distanceFactor * angleFactor);
 
@@ -147,36 +139,35 @@ void Roboco::collectData(){
   //              3.4.1 Repetir as atividades do 2º passo para reposicionamento
   //      3.5 Repetir 3.2 até esgotar o TEMPO_CAPTURA
 
-	Serial.print("COLLECT COUNT:");
-  Serial.println(this->currentStep->collectCount); // contagem da coleta ATE ACABAR O tempo
-  Serial.print("COLLECT INTERVAL:");
-  Serial.println(this->currentStep->collectInterval);
-  int conta = (this->currentStep->collectInterval)/(this->currentStep->collectCount);
-  Serial.println(conta);
+	// Serial.print("COLLECT COUNT:");
+  // Serial.println(this->currentStep->collectCount); // contagem da coleta ATE ACABAR O tempo
+  // Serial.print("COLLECT INTERVAL:");
+  // Serial.println(this->currentStep->collectInterval);
+  // int conta = (this->currentStep->collectInterval)/(this->currentStep->collectCount);
+  // Serial.println(conta);
 
-     unsigned long start = millis();
-     do
-     {
-       this->gps->getCurrentLocation();
-       this->gps->getCurrentDateTime();
+  unsigned long start = millis();
 
-     } while (millis() - start < conta);
+  do{
+    this->gps->getCurrentLocation();
+    this->gps->getCurrentDateTime();
 
-       for (int i = 0; i < this->currentStep->collectCount; i++)
-       {
-         this->collectRegister->open();
-         this->collectRegister->write(this->gps->getCurrentLocation(), this->gps->getCurrentDateTime(), this->sensors);
-         this->collectRegister->close();
-       }
+  } while (millis() - start < this->currentStep->collectInterval);
+
+  for (int i = 0; i < this->currentStep->collectCount; i++){
+    this->collectRegister->open(this->currentStep->collectName);
+    this->collectRegister->write(this->gps->getCurrentLocation(), this->gps->getCurrentDateTime(), this->sensors);
+    this->collectRegister->close();
+  }
 }
 
 void Roboco::origin(){
 
   this->originLocation = this->gps->getCurrentLocation(); // salvando a origem do gps ao ligar o robo
-  Serial.print("latitude origem:");
-  Serial.println(this->originLocation->latitude); // contagem da coleta ATE ACABAR O tempo
-  Serial.print("longitude origem:");
-  Serial.println(this->originLocation->longitude);
+  // Serial.print("latitude (origin):");
+  // Serial.println(this->originLocation->latitude); 
+  // Serial.print("longitude (origin):");
+  // Serial.println(this->originLocation->longitude);
 
 }
 
@@ -184,9 +175,13 @@ void Roboco::returnOrigin(){
   //      4 voltar para lugar de origem
   //      4.1 define as coordenadas de origem como proximo alvo do gps
   //this->gps->setTargetLocation(this->originLocation->latitude, this->originLocation->longitude); //OBS:sobrescrevendo valores (assim ele coloca o alvo como a origem e não grava a primeira coordenada)
-  this->gps->setTargetLocation(-24.034236, -52.361972); // testamos com parametros fixos e ele retorna para a origem certinho.
-  this->goTarget();
+  //this->gps->setTargetLocation(-24.034236, -52.361972); // testamos com parametros fixos e ele retorna para a origem certinho.
+  //this->goTarget();
+   while(1){
+    Serial.println("******** indo para a origem *********");
   }
+
+}
 
 void Roboco::initSensors(){
  // implementar se for usar o estado INIT_SENSORS
@@ -201,9 +196,14 @@ void Roboco::test(){
   Serial.println("Testing Roboco...");
   //this->gps->test();
   //this->sensors->test();
-  // this->output->test();
-  // this->collectRegister->test(); 
-  //this->workflow->test();
+  //this->output->test();
+  //this->collectRegister->test(); 
+  this->workflow->test();
   //this->motorLeft->test();
   //this->motorRight->test();
+
+  //Teste para coletar dados no lado sem mexer com os motores e sem o alvo
+  // this->getTarget();
+  // this->collectData();
+
 }

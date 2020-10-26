@@ -1,11 +1,13 @@
 #include <collectRegister.h>
+#include <stdio.h>
+
 
 CollectRegister::CollectRegister(SDClass& sd) {
 	this->sd = &sd;
 }
 
-void CollectRegister::open() {
-	this->file = this->sd->open("result.txt", FILE_WRITE);
+void CollectRegister::open(String collectName) {
+	this->file = this->sd->open(collectName.c_str(), FILE_WRITE);
 	if (this->file) { 									// Inicializa o SD Card (if temporário)
 		Serial.println("O Arquivo pronto para uso."); 
 	} else {
@@ -15,6 +17,9 @@ void CollectRegister::open() {
 }
 
 void CollectRegister::write(Location* location, DateTime* dateTime, Sensors* sensors) {
+
+	file.print("------------------------------------------------------ ");
+	file.println(this->cont++);
 
 	if (file) { 
 		file.print("Longitude: ");
@@ -38,16 +43,23 @@ void CollectRegister::write(Location* location, DateTime* dateTime, Sensors* sen
     	file.println();
 		file.println();
 
-		for (int i = 0; i < (sensors->getSize()-1); i++) { // sensors->getSize()-1 será iguual a 4 pois não estamos usando o sensor mhz19 ainda resultando em 4 sensores usados
+		for (int i = 0; i < (sensors->getSize()-1); i++) { 
 			file.print(sensors->getSensor(i)->getTypeName());
 			file.print(": ");
 			file.print(sensors->getSensor(i)->read());
 			file.println();
+			Serial.print(sensors->getSensor(i)->getTypeName());
+			Serial.print(": ");
+			Serial.print(sensors->getSensor(i)->read());
+			Serial.println( );
 		}
+		Serial.println( );
 	 	file.println();
-	 } else {										  // Se o Arquivo não abrir
+
+	}else{										 
 		Serial.println("Erro ao Abrir Arquivo .txt"); 
-	 }
+	}
+
 }
 
 void CollectRegister::close() {
@@ -55,7 +67,7 @@ void CollectRegister::close() {
 }
 
 void CollectRegister::test() {
-// pegamos os valores que estão sendo criados na mais, para não criar os virtuais
+// pegamos os valores que estão sendo criados na maim, para não criar os virtuais
 
 	Serial.println("Testing collectRegister...");
 
@@ -77,7 +89,7 @@ void CollectRegister::test() {
 
 	Location *loc = g->getCurrentLocation();
 	DateTime *dat = g->getCurrentDateTime();
-	open(); 										
+	open("result.txt"); 	
 	write(loc, dat, s);
 	close(); 										
 
@@ -90,7 +102,8 @@ void CollectRegister::test() {
 			Serial.write(file.read());
 		}
 		file.close(); 									// Fecha o Arquivo após ler
-	} else {
+	} else{
 		Serial.println("Erro ao Abrir Arquivo .txt"); 
 	}
+
 }

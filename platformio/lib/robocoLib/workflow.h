@@ -1,11 +1,12 @@
 #ifndef WORKFLOW_H
 #define WORKFLOW_H
 #include <Arduino.h>
-#include <stdio.h>
 #include <SD.h>
-#include <EEPROM.h>
+
+#define EEPROM_STEP_ADDRESS 0
 
 struct Workstep{
+  String collectName;
   float latitude;
   float longitude;
   int collectCount; // contagem da coleta D3 ATE ACABAR O 5M
@@ -18,7 +19,6 @@ class Workflow{
   private:
     SDClass* sd;
     byte currentStepIndex;
-    //byte currentLine;
 
   public:
     Workflow(SDClass& sd);
