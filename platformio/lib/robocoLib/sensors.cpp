@@ -9,7 +9,24 @@ String Sensor::getTypeName()
 }
 
 boolean Sensor::calibrate()
-{
+{ 
+  return true;
+}
+
+boolean BasicCalibrableSensor::calibrate()
+{ 
+  // Verifica o tempo ocorrido desde a última chamada
+    // millis() - this->calibrateLastTime > this->calibrateReadInterval?
+    // então 
+         // this->calibrateLastValue += this->readRaw(); //efetua mais uma leitura 
+         // decretementa o calibrateReadCount
+         // this->calibrateLastTime = milis();
+
+    // se o this->calibrateReadCount == 0? Terminou de ler a série de valores do sendor
+    // então 
+          // value = values / this
+          // retorna TRUE
+    // senão retorna FALSE
   return true;
 }
 
@@ -27,7 +44,6 @@ Co2Sensor::Co2Sensor(int8_t pinRx, int8_t pinTx)
 
 Co2Sensor::Co2Sensor(HardwareSerial *serial)
 {
-
   serial->begin(9600);
   this->serial = serial;
   this->mhz19 = new MHZ19();
@@ -67,7 +83,7 @@ SensorType LuminositySensor::getType()
 String LuminositySensor::read()
 {
   return String(analogRead(this->pin));
-};
+}; 
 
 boolean LuminositySensor::calibrate()
 {
@@ -296,6 +312,9 @@ boolean CompassSensorHMC5883::calibrate()
 MQ2Sensor::MQ2Sensor(int pin) {
   pinMode(pin, INPUT);
   Serial.begin (9600);
+
+  this->calibrateReadCount = 5;
+  this->calibrateReadInterval = 50;
 }
 
 SensorType MQ2Sensor::getType(){
@@ -303,35 +322,30 @@ SensorType MQ2Sensor::getType(){
 };
 
 boolean MQ2Sensor::calibrate(){
-    Ro = MQCalibration();
-    return true;
+    boolean result = Sensor::calibrate();
+
+    if(result){
+      this->calibrateReadValue = this->calibrateReadValue/RO_CLEAN_AIR_FACTOR;
+      Ro = this->calibrateReadValue;
+    }
+
+    return result;
 }
 
 float MQ2Sensor::MQResistanceCalculation(int raw_adc) {
    return (((float)RL_VALUE*(1023-raw_adc)/raw_adc));
 }
 
-float MQ2Sensor::MQCalibration() {
-  float val = 0;
- 
-  for (int i = 0; i<CALIBRATION_SAMPLE_INTERVAL; i++) {            //take multiple samples
-    val += MQResistanceCalculation(analogRead(this->pin));
-    delay(500);
-  }
-  val = val/CALIBRATION_SAMPLE_INTERVAL;                   //calculate the average value
- 
-  val = val/RO_CLEAN_AIR_FACTOR;                        //divided by RO_CLEAN_AIR_FACTOR yields the Ro 
-                                                        //according to the chart in the datasheet 
-  return val; 
+float MQ2Sensor::readRaw() {
+  return MQResistanceCalculation(analogRead(this->pin));
 }
 
 float MQ2Sensor::MQRead() {
  
   float rs = 0;
-  float val = analogRead(this->pin);
 
   for (int i = 0; i<READ_SAMPLE_TIMES; i++) {
-    rs += MQResistanceCalculation(val);
+    rs += readRaw();
     delay(READ_SAMPLE_INTERVAL);
   }
  

@@ -21,10 +21,26 @@ enum SensorType{LUMINOSITY, PRESSURE, ALTITUDE, TEMPERATURE, CO2, CH4, COMPASS};
 class Sensor{
   protected:
     static String SENSOR_TYPE_NAMES[];
+    float calibrateReadValue = 0; 
+    int calibrateLastTime = 0;
+    int calibrateReadCount = 10; 
+    int calibrateReadInterval = 50; //ms
   public:
     virtual SensorType getType() = 0;
     virtual String read() = 0;
+    virtual float readRaw() = 0;
     String getTypeName(); 
+    boolean calibrate();
+};
+
+class BasicCalibrableSensor: public Sensor{
+  protected:
+    float calibrateReadValue = 0; 
+    int calibrateLastTime = 0;
+    int calibrateReadCount = 10; 
+    int calibrateReadInterval = 50; //ms
+  public:
+    virtual float readRaw() = 0;
     boolean calibrate();
 };
 
@@ -122,19 +138,18 @@ class CompassSensorHMC5883: public Sensor{
 /* MQ2 ===========================================================================
    SOURCE: https://create.arduino.cc/projecthub/Junezriyaz/how-to-connect-mq2-gas-sensor-to-arduino-f6a456
            https://jualabs.wordpress.com/2016/11/30/sensoriamento-de-gases-em-tempo-real-atraves-de-sensores-mq-0-9/ */
-class MQ2Sensor: public Sensor {
+class MQ2Sensor: public BasicCalibrableSensor {
 public: 
 	MQ2Sensor(int pin);
   SensorType getType(); 
   String read(); 
+  float readRaw(); 
 	boolean calibrate();
 
 private:
 	int pin;
 	int RL_VALUE = 5;     //define the load resistance on the board, in kilo ohms
-	float RO_CLEAN_AIR_FACTOR = 9.83;  
-	int CALIBARAION_SAMPLE_TIMES = 5; 
-	int CALIBRATION_SAMPLE_INTERVAL = 50;
+	float RO_CLEAN_AIR_FACTOR = 9.83;
 	int READ_SAMPLE_INTERVAL = 50;
 	int READ_SAMPLE_TIMES = 5;
 
@@ -158,7 +173,6 @@ private:
 	float MQRead();
 	float MQGetGasPercentage(float rs_ro_ratio, GasType gasType);
 	float MQGetPercentage(float rs_ro_ratio, float *pcurve);
-	float MQCalibration();
 	float MQResistanceCalculation(int raw_adc);
 
 };
