@@ -21,27 +21,27 @@ enum SensorType{LUMINOSITY, PRESSURE, ALTITUDE, TEMPERATURE, CO2, CH4, COMPASS};
 class Sensor{
   protected:
     static String SENSOR_TYPE_NAMES[];
-    float calibrateReadValue = 0; 
-    int calibrateLastTime = 0;
-    int calibrateReadCount = 10; 
-    int calibrateReadInterval = 50; //ms
+    boolean calibrated = false;
   public:
+    String getTypeName(); 
+    boolean getCalibrated();
+    
     virtual SensorType getType() = 0;
     virtual String read() = 0;
-    virtual float readRaw() = 0;
-    String getTypeName(); 
-    boolean calibrate();
+    virtual boolean calibrate();
 };
 
 class BasicCalibrableSensor: public Sensor{
   protected:
-    float calibrateReadValue = 0; 
-    int calibrateLastTime = 0;
     int calibrateReadCount = 10; 
     int calibrateReadInterval = 50; //ms
+    
+    float calibrateReadValue = 0; 
+    int calibrateLastTime = 0;
+    int calibrateReadTimes = 0; 
   public:
     virtual float readRaw() = 0;
-    boolean calibrate();
+    virtual boolean calibrate();
 };
 
 #include <MHZ19.h>
@@ -161,7 +161,6 @@ private:
    
 	float SmokeCurve[3] = {2.3,0.53,-0.42};                                                       
 	float LPGCurve[3]  =  {2.3,0.21,-0.47}; 
-	float Ro = 10;             
  
   enum GasType{GAS_LPG, GAS_CO, GAS_SMOKE, GAS_CH4};
 
@@ -171,9 +170,9 @@ private:
 	float ch4 = 0;                          // só estamos observando os valores deste gas
 	
 	float MQRead();
-	float MQGetGasPercentage(float rs_ro_ratio, GasType gasType);
-	float MQGetPercentage(float rs_ro_ratio, float *pcurve);
-	float MQResistanceCalculation(int raw_adc);
+	float MQGetGasPercentage(GasType gasType);
+	float MQGetPercentage(float *pcurve);
+	float resistanceCalculation(int raw_adc);
 
 };
 

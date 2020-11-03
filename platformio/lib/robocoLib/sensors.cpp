@@ -10,24 +10,33 @@ String Sensor::getTypeName()
 
 boolean Sensor::calibrate()
 { 
+  this->calibrated = true;
   return true;
+}
+
+boolean Sensor::getCalibrated()
+{ 
+  return this->calibrated;
 }
 
 boolean BasicCalibrableSensor::calibrate()
 { 
-  // Verifica o tempo ocorrido desde a última chamada
-    // millis() - this->calibrateLastTime > this->calibrateReadInterval?
-    // então 
-         // this->calibrateLastValue += this->readRaw(); //efetua mais uma leitura 
-         // decretementa o calibrateReadCount
-         // this->calibrateLastTime = milis();
+  if(this-calibrateReadTimes == 0) // Detecta a primeira chamada
+    this->calibrateLastTime = millis();
 
-    // se o this->calibrateReadCount == 0? Terminou de ler a série de valores do sendor
-    // então 
-          // value = values / this
-          // retorna TRUE
-    // senão retorna FALSE
-  return true;
+  // Verifica o tempo ocorrido desde a última chamada
+  if(millis() - this->calibrateLastTime >= this->calibrateReadInterval){
+    this->calibrateReadValue += this->readRaw();
+    this->calibrateReadTimes++;
+    this->calibrateLastTime = millis();
+  }
+
+  if(this->calibrateReadCount == this->calibrateReadTimes){
+    this->calibrateReadValue /= this->calibrateReadCount;
+    this->calibrated = true;
+  }
+
+  return this->calibrated;
 }
 
 /*******************************************************/
@@ -313,6 +322,7 @@ MQ2Sensor::MQ2Sensor(int pin) {
   pinMode(pin, INPUT);
   Serial.begin (9600);
 
+  // Define os parâmetros de calibração do sensor
   this->calibrateReadCount = 5;
   this->calibrateReadInterval = 50;
 }
@@ -322,22 +332,21 @@ SensorType MQ2Sensor::getType(){
 };
 
 boolean MQ2Sensor::calibrate(){
-    boolean result = Sensor::calibrate();
+    boolean result = BasicCalibrableSensor::calibrate();
 
     if(result){
       this->calibrateReadValue = this->calibrateReadValue/RO_CLEAN_AIR_FACTOR;
-      Ro = this->calibrateReadValue;
     }
 
     return result;
 }
 
-float MQ2Sensor::MQResistanceCalculation(int raw_adc) {
+float MQ2Sensor::resistanceCalculation(int raw_adc) {
    return (((float)RL_VALUE*(1023-raw_adc)/raw_adc));
 }
 
 float MQ2Sensor::readRaw() {
-  return MQResistanceCalculation(analogRead(this->pin));
+  return resistanceCalculation(analogRead(this->pin));
 }
 
 float MQ2Sensor::MQRead() {
@@ -354,27 +363,27 @@ float MQ2Sensor::MQRead() {
   return rs;  
 }
 
-float MQ2Sensor::MQGetGasPercentage(float rs_ro_ratio, GasType gasType) {
+float MQ2Sensor::MQGetGasPercentage(GasType gasType) {
 
   switch (gasType)
   {
-  case GAS_LPG: return MQGetPercentage(rs_ro_ratio,LPGCurve);
-  case GAS_CO: return MQGetPercentage(rs_ro_ratio,COCurve);
-  case GAS_SMOKE: return MQGetPercentage(rs_ro_ratio,SmokeCurve);
-  case GAS_CH4: return MQGetPercentage(rs_ro_ratio,CH4Curve);
+  case GAS_LPG: return MQGetPercentage(LPGCurve);
+  case GAS_CO: return MQGetPercentage(COCurve);
+  case GAS_SMOKE: return MQGetPercentage(SmokeCurve);
+  case GAS_CH4: return MQGetPercentage(CH4Curve);
   default:
     break;
   }
 
 }
 
-float MQ2Sensor::MQGetPercentage(float rs_ro_ratio, float *pcurve) {
-  rs_ro_ratio = MQRead()/Ro;
+float MQ2Sensor::MQGetPercentage(float *pcurve) {
+  float rs_ro_ratio = MQRead()/this->calibrateReadValue;
   return (pow(10,(((log(rs_ro_ratio)-pcurve[1])/pcurve[2]) + pcurve[0])));
 }
 
 String MQ2Sensor::read(){
-  return String(MQGetGasPercentage((MQRead()/this->Ro),GAS_CH4));
+  return String(MQGetPercentage(CH4Curve));
 }
 
 /********************************************************************************************/
@@ -418,15 +427,25 @@ void Sensors::test()
 
 boolean Sensors::calibrate()
 {
+  boolean allSensorsCalibrated;
 
   Serial.println("Calibrating Sensors...");
-  for (int i = 0; i < this->getSize(); i++)
-  {
-    Sensor *sensor = this->getSensor(i);
-    Serial.print(sensor->getTypeName());
-    Serial.print(":");
-    Serial.println(sensor->calibrate());
-  }
+  do{
+    allSensorsCalibrated = true;
+    for (int i = 0; i < this->getSize(); i++)
+    {
+      Sensor *sensor = this->getSensor(i);
+      if(!sensor->getCalibrated()){
+        sensor->calibrate();
+        if(sensor->getCalibrated()){
+          Serial.print(sensor->getTypeName());
+          Serial.print(":");
+          Serial.println(sensor->read());
+        }
+      }
+      allSensorsCalibrated = allSensorsCalibrated && sensor->getCalibrated();
+    }
+  }while(!allSensorsCalibrated);
 
   return true;
 }
