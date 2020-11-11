@@ -74,6 +74,7 @@ boolean Co2Sensor::calibrate()
 {
   // Código de calibração do sensor!! DUrará horas???
   this->mhz19->autoCalibration(false);
+  this->calibrated = true;
   return true;
 };
 
@@ -96,6 +97,7 @@ String LuminositySensor::read()
 
 boolean LuminositySensor::calibrate()
 {
+  this->calibrated = true;
   return true;
 };
 
@@ -119,6 +121,7 @@ String TemperatureSensor::read()
 
 boolean TemperatureSensor::calibrate()
 {
+  this->calibrated = true;
   return true;
 };
 
@@ -142,6 +145,7 @@ String PressureSensor::read()
 
 boolean PressureSensor::calibrate()
 {
+  this->calibrated = true;
   return true;
 };
 
@@ -165,6 +169,7 @@ String AltitudeSensor::read()
 
 boolean AltitudeSensor::calibrate()
 {
+  this->calibrated = true;
   return true;
 };
 
@@ -324,7 +329,7 @@ MQ2Sensor::MQ2Sensor(int pin) {
 
   // Define os parâmetros de calibração do sensor
   this->calibrateReadCount = 5;
-  this->calibrateReadInterval = 50;
+  this->calibrateReadInterval = 500;
 }
 
 SensorType MQ2Sensor::getType(){
@@ -432,7 +437,7 @@ boolean Sensors::calibrate()
   Serial.println("Calibrating Sensors...");
   do{
     allSensorsCalibrated = true;
-    for (int i = 0; i < this->getSize(); i++)
+    for (int i = 0; i < (this->getSize()-1); i++)
     {
       Sensor *sensor = this->getSensor(i);
       if(!sensor->getCalibrated()){

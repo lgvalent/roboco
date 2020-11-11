@@ -32,21 +32,18 @@ void Motor::move(MotorDirection direction, unsigned char speed){
 }
 
 void Motor::test(){
-    Serial.print("Testing Motor: ");
-    int i=0;
-    for (i = 1; i <= 255; i++){
-        Serial.println ("primeiro for:");
-        Serial.println (i);
-        move(CLOCKWISE, i);
-        i=i+10;
-        
-    }
-    for(i=1; i<= 255; i++){
-        Serial.println ("segundo for:");
-        Serial.println (i);
-        move(ANTICLOCKWISE, i);
-        i=i+10;
-        
-      }
-      stop();
+  Serial.print("Testing Motor: ");
+  
+  for (int i = 255; i >= 0; i--){
+    Serial.println ("primeiro for:");
+    Serial.println (i);
+    move(CLOCKWISE, i);     
+  }
+  // delay(500);
+  for(int i = 255; i >= 0; i--){
+    Serial.println ("segundo for:");
+    Serial.println (i);
+    move(ANTICLOCKWISE, i);   
+  }
+  stop();
 }

@@ -34,7 +34,7 @@ void setup(){
   AltitudeSensor* altSensor = new AltitudeSensor(bmp280);
   Co2Sensor* myMHZ19 = new Co2Sensor(&Serial2);    
   TemperatureSensor* tempSensor = new TemperatureSensor(bmp280);
-  setPinMode(A0, OUTPUT);
+ 
   MQ2Sensor* mq2 = new MQ2Sensor(A0); 
 
   sensors = new Sensors(Roboco::_COUNT);
@@ -61,7 +61,7 @@ void setup(){
   Workflow* workflow = new Workflow(SD);                      // para arduino uno use o pin10
 
   Motor* motorLeft = new Motor(2,4,3);
-  Motor* motorRight = new Motor(5,6,3);
+  Motor* motorRight = new Motor(40,42,30);
 
   roboco = new Roboco(sensors, output, gps, collectRegister, workflow, motorLeft, motorRight);
   //roboco->setup(); // OBS 2: Setup comentado pq quando testamos o sd com ele, da problema.
@@ -72,5 +72,6 @@ void setup(){
 
 void loop(){
   roboco->test();
-  //roboco->run(); 
+  
+  // roboco->run(); 
 }
