@@ -21,17 +21,14 @@ enum SensorType{LUMINOSITY, PRESSURE, ALTITUDE, TEMPERATURE, CO2, CH4, COMPASS};
 class Sensor{
   protected:
     static String SENSOR_TYPE_NAMES[];
-    boolean calibrated = false;
   public:
     String getTypeName(); 
-    boolean getCalibrated();
     
     virtual SensorType getType() = 0;
     virtual String read() = 0;
-    virtual boolean calibrate();
 };
 
-class BasicCalibrableSensor: public Sensor{
+class CalibrableSensor: public Sensor{
   protected:
     int calibrateReadCount = 10; 
     int calibrateReadInterval = 50; //ms
@@ -39,24 +36,12 @@ class BasicCalibrableSensor: public Sensor{
     float calibrateReadValue = 0; 
     int calibrateLastTime = 0;
     int calibrateReadTimes = 0; 
+
+    boolean calibrated = false;
   public:
     virtual float readRaw() = 0;
+    virtual boolean isCalibrated();
     virtual boolean calibrate();
-};
-
-#include <MHZ19.h>
-class Co2Sensor: public Sensor {
-
-  private:
-    Stream* serial;
-    MHZ19* mhz19;
-
-  public:
-    Co2Sensor(int8_t pinRx, int8_t pinTx);
-    Co2Sensor(HardwareSerial *serial);
-    SensorType getType();
-    String read();
-    boolean calibrate();
 };
 
 class LuminositySensor: public Sensor{
@@ -68,7 +53,6 @@ class LuminositySensor: public Sensor{
     LuminositySensor(int8_t pin);
     SensorType getType();
     String read();
-    boolean calibrate();
 };
 
 #include <Adafruit_BMP280.h>
@@ -81,7 +65,6 @@ class TemperatureSensor: public Sensor{
     TemperatureSensor(Adafruit_BMP280* sensor); 
     SensorType getType(); 
     String read();
-    boolean calibrate();
 };
 
 class PressureSensor: public Sensor{
@@ -93,7 +76,6 @@ class PressureSensor: public Sensor{
     PressureSensor(Adafruit_BMP280* sensor); 
     SensorType getType();
     String read();
-     boolean calibrate();
 };
 
 class AltitudeSensor: public Sensor{
@@ -105,20 +87,6 @@ class AltitudeSensor: public Sensor{
     AltitudeSensor(Adafruit_BMP280* sensor); 
     SensorType getType(); 
     String read(); 
-    boolean calibrate();
-};
-
-#include <QMC5883LCompass.h>
-class CompassSensorQMC5883: public Sensor{
-  
-  private:
-    QMC5883LCompass* sensor;
-
-  public:
-    CompassSensorQMC5883(QMC5883LCompass* sensor); 
-    SensorType getType(); 
-    String read(); 
-    boolean calibrate();
 };
 
 #include <Adafruit_Sensor.h>
@@ -138,7 +106,7 @@ class CompassSensorHMC5883: public Sensor{
 /* MQ2 ===========================================================================
    SOURCE: https://create.arduino.cc/projecthub/Junezriyaz/how-to-connect-mq2-gas-sensor-to-arduino-f6a456
            https://jualabs.wordpress.com/2016/11/30/sensoriamento-de-gases-em-tempo-real-atraves-de-sensores-mq-0-9/ */
-class MQ2Sensor: public BasicCalibrableSensor {
+class MQ2Sensor: public CalibrableSensor {
 public: 
 	MQ2Sensor(int pin);
   SensorType getType(); 
@@ -174,6 +142,34 @@ private:
 	float MQGetPercentage(float *pcurve);
 	float resistanceCalculation(int raw_adc);
 
+};
+
+#include <MHZ19.h>
+class Co2Sensor: public CalibrableSensor {
+
+  private:
+    Stream* serial;
+    MHZ19* mhz19;
+
+  public:
+    Co2Sensor(int8_t pinRx, int8_t pinTx);
+    Co2Sensor(HardwareSerial *serial);
+    SensorType getType();
+    String read();
+  	boolean calibrate();
+};
+
+#include <QMC5883LCompass.h>
+class CompassSensorQMC5883: public CalibrableSensor{
+  
+  private:
+    QMC5883LCompass* sensor;
+
+  public:
+    CompassSensorQMC5883(QMC5883LCompass* sensor); 
+    SensorType getType(); 
+    String read(); 
+    boolean calibrate();
 };
 
 class Sensors{

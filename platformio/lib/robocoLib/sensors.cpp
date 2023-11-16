@@ -8,17 +8,6 @@ String Sensor::getTypeName()
   return SENSOR_TYPE_NAMES[this->getType()];
 }
 
-boolean Sensor::calibrate()
-{ 
-  this->calibrated = true;
-  return true;
-}
-
-boolean Sensor::getCalibrated()
-{ 
-  return this->calibrated;
-}
-
 boolean BasicCalibrableSensor::calibrate()
 { 
   if(this-calibrateReadTimes == 0) // Detecta a primeira chamada
@@ -95,12 +84,6 @@ String LuminositySensor::read()
   return String(analogRead(this->pin));
 }; 
 
-boolean LuminositySensor::calibrate()
-{
-  this->calibrated = true;
-  return true;
-};
-
 /*******************************************************/
 
 TemperatureSensor::TemperatureSensor(Adafruit_BMP280 *sensor)
@@ -117,12 +100,6 @@ SensorType TemperatureSensor::getType()
 String TemperatureSensor::read()
 {
   return String(this->sensor->readTemperature());
-};
-
-boolean TemperatureSensor::calibrate()
-{
-  this->calibrated = true;
-  return true;
 };
 
 /*******************************************************/
@@ -143,12 +120,6 @@ String PressureSensor::read()
   return String(this->sensor->readPressure());
 };
 
-boolean PressureSensor::calibrate()
-{
-  this->calibrated = true;
-  return true;
-};
-
 /*******************************************************/
 
 AltitudeSensor::AltitudeSensor(Adafruit_BMP280 *sensor)
@@ -166,12 +137,6 @@ String AltitudeSensor::read()
 {
   return String(this->sensor->readAltitude(1013.25));
 }
-
-boolean AltitudeSensor::calibrate()
-{
-  this->calibrated = true;
-  return true;
-};
 
 /*******************************************************/
 

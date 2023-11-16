@@ -8,7 +8,7 @@ struct Location{
     float longitude;
     float altitude;
     float angle;
-    unsigned long time;
+    // unsigned long time;
 };
 
 struct DateTime
